@@ -2179,6 +2179,98 @@
     touch-action: manipulation;
   }
 
+  /* ─── M3 · Vorlesefunktion · Lautsprecher-Button und Settings ─── */
+  .tts-btn {
+    /* dezent, am rechten Rand der card-meta, in der Pergament-Palette */
+    background: transparent;
+    border: 1px solid var(--paper-edge);
+    border-radius: 99px;
+    padding: 6px 8px;
+    margin-left: 10px;
+    cursor: pointer;
+    color: var(--ink-faint);
+    font-size: 0;             /* SVG-Icon, kein Text */
+    line-height: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    min-width: 32px;
+    min-height: 32px;
+  }
+  .tts-btn svg { width: 14px; height: 14px; display: block; }
+  .tts-btn:hover {
+    color: var(--ink-soft);
+    border-color: var(--ink-faint);
+  }
+  .tts-btn.speaking {
+    color: var(--gold-deep);
+    border-color: var(--gold);
+    background: rgba(160,122,42,0.08);
+  }
+  .tts-btn.speaking svg { animation: tts-pulse 1.4s ease-in-out infinite; }
+  @keyframes tts-pulse {
+    0%, 100% { opacity: 0.55; }
+    50%      { opacity: 1; }
+  }
+  /* card-meta-tags soll TTS-Button in der Reihe halten */
+  .card-meta-tags { display: flex; align-items: center; gap: 0; }
+
+  /* Touch-tauglich: 44px-Mindestgrösse auf Mobile */
+  @media (max-width: 760px) {
+    .tts-btn { min-width: 44px; min-height: 44px; padding: 8px 10px; }
+    .tts-btn svg { width: 16px; height: 16px; }
+  }
+
+  /* TTS-Section in der Sidebar */
+  .tts-section .tts-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .tts-section label {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    flex-shrink: 0;
+    min-width: 56px;
+  }
+  .tts-section input[type="range"] {
+    flex: 1;
+    accent-color: var(--gold-deep);
+    height: 4px;
+  }
+  .tts-section .tts-rate-display {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink);
+    min-width: 32px;
+    text-align: right;
+  }
+  .tts-section select {
+    flex: 1;
+    font-family: var(--serif-body);
+    font-size: 12px;
+    padding: 6px 8px;
+    border: 1px solid var(--paper-edge);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    max-width: 100%;
+  }
+  .tts-section .tts-hint {
+    font-family: var(--serif-body);
+    font-size: 11px;
+    font-style: italic;
+    color: var(--ink-mute);
+    line-height: 1.5;
+    margin-top: 4px;
+  }
+
   /* ─── iOS-Safari: Auto-Zoom auf Inputs verhindern ─── */
   @media (max-width: 760px) {
     input, textarea, select, button {
@@ -2264,6 +2356,21 @@
       <div><span>1 / 2 / 3</span> · bewerten</div>
     </div>
 
+    <!-- M3 · Vorlesefunktion · Tempo und Stimme -->
+    <div class="toc-section tts-section" id="ttsSection">
+      <div class="toc-label">Vorlesen</div>
+      <div class="tts-row">
+        <label for="ttsRate">Tempo</label>
+        <input type="range" id="ttsRate" min="0.7" max="1.8" step="0.05" value="1.1">
+        <span class="tts-rate-display" id="ttsRateDisplay">1.1×</span>
+      </div>
+      <div class="tts-row">
+        <label for="ttsVoice">Stimme</label>
+        <select id="ttsVoice"><option>—</option></select>
+      </div>
+      <div class="tts-hint">Erst antworten, dann anhören.</div>
+    </div>
+
     <div class="toc-section">
       <button class="help-btn" id="helpBtn" title="Gebrauchsanweisung anzeigen">
         <span class="help-icon">?</span>
@@ -2271,7 +2378,7 @@
       </button>
     </div>
 
-    <div class="version-footer" id="versionFooter">v3.0 · Aargau · Strafrecht + Lernmethodik + Prüfungsablauf + BT-Definitionen + Bestandsreview + BGE-Sammlung + Nebenstrafrecht + Klausur-Modul</div>
+    <div class="version-footer" id="versionFooter">v3.0 · Aargau · Strafrecht + Lernmethodik + Prüfungsablauf + BT-Definitionen + Bestandsreview + BGE-Sammlung + Nebenstrafrecht + Klausur-Modul + Mobile-Layout + iOS-PWA + Vorlesefunktion</div>
   </aside>
 
   <main>
@@ -2408,6 +2515,11 @@
       </ol>
       <p>Das App-Icon erscheint mit einer Justitia-Waage auf Pergament. Auf Tap öffnet sich das Tool im Vollbild-Modus. Der Lernfortschritt bleibt im selben Browser-Speicher wie zuvor.</p>
       <div class="pillar"><strong>Hinweis:</strong> Mobile-Drill ergänzt die Hauptarbeit am Computer. Klausurbearbeitung (4 Stunden Tippen) bleibt sinnvollerweise auf dem Computer. Karteikarten-Drill in S-Bahn, Wartezimmer und Mittagspause ist die typische Nutzung.</div>
+
+      <h4>Karten vorlesen lassen</h4>
+      <p>Auf jeder Karteikarte gibt es oben rechts ein dezentes Lautsprecher-Symbol — auf Vorder- und Rückseite. Antippen liest den jeweiligen Karteninhalt mit deutscher Stimme vor. Erneutes Antippen stoppt. Beim Umdrehen, Wechseln zur nächsten Karte oder Verlassen des Karteikarten-Modus wird das Vorlesen automatisch beendet.</p>
+      <p>In der Sidebar lassen sich unter <strong>Vorlesen</strong> Tempo (Standard 1.1×) und die deutsche Stimme einstellen. Welche Stimmen verfügbar sind, hängt vom Gerät und Betriebssystem ab — auf iOS sind das in der Regel Anna oder Petra, optional zusätzliche Premium-Stimmen aus den iOS-Einstellungen.</p>
+      <div class="pillar"><strong>Methodische Disziplin:</strong> Vorlesen ist Wiederholungswerkzeug, kein Ersatz für aktiven Abruf. Die Karte erst selbst durchdenken und mündlich beantworten, dann zur Kontrolle anhören. Hörendes Wiederholen festigt die korrekte Aussprache schwieriger Termini (Verwaltungsgerichtsbeschwerde, Spezialverwaltungsgericht, Anschlussgebühren) — das zahlt sich in der mündlichen Prüfung aus.</div>
 
     </div>
     <div class="modal-buttons">
@@ -3180,6 +3292,23 @@ const CARDS = [
       </ul>
       <h4>Abgrenzung Art. 305<sup>ter</sup></h4>
       <p>Mangelnde Sorgfalt bei Finanzgeschäften — Sondertatbestand für Finanzintermediäre, der fahrlässige Identifikationsmängel erfasst.</p>
+      <h4>Schnittstelle GwG · Geldwäschereigesetz · Etappe 11.9 ergänzt</h4>
+      <p>Das Geldwäschereigesetz (<strong>GwG, SR 955.0</strong>) ist Aufsichtsrecht und ergänzt die strafrechtlichen Tatbestände durch verwaltungsrechtliche Sorgfaltspflichten der Finanzintermediäre. Wichtigste Pflichten:</p>
+      <ul>
+        <li><strong>Identifikation der Vertragspartei · Art. 3 GwG</strong> · KYC-Pflicht bei Geschäftsbeziehung oder Bartransaktion über CHF 15'000</li>
+        <li><strong>Feststellung der wirtschaftlich berechtigten Person · Art. 4 GwG</strong> · bei Anhaltspunkten oder Pflicht-Schwellenwerten</li>
+        <li><strong>Besondere Abklärungspflichten · Art. 6 GwG</strong> · bei ungewöhnlichen oder hochriskanten Transaktionen</li>
+        <li><strong>Dokumentationspflicht · Art. 7 GwG</strong> · Aufbewahrung der Belege während 10 Jahren</li>
+        <li><strong>Meldepflicht bei Verdacht · Art. 9 GwG</strong> · Meldung an die Meldestelle für Geldwäscherei (MROS) bei begründetem Verdacht auf Vortat</li>
+        <li><strong>Vermögenssperre · Art. 10 GwG</strong> · automatische Sperre bei MROS-Meldung</li>
+      </ul>
+      <p><strong>Strafrechtliche Folgen bei Pflichtverletzungen:</strong></p>
+      <ul>
+        <li>Verletzung der Meldepflicht · <em>Art. 37 GwG</em> · Busse bis CHF 500'000</li>
+        <li>Mangelnde Sorgfalt · <em>Art. 305<sup>ter</sup> StGB</em> · subsidiär zu Art. 305<sup>bis</sup> StGB</li>
+        <li>Bei eventualvorsätzlichem Handeln des Finanzintermediärs · Eintritt in den Vollverstösser-Tatbestand <em>Art. 305<sup>bis</sup> StGB</em></li>
+      </ul>
+      <p>Methodische Faustregel · GwG-Verstösse zeigen oft, dass der Finanzintermediär „etwas hätte merken müssen" (Indiz für Eventualvorsatz Art. 305<sup>bis</sup>). Wer nur Art. 305<sup>ter</sup> prüft und die Eventualvorsatz-Frage übergeht, lässt Klausurpunkte liegen.</p>
       <div class="pillar"><strong>Klausurspur:</strong> Eventualvorsatz ist die zentrale Klippe — Verdachtsmomente beim Täter, die er nicht weiter abklärt.</div>
     `
   },
@@ -8169,6 +8298,155 @@ const CARDS = [
   },
 
 
+  /* ════════════════════════════════════════════════════════════
+     ETAPPE 11 · Lücken-Schliessung · AT-19, AT-20, AT-21 (1.5.2026)
+     Befund Etappe 10 Audit-Memo: Drei harte/mittlere Lücken im AT-Block
+     ════════════════════════════════════════════════════════════ */
+
+  {
+    id: "AT-19", type: "schema", category: "stgb-at",
+    topic: "Geschäftsherrenhaftung · Art. 102 StGB",
+    prompt: "Wann ist ein Unternehmen strafbar nach Art. 102 StGB?",
+    hint: "Subsidiäre Unternehmensstrafbarkeit Abs. 1, originäre Abs. 2 für Katalogdelikte.",
+    answerTitle: "Strafrechtliche Verantwortlichkeit des Unternehmens",
+    answerRef: "Art. 102 StGB · BGE 142 IV 333 · BGE 146 IV 68",
+    answerHTML: `
+      <h4>Zwei Grundvarianten</h4>
+      <p>Art. 102 StGB normiert die strafrechtliche Verantwortlichkeit des Unternehmens. Das Gesetz unterscheidet zwei Konstruktionen mit unterschiedlicher Reichweite und Beweisstruktur:</p>
+      <h4>Variante 1 · Subsidiäre Unternehmensstrafbarkeit (Abs. 1)</h4>
+      <p>Wird in einem Unternehmen in Ausübung geschäftlicher Verrichtung im Rahmen des Unternehmenszwecks ein Verbrechen oder Vergehen begangen und kann diese Tat <strong>wegen mangelhafter Organisation</strong> des Unternehmens <strong>keiner bestimmten natürlichen Person zugerechnet werden</strong>, so wird das Verbrechen oder Vergehen dem Unternehmen zugerechnet.</p>
+      <ul>
+        <li><strong>Anlasstat</strong> · ein Verbrechen oder Vergehen aus dem Strafgesetzbuch oder Nebenstrafrecht</li>
+        <li><strong>Geschäftliche Verrichtung im Unternehmenszweck</strong> · Tat im Rahmen der unternehmerischen Tätigkeit, nicht private Exzesse Einzelner</li>
+        <li><strong>Zuordnungsdefekt</strong> · die individuelle Täterschaft lässt sich trotz Untersuchung nicht klären</li>
+        <li><strong>Mangelhafte Organisation</strong> · Compliance-, Aufsichts- oder Strukturversagen, das die Tat ermöglicht oder die Aufklärung verhindert hat</li>
+      </ul>
+      <p>Charakter: <em>Auffangtatbestand</em> · greift, wenn die individuelle Strafverfolgung an der Beweis- und Zurechnungslage scheitert.</p>
+      <h4>Variante 2 · Originäre Unternehmensstrafbarkeit (Abs. 2)</h4>
+      <p>Bei Katalogdelikten wird das Unternehmen <strong>unabhängig</strong> von der Strafbarkeit natürlicher Personen bestraft, wenn ihm vorzuwerfen ist, dass es nicht alle erforderlichen und zumutbaren organisatorischen Vorkehren getroffen hat, um die Tat zu verhindern.</p>
+      <p><strong>Katalogdelikte (Art. 102 Abs. 2 StGB):</strong></p>
+      <ul>
+        <li>Beteiligung an oder Unterstützung einer kriminellen oder terroristischen Organisation (<em>Art. 260<sup>ter</sup> StGB</em>)</li>
+        <li>Finanzierung des Terrorismus (<em>Art. 260<sup>quinquies</sup> StGB</em>)</li>
+        <li>Geldwäscherei (<em>Art. 305<sup>bis</sup> StGB</em>)</li>
+        <li>Bestechungstatbestände (<em>Art. 322<sup>ter</sup>, 322<sup>quinquies</sup>, 322<sup>septies</sup> Abs. 1, 322<sup>octies</sup> StGB</em>)</li>
+      </ul>
+      <p>Charakter: <em>Originäre und kumulative</em> Strafbarkeit · neben einer allenfalls strafbaren natürlichen Person wird auch das Unternehmen verantwortlich gemacht.</p>
+      <h4>Sanktion</h4>
+      <p><strong>Busse bis 5 Millionen Franken</strong> (<em>Art. 102 Abs. 1 StGB</em>). Die Höhe richtet sich nach der Schwere der Tat, der Schwere des Organisationsmangels und nach den wirtschaftlichen Verhältnissen des Unternehmens (<em>Art. 102 Abs. 3</em>).</p>
+      <h4>Unternehmensbegriff · Art. 102 Abs. 4 StGB</h4>
+      <ul>
+        <li>Juristische Personen des Privatrechts</li>
+        <li>Juristische Personen des öffentlichen Rechts (mit Ausnahmen)</li>
+        <li>Gesellschaften (auch Personengesellschaften)</li>
+        <li>Einzelfirmen</li>
+      </ul>
+      <h4>BGer-Praxis</h4>
+      <p><strong>BGE 142 IV 333</strong> präzisiert die Anforderungen an die mangelhafte Organisation in Abs. 1: Es genügt nicht jeder Organisationsmangel, sondern es muss ein konkreter Zusammenhang zwischen dem Organisationsdefekt und der Nichtzurechenbarkeit der Tat bestehen. <strong>BGE 146 IV 68</strong> behandelt die originäre Verantwortlichkeit nach Abs. 2 (Bestechung); die geforderten Compliance-Massnahmen müssen konkret zur Verhinderung der Anlasstat geeignet gewesen sein.</p>
+      <h4>Klausurrelevanz</h4>
+      <p>Im Tool als <strong>Aargauer Klausurschwerpunkt</strong> hinterlegt (vgl. M-12). Klassische Aargauer Konstellation: Wirtschaftsstrafrechts-Sachverhalt mit GmbH oder AG, deren Mitarbeitende eine Tat begangen haben. Zu prüfen ist die Reihenfolge: erst individuelle Strafbarkeit (Geschäftsführer, Compliance-Officer), dann subsidiäre oder originäre Verantwortlichkeit des Unternehmens.</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Bei jedem Wirtschaftsstrafrechts-Sachverhalt mit Unternehmensbezug Art. 102 StGB als eigenständigen Prüfungsschritt aufnehmen. Erst Variante 1 (Auffang bei Zuordnungsdefekt) oder Variante 2 (originär bei Katalogdelikt) bestimmen, dann Organisationsmangel substantiieren. Methodisch zu verbinden mit AT-04 (Garantenstellung), BT-07 (Geldwäscherei) und BT-12 (Amtsdelikte).</div>
+    `
+  },
+
+  {
+    id: "AT-20", type: "schema", category: "stgb-at",
+    topic: "Strafrechtliche Massnahmen · Art. 56 ff. StGB",
+    prompt: "Welche Massnahmen sieht das StGB vor und wann werden sie angeordnet?",
+    hint: "Dualistisches System · Strafe und Massnahme nebeneinander.",
+    answerTitle: "Massnahmenrecht · Art. 56-65 StGB",
+    answerRef: "Art. 56-65 StGB",
+    answerHTML: `
+      <h4>Dualistisches System</h4>
+      <p>Das schweizerische Sanktionensystem ist dualistisch · neben der Strafe (Art. 34 ff., 40 ff. StGB) treten die Massnahmen (Art. 56 ff.). Massnahmen werden zusätzlich zur Strafe oder anstelle einer Strafe angeordnet, abhängig von Schuldfähigkeit, Behandlungsbedarf und Gefährlichkeit.</p>
+      <h4>Allgemeine Voraussetzungen · Art. 56 StGB</h4>
+      <p>Eine Massnahme darf nur angeordnet werden, wenn:</p>
+      <ul>
+        <li>Eine Strafe allein nicht geeignet ist, der Gefahr weiterer Straftaten des Täters zu begegnen</li>
+        <li>Ein Behandlungsbedürfnis des Täters besteht oder die öffentliche Sicherheit dies erfordert</li>
+        <li>Die Voraussetzungen der spezifischen Massnahme (Art. 59-64 StGB) erfüllt sind</li>
+      </ul>
+      <p>Das Gericht stützt sich auf eine <strong>sachverständige Begutachtung</strong> (<em>Art. 56 Abs. 3 StGB</em>) zur psychischen Verfassung, Behandlungsaussicht und Rückfallgefahr des Täters.</p>
+      <h4>Therapeutische Massnahmen</h4>
+      <ul>
+        <li><strong>Stationäre Behandlung von psychischen Störungen · Art. 59 StGB</strong> · bei schwerer psychischer Störung mit Zusammenhang zur Tat, Behandlungsfähigkeit und -bedürftigkeit · Höchstdauer 5 Jahre, Verlängerung möglich</li>
+        <li><strong>Suchtbehandlung · Art. 60 StGB</strong> · bei Abhängigkeit (Alkohol, Betäubungsmittel) und Tatbezug · Höchstdauer 3 Jahre</li>
+        <li><strong>Massnahme für junge Erwachsene · Art. 61 StGB</strong> · 18-25 Jahre, erhebliche Persönlichkeitsstörung, Zusammenhang mit Tat</li>
+        <li><strong>Ambulante Behandlung · Art. 63 StGB</strong> · bei psychischer Störung oder Suchtproblem, wenn stationäre Behandlung nicht erforderlich</li>
+      </ul>
+      <h4>Verwahrung · Art. 64 StGB</h4>
+      <p>Sicherungsmassnahme bei sehr schwerwiegenden Anlasstaten und ungünstiger Prognose. Voraussetzungen kumulativ:</p>
+      <ul>
+        <li><strong>Anlasstat</strong> · Verbrechen aus dem Katalog Art. 64 Abs. 1 (Mord, vorsätzliche Tötung, schwere Körperverletzung, Vergewaltigung, Raub, Geiselnahme, Brandstiftung, Gefährdung des Lebens, weitere)</li>
+        <li><strong>Anhaltende Persönlichkeitsstörung oder schwere Geistesstörung</strong></li>
+        <li><strong>Hohe Wahrscheinlichkeit</strong> weiterer Verbrechen</li>
+        <li><strong>Behandlung erfolglos oder ausgeschlossen</strong></li>
+      </ul>
+      <p>Die ordentliche Verwahrung wird unbefristet angeordnet, mit jährlicher Überprüfung (Art. 64b StGB). Die <strong>lebenslängliche Verwahrung</strong> nach <em>Art. 64 Abs. 1<sup>bis</sup></em> ist Sondermassnahme bei extremer Gefährlichkeit · sie wurde durch Volksinitiative 2008 eingeführt und ist BGer-praktisch sehr restriktiv ausgelegt.</p>
+      <h4>Andere Massnahmen · Art. 66-73 StGB</h4>
+      <ul>
+        <li><strong>Friedensbürgschaft · Art. 66</strong> · präventive Sicherheitsleistung bei Drohung</li>
+        <li><strong>Tätigkeitsverbot · Art. 67 ff.</strong> · Berufs-, Funktions- oder Tätigkeitsverbot</li>
+        <li><strong>Kontakt- und Rayonverbot · Art. 67b</strong> · zum Schutz vor weiteren Straftaten gegen bestimmte Personen</li>
+        <li><strong>Fahrverbot · Art. 67e</strong></li>
+        <li><strong>Veröffentlichung des Urteils · Art. 68</strong></li>
+        <li><strong>Einziehung · Art. 69-73</strong> · vgl. AT-21</li>
+      </ul>
+      <h4>Vollzug · Anordnung und Aufhebung</h4>
+      <p>Stationäre Massnahmen Art. 59-61 werden in geeigneten Einrichtungen vollzogen. Die <strong>jährliche Prüfung</strong> der weiteren Notwendigkeit erfolgt durch die Vollzugsbehörde (Art. 62d StGB). <strong>Gerichtsentscheid</strong> über Aufhebung, bedingte Entlassung, Verlängerung oder Umwandlung.</p>
+      <h4>Klausurrelevanz</h4>
+      <p>Bei Aargauer Klausuren mit Schuldunfähigkeit (<em>Art. 19 StGB</em>) oder verminderter Schuldfähigkeit (<em>Art. 19 Abs. 2</em>) immer Massnahmenfrage prüfen — Strafe entfällt oder ist gemildert, aber Massnahme kann zwingend sein. Auch bei wiederholten Vermögensdelikten mit Suchterkrankung ist die Frage Strafe vs. Behandlung Art. 60 StGB klausurklassisch. Verfahrensseite: Anordnung im Sachurteil, Vollzugsfragen Art. 62 ff. StGB. Aargauer Spezifikum: Bezirksgericht in Fünferbesetzung bei Antrag auf stationäre Massnahme oder Verwahrung (vgl. PR-37).</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Strafe und Massnahme sind kumulativ möglich. Bei jedem Sachverhalt mit Schuldfähigkeitsfrage, Suchterkrankung oder schwerer Persönlichkeitsstörung Massnahmenrecht eigenständig prüfen. Verwahrung Art. 64 StGB ist ultima ratio · sehr hohe Schwelle, Anlasstat-Katalog beachten.</div>
+    `
+  },
+
+  {
+    id: "AT-21", type: "schema", category: "stgb-at",
+    topic: "Einziehung · Art. 69-73 StGB · Übersicht",
+    prompt: "Welche vier Einziehungsformen sieht das StGB vor?",
+    hint: "Sicherungseinziehung, Vermögenseinziehung, Ersatzforderung, Verwendung zugunsten Geschädigter.",
+    answerTitle: "Einziehungsrecht · Übersicht der vier Formen",
+    answerRef: "Art. 69-73 StGB · vgl. VN-12, BGE-16",
+    answerHTML: `
+      <h4>Vier-Säulen-System</h4>
+      <p>Das StGB kennt vier Einziehungsformen mit unterschiedlicher Schutzrichtung:</p>
+      <h4>Säule 1 · Sicherungseinziehung · Art. 69 StGB</h4>
+      <p>Einziehung von <strong>gefährlichen Gegenständen</strong>, die zu Straftaten gedient haben oder dazu bestimmt waren oder die durch eine Straftat hervorgebracht wurden, sofern sie die Sicherheit von Menschen, die Sittlichkeit oder die öffentliche Ordnung gefährden.</p>
+      <ul>
+        <li>Beispiele · Tatwerkzeuge (Brechstange beim Einbruch), Waffen, gefälschte Banknoten, Drogen, Kinderpornografie</li>
+        <li>Voraussetzung · konkrete Gefahr, nicht abstrakte Verbotenheit</li>
+        <li>Schutzzweck · präventiv (öffentliche Sicherheit)</li>
+      </ul>
+      <h4>Säule 2 · Vermögenseinziehung · Art. 70 StGB</h4>
+      <p>Einziehung von <strong>Vermögenswerten</strong>, die durch eine Straftat erlangt worden sind oder dazu bestimmt waren, eine Straftat zu veranlassen oder zu belohnen.</p>
+      <ul>
+        <li>Erlangungsobjekte · der ergaunerte Geldbetrag, gestohlene Wertgegenstände, Bestechungsgelder</li>
+        <li>Voraussetzung · Konnex zur Tat (<em>scelere quaesita</em>) und Greifbarkeit des Vermögenswerts</li>
+        <li>Schutzzweck · Gewinnabschöpfung · der Tatentlohn soll nicht beim Täter bleiben</li>
+        <li><strong>Drittunschuld · Art. 70 Abs. 2</strong> · keine Einziehung beim gutgläubigen Dritten, der einen gleichwertigen Gegenwert erbracht hat</li>
+      </ul>
+      <h4>Säule 3 · Ersatzforderung · Art. 71 StGB</h4>
+      <p>Wenn die unmittelbare Einziehung nicht mehr möglich ist (Vermögenswert verbraucht, vermischt, weggegeben), tritt eine staatliche <strong>Ersatzforderung</strong> in entsprechender Höhe an die Stelle der Einziehung.</p>
+      <ul>
+        <li>Charakter · subsidiär zur Einziehung nach Art. 70</li>
+        <li><strong>Wiedereingliederungsvorbehalt · Art. 71 Abs. 2</strong> · Verzicht ganz oder teilweise möglich, wenn Forderung uneinbringlich oder Wiedereingliederung des Betroffenen ernstlich behindern würde (vgl. BGE-16, BGE 144 IV 1)</li>
+        <li>Sicherung der Ersatzforderung durch Beschlagnahme nach <em>Art. 263 StPO</em></li>
+      </ul>
+      <h4>Säule 4 · Verwendung zugunsten der Geschädigten · Art. 73 StGB</h4>
+      <p>Eingezogene Vermögenswerte und Ersatzforderungen werden auf Antrag der Geschädigten zu deren Gunsten verwendet, sofern sie aus der Straftat einen Schaden erlitten haben und der Schaden nicht durch Versicherung oder Dritte gedeckt ist.</p>
+      <ul>
+        <li>Verfahren · Antrag spätestens 5 Jahre nach rechtskräftigem Endentscheid</li>
+        <li>Bedeutung · adhäsionsähnlicher Schadensausgleich aus dem konfiszierten Vermögen</li>
+      </ul>
+      <h4>Verfahren</h4>
+      <p>Einziehung wird im Strafurteil ausgesprochen. <strong>Selbständige Einziehung</strong> nach <em>Art. 376-378 StPO</em> ist möglich, wenn keine Strafverfolgung gegen eine bestimmte Person erfolgt (z.B. unbekannter Täter, verstorbene beschuldigte Person). Beschlagnahmung als Sicherungsmassnahme im Vorverfahren nach <em>Art. 263 StPO</em>.</p>
+      <h4>Klausurrelevanz</h4>
+      <p>Bei jedem Vermögensdelikt mit Erlös oder Tatwerkzeugen ist die Einziehungsfrage zu prüfen. Methodisch zu verbinden mit BT-04 ff. (Vermögensdelikte), VN-12 (Sicherungseinziehung vs. Ersatzabschöpfung im Vergleich) und BGE-16 (Wiedereingliederungsvorbehalt). Aargauer Klausurschwerpunkt "Vermögensdelikte mit Werterhaltungspflicht" lädt das Thema regelmässig ein.</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Vier Säulen einzeln prüfen · Sicherungseinziehung (Art. 69) für gefährliche Gegenstände, Vermögenseinziehung (Art. 70) für Tatentlohn, Ersatzforderung (Art. 71) bei Uneinbringlichkeit der unmittelbaren Einziehung, Verwendung zugunsten Geschädigter (Art. 73) als Schadensausgleich. Drittunschuld Art. 70 Abs. 2 und Wiedereingliederungsvorbehalt Art. 71 Abs. 2 sind die zentralen Korrektive.</div>
+    `
+  },
+
+
   /* ── StGB Besonderer Teil · BT-24 bis BT-25 ─────────────── */
 
   {
@@ -9203,6 +9481,111 @@ const CARDS = [
     `
   },
 
+
+  /* ════════════════════════════════════════════════════════════
+     ETAPPE 11 · Lücken-Schliessung · BT-50, BT-51 (1.5.2026)
+     Befund Etappe 10 Audit-Memo: Wirtschaftsstrafrecht-Lücken
+     ════════════════════════════════════════════════════════════ */
+
+  {
+    id: "BT-50", type: "schema", category: "stgb-bt",
+    topic: "Ungetreue Geschäftsführung · Art. 158 StGB",
+    prompt: "Welche zwei Tatbestandsvarianten kennt Art. 158 StGB?",
+    hint: "Treubruch- und Bereicherungsvariante mit unterschiedlicher Strafdrohung.",
+    answerTitle: "Ungetreue Geschäftsführung · Treuepflichtverletzung im Vermögensinteresse",
+    answerRef: "Art. 158 StGB · Abgrenzung zu Art. 138 (Veruntreuung) und Art. 146 (Betrug)",
+    answerHTML: `
+      <h4>Schutzgut</h4>
+      <p>Vermögen des Geschäftsherrn (Treugebers), für dessen Verwaltung der Täter eine besondere Pflichtenstellung innehat. Klassischer Wirtschaftsstrafrechts-Tatbestand · neben Veruntreuung Art. 138 StGB die wichtigste Vermögensdeliktsnorm bei Treuepflichtverletzungen.</p>
+      <h4>Variante 1 · Treubruch · Art. 158 Ziff. 1 StGB</h4>
+      <p>Wer aufgrund des Gesetzes, eines behördlichen Auftrages oder eines Rechtsgeschäfts damit betraut ist, Vermögen eines anderen zu verwalten oder eine solche Vermögensverwaltung zu beaufsichtigen, und dabei unter Verletzung seiner Pflichten <strong>bewirkt oder zulässt, dass der andere am Vermögen geschädigt wird</strong>, wird mit Freiheitsstrafe bis zu drei Jahren oder Geldstrafe bestraft.</p>
+      <p><strong>Tatbestandsmerkmale</strong></p>
+      <ul>
+        <li><strong>Geschäftsführerstellung</strong> · Vermögensverwaltung oder -aufsicht aufgrund Gesetz, behördlichen Auftrags oder Rechtsgeschäfts (Geschäftsführer GmbH, Verwaltungsrat AG, Vermögensverwalter, Treuhänder, Vormund, Willensvollstrecker)</li>
+        <li><strong>Pflichtverletzung</strong> · Verstoss gegen die übertragenen Pflichten (Sorgfalts-, Treue-, Loyalitätspflicht), nicht jeder Fehler reicht — qualifizierte Pflichtverletzung erforderlich</li>
+        <li><strong>Vermögensschaden</strong> beim Treugeber · objektiv messbare Vermögensminderung oder konkrete Gefährdung mit Schadensgleichwertigkeit</li>
+        <li><strong>Kausalzusammenhang</strong> · Pflichtverletzung verursacht Schaden</li>
+        <li><strong>Vorsatz</strong> · auf alle objektiven Tatbestandsmerkmale, Eventualvorsatz genügt</li>
+      </ul>
+      <p>Strafdrohung: Freiheitsstrafe bis 3 Jahre oder Geldstrafe.</p>
+      <h4>Variante 2 · Treubruch mit Bereicherungsabsicht · Art. 158 Ziff. 1 Abs. 3 StGB</h4>
+      <p>Handelt der Täter in der Absicht, sich oder einen anderen <strong>unrechtmässig zu bereichern</strong>, so wird auf Freiheitsstrafe bis zu fünf Jahren oder Geldstrafe erkannt. Qualifizierter Tatbestand · höhere Strafdrohung wegen verschärfter Tatschwere.</p>
+      <h4>Variante 3 · Bereicherungstatbestand · Art. 158 Ziff. 2 StGB</h4>
+      <p>Wer in der Absicht, sich oder einen anderen unrechtmässig zu bereichern, die ihm durch Gesetz, behördlichen Auftrag oder Rechtsgeschäft eingeräumte Ermächtigung, jemanden zu vertreten, missbraucht und dadurch den Vertretenen am Vermögen schädigt.</p>
+      <ul>
+        <li>Vertretungsmacht · Einräumung einer rechtsgeschäftlichen oder gesetzlichen Vertretungsbefugnis</li>
+        <li>Missbrauch · Handeln im fremden Namen ohne deckende Befugnis oder gegen die Interessen des Vertretenen</li>
+        <li>Vermögensschaden · beim Vertretenen</li>
+        <li>Bereicherungsabsicht · für sich oder Dritte, ohne Rechtsanspruch</li>
+      </ul>
+      <p>Strafdrohung: Freiheitsstrafe bis 5 Jahre oder Geldstrafe.</p>
+      <h4>Abgrenzung zu Veruntreuung · Art. 138 StGB</h4>
+      <ul>
+        <li><strong>Veruntreuung</strong> · der Täter hat das anvertraute Vermögen <strong>tatsächlich</strong> erhalten und verwendet es vereinbarungswidrig (Werterhaltungspflicht). Tatobjekt ist die anvertraute Sache oder der anvertraute Vermögenswert</li>
+        <li><strong>Ungetreue Geschäftsführung</strong> · der Täter hat eine <strong>Verwaltungs- oder Aufsichtsstellung</strong>, das Vermögen verbleibt im Eigentum des Treugebers, wird aber durch Pflichtverletzung gefährdet oder geschädigt. Tatobjekt ist das vom Täter zu verwaltende fremde Vermögen</li>
+      </ul>
+      <p>Bei Geschäftsführer einer GmbH, der Gesellschaftsvermögen für eigene Zwecke abzweigt: Konkurrenzfrage zwischen Veruntreuung und ungetreuer Geschäftsführung. Häufig <strong>echte Konkurrenz</strong> oder spezielle Gesetzeskonkurrenz, je nach Konstellation. BGer-Praxis tendiert zur Veruntreuung, wenn klare Werterhaltungspflicht besteht.</p>
+      <h4>Abgrenzung zu Betrug · Art. 146 StGB</h4>
+      <p>Beim Betrug wird die Vermögensdisposition durch Täuschung des Geschädigten herbeigeführt. Bei der ungetreuen Geschäftsführung handelt der Täter <strong>aufgrund seiner eigenen Befugnis</strong>, ohne den Treugeber zu täuschen — die Pflichtverletzung ist die Tathandlung, nicht die Irrtumserregung.</p>
+      <h4>Klausurrelevanz</h4>
+      <p>Wichtigstes Vermögensdelikt im Wirtschaftsstrafrecht neben der Veruntreuung. Klassische Aargauer Konstellation: Geschäftsführer einer GmbH oder Verwaltungsrat einer AG schädigt das Gesellschaftsvermögen durch riskante Geschäfte, eigennützige Transaktionen oder Pflichtverletzungen. Methodisch zu verbinden mit BT-26 bis BT-28 (Veruntreuung), AT-19 (Geschäftsherrenhaftung Art. 102 StGB) und VN-01 (Vermögensdelikte). Aargauer Klausurschwerpunkt "Vermögensdelikte mit Werterhaltungspflicht" tangiert das Thema unmittelbar.</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Drei Tatbestandsvarianten unterscheiden · Treubruch ohne Bereicherungsabsicht (Ziff. 1 Abs. 1, bis 3 Jahre), Treubruch mit Bereicherungsabsicht (Ziff. 1 Abs. 3, bis 5 Jahre), Bereicherungstatbestand mit Vertretungsmissbrauch (Ziff. 2, bis 5 Jahre). Abgrenzung zu Veruntreuung über Werterhaltungspflicht vs. Verwaltungsbefugnis.</div>
+    `
+  },
+
+  {
+    id: "BT-51", type: "schema", category: "stgb-bt",
+    topic: "Konkursdelikte · Art. 163-171bis StGB",
+    prompt: "Welche zentralen Konkursdelikte kennt das StGB?",
+    hint: "Betrügerischer Konkurs, Misswirtschaft, Pfändungsbetrug.",
+    answerTitle: "Konkursdelikte · Übersicht",
+    answerRef: "Art. 163-171bis StGB",
+    answerHTML: `
+      <h4>Systematik</h4>
+      <p>Die Konkurs- und Betreibungsdelikte des 11. Titels schützen das Vermögen der Gläubiger im Konkurs- und Pfändungsverfahren. Die Tatbestände setzen typischerweise eine <strong>Konkurseröffnung</strong> oder einen <strong>Verlustschein</strong> als objektive Strafbarkeitsbedingung voraus.</p>
+      <h4>Art. 163 StGB · Betrügerischer Konkurs / Pfändungsbetrug</h4>
+      <p>Der Schuldner, der zum Schaden seiner Gläubiger sein Vermögen <strong>zum Schein vermindert</strong>, wird, wenn über ihn der Konkurs eröffnet oder ein Verlustschein ausgestellt wurde, mit Freiheitsstrafe bis zu fünf Jahren oder Geldstrafe bestraft.</p>
+      <ul>
+        <li>Tathandlungen: Vermögen verheimlichen, Schulden vortäuschen, vorgegebene Forderungen anerkennen, scheinbare Forderungen geltend machen</li>
+        <li>Objektive Strafbarkeitsbedingung: Konkurseröffnung oder Verlustschein</li>
+        <li>Vorsatz: Schädigungsabsicht hinsichtlich der Gläubiger</li>
+      </ul>
+      <h4>Art. 164 StGB · Gläubigerschädigung durch Vermögensminderung</h4>
+      <p>Schuldner schädigt Gläubiger durch <strong>tatsächliche</strong> Vermögensminderung — Beschädigung, Zerstörung, unentgeltliche Veräusserung oder Veräusserung zu offensichtlichem Missverhältnis von Wert und Gegenleistung.</p>
+      <p>Abgrenzung zu Art. 163: Art. 163 erfasst <em>scheinbare</em> Vermögensminderung, Art. 164 die <em>tatsächliche</em>.</p>
+      <h4>Art. 165 StGB · Misswirtschaft</h4>
+      <p>Der Schuldner, der durch <strong>Misswirtschaft</strong>, namentlich durch ungenügende Kapitalausstattung, unverhältnismässigen Aufwand, gewagte Spekulationen, leichtsinniges Gewähren oder Benützen von Kredit, Verschleudern von Vermögenswerten oder arge Nachlässigkeit in der Berufsausübung oder Vermögensverwaltung, seine Überschuldung herbeiführt oder verschlimmert, seine Zahlungsunfähigkeit herbeiführt oder im Bewusstsein seiner Zahlungsunfähigkeit seine Vermögenslage verschlimmert, wird, wenn über ihn der Konkurs eröffnet oder ein Verlustschein ausgestellt wurde, mit Freiheitsstrafe bis zu fünf Jahren oder Geldstrafe bestraft.</p>
+      <ul>
+        <li>Klassischer Wirtschaftsstrafrechts-Tatbestand bei Insolvenz von Unternehmen</li>
+        <li>Zentrale Tatvariante in der Aargauer Praxis · oft kombiniert mit Art. 158 (ungetreue Geschäftsführung)</li>
+        <li>Vorsatz oder Fahrlässigkeit als subjektive Tatbestandsvarianten · Fahrlässigkeitsvariante in Art. 165 Ziff. 1 letzter Absatz</li>
+      </ul>
+      <h4>Art. 166 StGB · Unterlassung der Buchführung</h4>
+      <p>Schuldner, der die ihm gesetzlich obliegende Pflicht zur ordnungsgemässen Buchführung verletzt, sodass die Vermögenslage nicht oder nicht vollständig ersichtlich ist · mit Freiheitsstrafe bis zu drei Jahren oder Geldstrafe.</p>
+      <h4>Art. 167 StGB · Bevorzugung eines Gläubigers</h4>
+      <p>Schuldner befriedigt einzelne Gläubiger im Wissen um seine Zahlungsunfähigkeit auf Kosten anderer Gläubiger · Verletzung der Gleichbehandlungspflicht im Vorfeld der Insolvenz.</p>
+      <h4>Art. 169 StGB · Verfügung über mit Beschlag belegte Vermögenswerte</h4>
+      <p>Schuldner verfügt über Vermögenswerte, die amtlich gepfändet, beschlagnahmt oder mit Arrest belegt sind, ohne dass die zuständige Behörde zustimmt.</p>
+      <h4>Art. 170 StGB · Erschleichen eines gerichtlichen Nachlassvertrages</h4>
+      <p>Erlangung eines Nachlassvertrages durch unwahre Angaben oder Verheimlichung wesentlicher Umstände.</p>
+      <h4>Art. 171 / 171bis StGB · weitere Tatbestände</h4>
+      <ul>
+        <li>Art. 171 · Verzugsanordnung des Bundesrates über Notmassnahmen</li>
+        <li>Art. 171<sup>bis</sup> · widerrechtliche Verwertung von Pfändungs- und Konkursprodukten</li>
+      </ul>
+      <h4>Konkurrenzen</h4>
+      <ul>
+        <li>Konkursdelikte stehen häufig in <strong>echter Konkurrenz</strong> zu Art. 158 (ungetreue Geschäftsführung) und Art. 138 (Veruntreuung)</li>
+        <li>Spezialitätsverhältnis zwischen Art. 163 und Art. 164 — eine Tatvariante schliesst die andere aus</li>
+        <li>Bei Misswirtschaft und gleichzeitiger Buchführungspflichtverletzung: echte Konkurrenz Art. 165 / Art. 166</li>
+      </ul>
+      <h4>Klausurrelevanz</h4>
+      <p>In Aargauer Wirtschaftsstrafrechts-Klausuren regelmässig vorkommend, insbesondere bei Sachverhalten mit GmbH-Insolvenz, Vermögensverschiebungen vor Konkurseröffnung oder bei Buchführungsmängeln. Methodisch zu verbinden mit BT-50 (ungetreue Geschäftsführung) und AT-19 (Geschäftsherrenhaftung). Konkursverfahren mit strafrechtlicher Komponente ist klassische Anwaltspraxis.</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Konkurseröffnung oder Verlustschein als objektive Strafbarkeitsbedingung bei den meisten Tatbeständen prüfen. Art. 163 (scheinbare Vermögensminderung) vs. Art. 164 (tatsächliche) sauber abgrenzen. Art. 165 Misswirtschaft ist die zentrale Tatvariante bei Unternehmensinsolvenz · oft echtkonkurrent zu Art. 158 ungetreue Geschäftsführung. Art. 166 Buchführungspflichtverletzung als eigenständiges Begleitdelikt.</div>
+    `
+  },
+
+
   /* ── Vernetzung · VN-11 bis VN-12 ───────────────────────── */
 
   {
@@ -9456,6 +9839,163 @@ const CARDS = [
       <h4>Kompetenzgrenzen zur Bundesanwaltschaft</h4>
       <p>In Bundeszuständigkeitsbereichen (z.B. Sprengstoffdelikte, Wirtschaftsdelikte mit Bundeszuständigkeit nach <em>Art. 24 StPO</em>) ist die Bundesanwaltschaft zuständig. Aargauer Behörden bleiben für Vorermittlungen, sofortige Sicherungsmassnahmen und Rechtshilfe in Strafsachen.</p>
       <div class="pillar"><strong>Klausurorientierung:</strong> Bei Aargauer Sachverhalten mit Polizei- und Strafverfolgungskompetenzen drei Schichten unterscheiden — Bundesanwaltschaft (selten), Aargauer Staatsanwaltschaft (Regelfall), Gemeinderat (kommunale Polizeireglemente).</div>
+    `
+  },
+
+
+  /* ════════════════════════════════════════════════════════════
+     ETAPPE 11 · Lücken-Schliessung · PR-42, PR-43, PR-44 (1.5.2026)
+     Befund Etappe 10 Audit-Memo: StPO-Lücken Zuständigkeit, Verteidigung, Zufallsfunde
+     ════════════════════════════════════════════════════════════ */
+
+  {
+    id: "PR-42", type: "schema", category: "stpo",
+    topic: "Zuständigkeit · Art. 31-40 StPO",
+    prompt: "Wie wird die örtliche und sachliche Zuständigkeit im Strafverfahren bestimmt?",
+    hint: "Tatortprinzip · Auslandstaten · besondere Gerichtsstände · Konnexität.",
+    answerTitle: "Zuständigkeit im Strafprozess",
+    answerRef: "Art. 31-40 StPO · Art. 32 BV (Garantien)",
+    answerHTML: `
+      <h4>Systematik</h4>
+      <p>Das StPO-Zuständigkeitsregime gliedert sich in drei Schichten · sachliche Zuständigkeit (welche Behörde, kantonal oder Bund), örtliche Zuständigkeit (welcher Kanton, welcher Gerichtsstand), funktionelle Zuständigkeit (Vorverfahren, Hauptverfahren, Rechtsmittel).</p>
+      <h4>Allgemeiner Gerichtsstand · Art. 31 StPO</h4>
+      <p>Für die Verfolgung und Beurteilung einer Straftat sind die Behörden des Ortes zuständig, an dem die Tat <strong>verübt</strong> worden ist. Liegt der Tatort im Ausland und ist trotzdem die Schweizer Strafhoheit gegeben (vgl. Art. 3-7 StGB), so sind die Behörden des Wohnsitzes oder gewöhnlichen Aufenthaltsortes der beschuldigten Person zuständig.</p>
+      <p><strong>Tatortbegriff</strong> · Tatort ist der Ort, an dem der Täter gehandelt hat oder hätte handeln sollen (Handlungsort), und der Ort, an dem der tatbestandsmässige Erfolg eingetreten ist (Erfolgsort). Bei Distanzdelikten beide Orte gerichtsstandsbegründend (Ubiquitätsprinzip).</p>
+      <h4>Auslandstaten · Art. 32 StPO</h4>
+      <ul>
+        <li>Tat im Ausland · Wohnsitz / gewöhnlicher Aufenthalt der beschuldigten Person massgeblich</li>
+        <li>Kein Wohnsitz in der Schweiz · Ergreifungsort entscheidend</li>
+        <li>Hilfsweise · der Ort, an dem die Strafverfolgung in der Schweiz begonnen hat</li>
+      </ul>
+      <h4>Besondere Gerichtsstände · Art. 33-37 StPO</h4>
+      <ul>
+        <li><strong>Art. 33 · Mehrere Beteiligte</strong> · Gerichtsstand am Ort, wo die Strafverfolgung gegen den Haupttäter zuerst angehoben wurde</li>
+        <li><strong>Art. 34 · Mehrere Straftaten</strong> · Gerichtsstand am Ort, wo die Strafverfolgung wegen der mit der höchsten Strafe bedrohten Tat begonnen wurde (sog. Schwerpunktprinzip)</li>
+        <li><strong>Art. 35 · Pressedelikte</strong> · Erscheinungsort des Druckerzeugnisses</li>
+        <li><strong>Art. 36 · Konkurs- und Betreibungsdelikte</strong> · Gerichtsstand am Ort des Konkurs- oder Pfändungsverfahrens</li>
+        <li><strong>Art. 37 · Einziehung ohne Strafverfolgung</strong> · Gerichtsstand am Ort, wo sich die Sache befindet</li>
+      </ul>
+      <h4>Konnexität und Trennung · Art. 29 + 30 StPO</h4>
+      <ul>
+        <li><strong>Art. 29 · Grundsatz der Verfahrenseinheit</strong> · Straftaten, die in einem Zusammenhang stehen, werden gemeinsam verfolgt und beurteilt</li>
+        <li><strong>Art. 30 · Trennung</strong> · ausnahmsweise Trennung aus sachlichen Gründen (z.B. abgekürzte Verfahren für einen Beschuldigten)</li>
+      </ul>
+      <h4>Gerichtsstandskonflikte · Art. 39-42 StPO</h4>
+      <p>Bei Streit zwischen Behörden verschiedener Kantone über die Zuständigkeit:</p>
+      <ul>
+        <li><strong>Art. 39 · Prüfung</strong> · Behörden klären die Zuständigkeit von Amtes wegen</li>
+        <li><strong>Art. 40 · Konflikte zwischen Kantonen</strong> · Beschwerdekammer des Bundesstrafgerichts entscheidet</li>
+        <li><strong>Art. 41 · Anfechtung des Gerichtsstands durch die Parteien</strong> · innerhalb von 10 Tagen, nachdem die Parteien Kenntnis erlangt haben</li>
+      </ul>
+      <h4>Sachliche Zuständigkeit · Bund vs. Kantone</h4>
+      <p>Grundsätzlich kantonale Zuständigkeit. Bundeszuständigkeit nach <em>Art. 23-24 StPO</em>:</p>
+      <ul>
+        <li>Bestimmte Bundesdelikte (z.B. Sprengstoffdelikte, Verbrechen gegen den Staat)</li>
+        <li>Wirtschaftsdelikte mit grösserem überkantonalem oder internationalem Bezug · in Verbindung mit Wäschereigeldern, organisiertem Verbrechen, Korruption (Art. 24 Abs. 1 StPO)</li>
+      </ul>
+      <h4>Aargauer Bezug</h4>
+      <p>In Aargauer Klausuren regelmässig: Tatort in einem anderen Kanton, Wohnsitz in Aargau · welche Staatsanwaltschaft ist zuständig? Lösung: Tatortprinzip Art. 31, allenfalls Schwerpunktprinzip bei mehreren Taten Art. 34, allenfalls Verfahrensvereinigung. Bei Aargauer Bezirksgerichten ist sachlich der Bezirksgerichtspräsident bei FS unter 1 Jahr zuständig, das Bezirksgericht in Fünferbesetzung darüber (vgl. PR-37).</p>
+      <h4>Klausurrelevanz</h4>
+      <p>Klausurklassiker · Sachverhalt mit Auslandsbezug, mehreren Tatorten oder mehreren Tätern. F-30 zeigt den typischen Aargauer Methodikfehler · Praktikant beginnt zu schreiben, ohne Zuständigkeit geprüft zu haben, muss später Strukturbruch hinnehmen. Methodisch zu verbinden mit M-33 (Erste 30 Minuten · Sachverhaltsanker) und F-30 (Sofort-Schreiben-Fehler).</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Zuständigkeit ist Eingangsprüfung jeder StPO-Klausur. Tatortprinzip Art. 31 als Grundregel, dann besondere Gerichtsstände Art. 33-37 prüfen, Konnexität Art. 29 bei mehreren Tatkomplexen, Anfechtung Art. 41 als Verteidigungsinstrument. Bei Aargauer Sachverhalten mit interkantonalem Bezug Beschwerdekammer des Bundesstrafgerichts als Konfliktinstanz.</div>
+    `
+  },
+
+  {
+    id: "PR-43", type: "schema", category: "stpo",
+    topic: "Notwendige und amtliche Verteidigung · Art. 130-135 StPO",
+    prompt: "Wann ist die Verteidigung notwendig, wann amtlich?",
+    hint: "Sachliche Notwendigkeit (Art. 130) vs. wirtschaftliche Mittellosigkeit (Art. 132).",
+    answerTitle: "Verteidigungssystem im Strafprozess",
+    answerRef: "Art. 130-135 StPO · Art. 32 Abs. 2 BV · Art. 6 Ziff. 3 lit. c EMRK",
+    answerHTML: `
+      <h4>Drei Verteidigungsformen</h4>
+      <p>Die StPO unterscheidet drei Konstellationen anwaltlicher Verteidigung mit unterschiedlichen Voraussetzungen und Folgen:</p>
+      <ul>
+        <li><strong>Wahlverteidigung</strong> · die beschuldigte Person bezeichnet selbst eine Verteidigerin (<em>Art. 129 StPO</em>) und trägt grundsätzlich die Kosten selbst</li>
+        <li><strong>Notwendige Verteidigung</strong> · die Strafbehörden müssen für anwaltliche Verteidigung sorgen, weil die Schwere der Sache es gebietet (<em>Art. 130 + 131 StPO</em>)</li>
+        <li><strong>Amtliche Verteidigung</strong> · der Staat bezahlt die Verteidigung, weil die beschuldigte Person mittellos ist (<em>Art. 132 StPO</em>)</li>
+      </ul>
+      <h4>Notwendige Verteidigung · Art. 130 StPO</h4>
+      <p>Eine Verteidigung muss in folgenden Fällen sichergestellt werden:</p>
+      <ul>
+        <li><strong>Art. 130 lit. a</strong> · Untersuchungs- oder Sicherheitshaft mehr als 10 Tage</li>
+        <li><strong>Art. 130 lit. b</strong> · zu erwartende Freiheitsstrafe mehr als ein Jahr, freiheitsentziehende Massnahme oder Landesverweisung</li>
+        <li><strong>Art. 130 lit. c</strong> · beschuldigte Person kann ihre Verfahrensinteressen wegen körperlicher oder geistiger Beeinträchtigung nicht ausreichend wahren</li>
+        <li><strong>Art. 130 lit. d</strong> · Staatsanwaltschaft tritt vor erstinstanzlichem Gericht oder Berufungsgericht persönlich auf</li>
+        <li><strong>Art. 130 lit. e</strong> · abgekürztes Verfahren (<em>Art. 358 ff. StPO</em>) wird durchgeführt</li>
+      </ul>
+      <p>Liegt einer der Fälle vor, ist Verteidigung <strong>zwingend</strong>. Das Verfahren ohne Verteidigung wäre nichtig. <em>Art. 131 StPO</em> regelt das Sicherstellungsverfahren · Verfahrensleitung fordert die Bezeichnung einer Wahlverteidigerin und ordnet bei Untätigkeit eine amtliche Verteidigung an.</p>
+      <h4>Amtliche Verteidigung · Art. 132 StPO</h4>
+      <p>Die Verfahrensleitung ordnet eine amtliche Verteidigung an, wenn:</p>
+      <ul>
+        <li><strong>Art. 132 Abs. 1 lit. a</strong> · bei notwendiger Verteidigung nach Art. 130, wenn die beschuldigte Person trotz Aufforderung keine Wahlverteidigerin bestimmt oder die Wahlverteidigerin das Mandat niedergelegt hat</li>
+        <li><strong>Art. 132 Abs. 1 lit. b</strong> · die beschuldigte Person nicht über die erforderlichen Mittel verfügt <em>und</em> die Verteidigung zur Wahrung ihrer Interessen geboten ist</li>
+      </ul>
+      <p><strong>Art. 132 Abs. 2 · Geboten ist die Verteidigung insbesondere, wenn:</strong></p>
+      <ul>
+        <li>Es sich nicht um einen Bagatellfall handelt</li>
+        <li>Der Fall in tatsächlicher oder rechtlicher Hinsicht Schwierigkeiten bietet, denen die beschuldigte Person allein nicht gewachsen wäre</li>
+      </ul>
+      <p><strong>Bagatellfall · Art. 132 Abs. 3</strong> · keine Bagatelle, wenn eine Freiheitsstrafe von mehr als 4 Monaten, eine Geldstrafe von mehr als 120 Tagessätzen oder gemeinnützige Arbeit von mehr als 480 Stunden zu erwarten ist.</p>
+      <h4>Bestellung und Bezahlung · Art. 133-135 StPO</h4>
+      <ul>
+        <li><strong>Art. 133 · Bestellung</strong> · durch die Verfahrensleitung. Die beschuldigte Person hat ein Vorschlagsrecht, dem nach Möglichkeit zu entsprechen ist</li>
+        <li><strong>Art. 134 · Wechsel</strong> · auf Wunsch der Parteien oder von Amtes wegen, wenn das Vertrauensverhältnis erheblich gestört ist</li>
+        <li><strong>Art. 135 · Entschädigung</strong> · die amtliche Verteidigerin wird nach dem Anwaltstarif des Bundes oder des Kantons entschädigt. <strong>Rückforderungsvorbehalt</strong> · die beschuldigte Person muss die Kosten erstatten, sobald ihre wirtschaftliche Lage es erlaubt</li>
+      </ul>
+      <h4>URP für Privatklägerschaft · Art. 136 StPO</h4>
+      <p>Die Verfahrensleitung gewährt der Privatklägerschaft auf Gesuch hin <strong>unentgeltliche Rechtspflege</strong>, wenn:</p>
+      <ul>
+        <li>Privatklägerschaft mittellos ist</li>
+        <li>Zivilklage nicht aussichtslos erscheint</li>
+        <li>Privatklägerin sich nicht selbst vertreten kann oder die Verteidigung der Interessen einen Anwalt erfordert</li>
+      </ul>
+      <h4>Aargauer Bezug</h4>
+      <p>Bestellung der amtlichen Verteidigung durch die Verfahrensleitung, in Aargau also durch die Aargauer Staatsanwaltschaft (Vorverfahren) oder das zuständige Aargauer Gericht (Hauptverfahren). Anwaltskommission Aargau führt die Liste der amtlichen Verteidigerinnen. Entschädigung nach Aargauer Anwaltstarif (AnwT).</p>
+      <h4>Klausurrelevanz</h4>
+      <p>Klausurklassiker bei Aargauer Mandatsfällen mit U-Haft, schweren Strafsachen oder mittellosen Beschuldigten. Anwaltspraktikanten erleben das in der Praxis regelmässig. Methodisch zu verbinden mit PR-04 (Verteidigung allgemein), PR-10 (Untersuchungshaft) und F-15 (BGFA · Doppelvertretung).</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Zuerst Notwendigkeit prüfen (Art. 130 · sachliche Schwere), dann Mittellosigkeit (Art. 132 · wirtschaftliche Lage). Notwendige und amtliche Verteidigung können kombiniert vorliegen · notwendig nach Art. 130, amtlich angeordnet nach Art. 132 Abs. 1 lit. a, wenn keine Wahlverteidigerin bestimmt wurde. Rückforderungsvorbehalt Art. 135 nicht vergessen.</div>
+    `
+  },
+
+  {
+    id: "PR-44", type: "schema", category: "stpo",
+    topic: "Zufallsfunde bei Hausdurchsuchung · Art. 243 StPO",
+    prompt: "Sind Zufallsfunde bei einer Hausdurchsuchung verwertbar?",
+    hint: "Verwertbarkeit unter Bedingungen · Voraussetzungen Art. 243 StPO.",
+    answerTitle: "Zufallsfunde · Verwertbarkeit",
+    answerRef: "Art. 243 StPO · Abgrenzung zu Art. 278 StPO (Telefonüberwachung)",
+    answerHTML: `
+      <h4>Begriff</h4>
+      <p>Zufallsfund liegt vor, wenn bei einer rechtmässig angeordneten Zwangsmassnahme (typischerweise Hausdurchsuchung Art. 244 ff. StPO oder Durchsuchung von Aufzeichnungen Art. 246 ff.) <strong>Beweise zu einer anderen Tat als der ursprünglich verfolgten</strong> entdeckt werden.</p>
+      <h4>Beispielkonstellation</h4>
+      <p>Hausdurchsuchung wegen Verdachts auf Betrug (Art. 146 StGB), bei der Durchsuchung der Geschäftsräume werden Indizien für Geldwäscherei (Art. 305<sup>bis</sup> StGB) und Drogenbesitz gefunden. Frage · sind diese Funde gegen die beschuldigte Person verwertbar?</p>
+      <h4>Grundregel · Art. 243 Abs. 1 StPO</h4>
+      <p>Zufällig entdeckte Spuren, Gegenstände oder Vermögenswerte, die mit der abzuklärenden Straftat <strong>nicht in Zusammenhang stehen</strong>, aber auf eine andere Straftat hinweisen, sind <strong>sicherzustellen</strong>. Sie werden zusammen mit einem Bericht der zuständigen Behörde übermittelt, die über das weitere Vorgehen entscheidet.</p>
+      <h4>Verwertbarkeit · Art. 243 Abs. 2 StPO</h4>
+      <p>Die Verfahrensleitung übermittelt diese Gegenstände samt Bericht und Akten unverzüglich der zuständigen Strafverfolgungsbehörde. Die Verwertung erfolgt nach den Regeln des Beweisverwertungsrechts (Art. 140-141 StPO).</p>
+      <h4>Voraussetzungen für Verwertbarkeit</h4>
+      <ul>
+        <li>Die ursprüngliche Zwangsmassnahme war <strong>rechtmässig angeordnet</strong> · gültiger Hausdurchsuchungsbefehl, ausreichender Tatverdacht für die ursprünglich verfolgte Tat</li>
+        <li>Die Entdeckung erfolgte <strong>zufällig</strong>, nicht durch gezielte Ausweitung der Durchsuchung über den Befehlsgegenstand hinaus (kein „forschender Eingriff")</li>
+        <li>Die Zufallsfundtat würde <strong>selbst eine entsprechende Zwangsmassnahme rechtfertigen</strong> · hätte für die Zufallsfundtat ebenfalls ein Hausdurchsuchungsbefehl erlassen werden können, ist Verwertung zulässig</li>
+        <li>Keine Umgehung der Anforderungen für die Zufallsfundtat · die Behörde darf nicht den Verdacht auf eine geringfügigere Tat als Vorwand benutzen, um nach einer schwereren Tat zu suchen</li>
+      </ul>
+      <h4>Abgrenzung zu Art. 278 StPO (Zufallsfunde bei Überwachung des Fernmeldeverkehrs)</h4>
+      <p>Bei Telefonüberwachungen sind die Voraussetzungen <strong>strenger</strong>:</p>
+      <ul>
+        <li>Zufallsfund nur verwertbar, wenn die Überwachung <strong>auch zur Verfolgung der Zufallsfundtat hätte angeordnet werden können</strong> (Katalogtat-Erfordernis)</li>
+        <li>Genehmigung des Zwangsmassnahmengerichts nachträglich einzuholen (Art. 278 Abs. 3)</li>
+      </ul>
+      <p>Die strengere Regel bei der Telefonüberwachung erklärt sich durch die höhere Eingriffstiefe in den geschützten Privatbereich (Art. 13 BV, Art. 8 EMRK).</p>
+      <h4>Verbot der „Fishing Expedition"</h4>
+      <p>Die Behörde darf eine Hausdurchsuchung nicht zur ungezielten Suche nach Beweisen für irgendeine Straftat nutzen. Wenn die ursprüngliche Anordnung als Vorwand erscheint und die tatsächliche Suche auf andere Tatkomplexe gerichtet ist, sind die so erlangten Beweise <strong>nicht verwertbar</strong> (Art. 141 Abs. 1 StPO · absolute Verwertungsverbote).</p>
+      <h4>Folgewirkungen · Vernetzung</h4>
+      <p>Aus einem rechtmässigen Zufallsfund kann ein neuer Tatverdacht erwachsen, der seinerseits Zwangsmassnahmen rechtfertigt (eigene Hausdurchsuchung, Beschlagnahme, Vorladung). Die Fernwirkung des Beweisverwertungsverbots (BGE 138 IV 169, vgl. BGE-01 und PR-35) ist zu beachten · ein rechtswidrig erlangter Zufallsfund kann auch nachfolgende Beweismittel kontaminieren.</p>
+      <h4>Klausurrelevanz</h4>
+      <p>Aargauer Klausurschwerpunkt „Beweisverwertung" lädt das Thema regelmässig ein. Klassische Konstellation: Hausdurchsuchung wegen Tatbestand A, gefunden werden Beweise zu Tatbestand B mit höherer Strafdrohung. Methodisch zu verbinden mit PR-02 (Beweisverwertung), PR-35 (Fernwirkung), PR-23 (geheime Massnahmen, Art. 278 als Pendant), F-13 (Beweisverwertung Mini-Fall) und BGE-01 (Fernwirkungs-Leitentscheid).</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Drei Voraussetzungen prüfen · rechtmässige ursprüngliche Anordnung, zufällige Entdeckung (kein „forschender Eingriff"), hypothetische Anordnungsfähigkeit für die Zufallsfundtat. Strengeres Regime bei Telefonüberwachung Art. 278 StPO · Katalogtat-Erfordernis. „Fishing expedition" als absolutes Verwertungshindernis.</div>
     `
   },
 
@@ -9937,124 +10477,143 @@ const CARDS = [
 
   /* ── Block 1 · Methodik / Klausurmethodik · BGE-01 bis BGE-04 ─ */
 
-  /* [PRÜFEN] BGE 138 IV 169 als Fernwirkungs-Leitentscheid · BGE-Nummer
-     und Inhalt durch Jane mit BGer-Datenbank verifizieren · alternative
-     Leitentscheide zur Fernwirkung sind möglich (z.B. spätere Urteile) */
+  /* [VERIFIZIERT · Etappe 8.1] BGE 138 IV 169 E. 3.3.3 ist Fernwirkungs-
+     Leitentscheid · Art. 141 Abs. 4 StPO per 1.1.2024 revidiert (bezieht
+     jetzt auch Abs. 1 mit ein) · BGer-Linie weitergeführt in Urteil
+     7B_257/2022 vom 4.12.2023 · ergänzend Urteil 6B_525/2024 vom 15.1.2025 */
   {
     id: "BGE-01", type: "bge", category: "bge",
     topic: "Verfahren · Beweisverwertung · Fernwirkung",
     prompt: "Wann erstreckt sich ein Beweisverwertungsverbot auf weitere Beweismittel?",
     hint: "Fernwirkung als Klausurfrage bei mehrstufigen Ermittlungen.",
     answerTitle: "BGE 138 IV 169 · Fernwirkung Beweisverwertungsverbot",
-    answerRef: "BGE 138 IV 169 · Art. 141 StPO",
+    answerRef: "BGE 138 IV 169 E. 3.3.3 · Art. 141 Abs. 4 StPO",
     answerHTML: `
       <h4>Sachverhalt</h4>
       <p>Aus einem rechtswidrig erlangten Primärbeweismittel werden weitere Beweise gewonnen. Frage: Greift das Verwertungsverbot auch auf die Folgebeweise durch?</p>
-      <h4>Leitsatz</h4>
-      <p>Nicht jede Folgebeweisverwertung wird automatisch ausgeschlossen. Massgeblich ist die <strong>hypothetische Erlangbarkeit</strong>: Hätte der Folgebeweis auch ohne den primären Beweisverstoss erlangt werden können, ist seine Verwertung möglich. Die Fernwirkung wird durch die hypothetische Alternative durchbrochen.</p>
+      <h4>Leitsatz · E. 3.3.3</h4>
+      <p>Nicht jede Folgebeweisverwertung wird automatisch ausgeschlossen. Massgeblich ist die <strong>hypothetische Erlangbarkeit</strong>: Eine Fernwirkung ist zu verneinen, wenn der Folgebeweis im Sinne eines hypothetischen Ermittlungsverlaufs <em>zumindest mit grosser Wahrscheinlichkeit</em> auch ohne den illegalen ersten Beweis erlangt worden wäre. Der erste Beweis muss <em>condicio sine qua non</em> des zweiten sein.</p>
+      <h4>Aktualisierung · Revision Art. 141 StPO per 1.1.2024</h4>
+      <p>Art. 141 Abs. 4 StPO wurde revidiert und bezieht jetzt ausdrücklich auch Art. 141 Abs. 1 (absolute Verwertungsverbote) mit ein. Im Urteil 7B_257/2022 vom 4. Dezember 2023 hat das BGer ausdrücklich festgehalten, dass die bisherige Rechtsprechung weitergilt: Es wird nicht danach unterschieden, ob der Primärbeweis absolut oder relativ unverwertbar ist.</p>
       <h4>Klausurrelevanz</h4>
       <p>Häufige Aargauer Klausurspur bei rechtswidrigen Hausdurchsuchungen, fehlerhafter Telefonüberwachung, mangelhaften Einvernahmen. Die Folgebeweisverwertung muss methodisch separat geprüft werden, nicht pauschal mit dem Primärbeweis verworfen.</p>
-      <div class="pillar"><strong>Klausuranker:</strong> Bei jedem Verwertungsverbot Frage stellen, ob Folgebeweis von der Verwertungssperre erfasst ist. Hypothese alternativer Erlangung ist der entscheidende Test.</div>
-      <div class="pillar"><strong>Verifikation empfohlen:</strong> BGE-Nummer und exakte Erwägungsziffer beim Lerngebrauch mit BGer-Datenbank oder Lehrbuch gegenprüfen.</div>
+      <div class="pillar"><strong>Klausuranker:</strong> Bei jedem Verwertungsverbot Frage stellen, ob Folgebeweis von der Verwertungssperre erfasst ist. Hypothese alternativer Erlangung mit grosser Wahrscheinlichkeit ist der entscheidende Test.</div>
     `
   },
 
-  /* [PRÜFEN] BGE 137 IV 219 als in dubio pro reo-Leitentscheid · BGer hat
-     mehrere Leitentscheide zu in dubio pro reo · Verwechslungsgefahr mit
-     138 IV 186 (in dubio pro duriore) */
+  /* [VERIFIZIERT · Etappe 8.1 · KORREKTUR] Vorherige Karte zitierte
+     fälschlich BGE 137 IV 219 als pro-reo-Leitentscheid · 137 IV 219 ist
+     in Wahrheit pro-DURIORE (siehe BGE-03) · Karte umgestellt auf
+     BGE 144 IV 345 E. 2.2.3.1-2.2.3.3 (Mord-Fall mit ausführlichen
+     Beweiswürdigungs-Erwägungen) */
   {
     id: "BGE-02", type: "bge", category: "bge",
     topic: "Verfahren · Beweiswürdigung",
-    prompt: "Welche Tragweite hat der Grundsatz in dubio pro reo?",
-    hint: "Beweiswürdigungs- und Beweislastregel zugleich.",
-    answerTitle: "BGE 137 IV 219 · in dubio pro reo",
-    answerRef: "BGE 137 IV 219 · Art. 32 BV · Art. 10 StPO",
+    prompt: "Welche Doppelfunktion hat der Grundsatz in dubio pro reo?",
+    hint: "Beweiswürdigungsregel und Beweislastregel zugleich.",
+    answerTitle: "BGE 144 IV 345 · in dubio pro reo · Doppelfunktion",
+    answerRef: "BGE 144 IV 345 E. 2.2.3.1-2.2.3.3 · Art. 10 Abs. 3 StPO · Art. 32 Abs. 1 BV · Art. 6 Ziff. 2 EMRK",
     answerHTML: `
       <h4>Sachverhalt</h4>
-      <p>Verurteilung trotz verbleibender Tatsachenzweifel. Frage: Welche Tragweite hat der Grundsatz für die Beweiswürdigung?</p>
-      <h4>Leitsatz</h4>
-      <p>Der Grundsatz hat zwei Dimensionen:</p>
+      <p>Verurteilung wegen Mordes (Restaurant in Uri, Messer-Tötung im März 2013). Frage der korrekten Beweiswürdigung der Mordmerkmale unter dem Grundsatz in dubio pro reo.</p>
+      <h4>Leitsatz · Doppelfunktion</h4>
+      <p>Der Grundsatz hat zwei dogmatisch zu trennende Funktionen:</p>
       <ul>
-        <li><strong>Beweiswürdigungsregel</strong> · der Tatrichter darf bei verbleibenden, erheblichen Zweifeln nicht verurteilen</li>
-        <li><strong>Beweislastregel</strong> · die Anklage trägt die Last für belastende Tatsachen, der Beschuldigte muss seine Unschuld nicht beweisen</li>
+        <li><strong>Beweiswürdigungsregel</strong> (E. 2.2.3.2) · Bei objektiver Würdigung der gesamten Beweise bestehen ernsthafte Zweifel an einem belastenden Sachverhalt, oder eine günstigere Tatversion ist vernünftigerweise nicht ausgeschlossen → kein belastender Sachverhalt anzunehmen. Einfache Wahrscheinlichkeit genügt nicht; absolute Gewissheit ist nicht verlangt.</li>
+        <li><strong>Beweislastregel</strong> (E. 2.2.3.3) · Verletzt, wenn das Gericht einen Angeklagten einzig mit der Begründung verurteilt, er habe seine Unschuld nicht nachgewiesen.</li>
       </ul>
+      <h4>Wichtige Abgrenzung · E. 2.2.3.1</h4>
+      <p>Der Grundsatz findet <em>keine</em> Anwendung auf die Frage, welche Beweismittel zu berücksichtigen oder wie sie zu würdigen sind (freie Beweiswürdigung). Auch auf das einzelne Indiz ist der In-dubio-Grundsatz nicht anwendbar — er greift erst beim Schritt vom Beweisergebnis zur Tatsachenfeststellung.</p>
       <h4>Klausurrelevanz</h4>
-      <p>Bei jedem Sachverhalt mit Indizien-Beweis prüfen, ob die Indizienkette zwingend ist oder Zweifel zulässt. In Aargauer Klausuren ist die Frage häufig in Verteidigungsstrategie eingebettet · der Anwaltspraktikant soll begründen, warum trotz Indizien Zweifel verbleiben.</p>
-      <div class="pillar"><strong>Klausuranker:</strong> Erhebliche, vernünftige Zweifel führen zum Freispruch. Die Beweisschwelle für Verurteilung ist hoch · methodisch ist das die Eingangsprüfung jeder Tatfrage.</div>
-      <div class="pillar"><strong>Verifikation empfohlen:</strong> BGE-Nummer beim Lerngebrauch mit BGer-Datenbank oder Lehrbuch gegenprüfen.</div>
+      <p>Bei jedem Sachverhalt mit Indizien-Beweis prüfen. In Aargauer Klausuren häufig in Verteidigungsstrategie eingebettet: Der Anwaltspraktikant soll begründen, warum trotz Indizien Zweifel verbleiben. Methodisch zu verbinden mit M-15 (Beweiswürdigung) und VN-08.</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Erhebliche, vernünftige Zweifel führen zum Freispruch. Beweiswürdigungsregel (Schritt vom Ergebnis zur Tatsache) und Beweislastregel (Anklage trägt die Last) sauber unterscheiden.</div>
     `
   },
 
-  /* [PRÜFEN] BGE 138 IV 186 als in dubio pro duriore-Leitentscheid · 
-     Verwechslungsgefahr mit BGE-01 (138 IV 169) und BGE-02 */
+  /* [VERIFIZIERT · Etappe 8.1] BGE 138 IV 186 E. 4.1 S. 190 ist
+     in-dubio-pro-duriore-Leitentscheid · oft zusammen mit BGE 138 IV 86
+     und BGE 137 IV 219 zitiert · Verwechslungsgefahr mit BGE-01 (138 IV 169)
+     und BGE-02 entschärft */
   {
     id: "BGE-03", type: "bge", category: "bge",
     topic: "Verfahren · Anklage- und Einstellungspraxis",
     prompt: "Welche Schwelle gilt für Einstellung versus Anklage durch die Staatsanwaltschaft?",
     hint: "Spiegelbild zu in dubio pro reo, aber für die Anklageentscheidung.",
     answerTitle: "BGE 138 IV 186 · in dubio pro duriore",
-    answerRef: "BGE 138 IV 186 · Art. 319 StPO",
+    answerRef: "BGE 138 IV 186 E. 4.1 S. 190 · Art. 319 StPO · vgl. BGE 137 IV 219, BGE 138 IV 86",
     answerHTML: `
       <h4>Sachverhalt</h4>
       <p>Staatsanwaltschaft stellt Verfahren ein, obwohl Verurteilung möglich erscheint. Frage: Welche Schwelle gilt für Einstellungsverfügungen?</p>
-      <h4>Leitsatz</h4>
-      <p>Im Zweifel ist <strong>Anklage zu erheben</strong>, nicht einzustellen. Eine Einstellung ist nur zulässig bei <strong>klar überwiegender Wahrscheinlichkeit eines Freispruchs</strong>. Bei offener Beweislage entscheidet das Gericht, nicht die Staatsanwaltschaft im Vorverfahren.</p>
+      <h4>Leitsatz · E. 4.1</h4>
+      <p>Im Zweifel ist <strong>Anklage zu erheben</strong>, nicht einzustellen. Eine Einstellung darf nur bei <strong>klarer Straflosigkeit bzw. offensichtlich fehlenden Prozessvoraussetzungen</strong> verfügt werden. Anklage ist zu erheben, wenn eine Verurteilung wahrscheinlicher ist als ein Freispruch — gleich verhält es sich, wenn sich die Wahrscheinlichkeiten die Waage halten. Bei offener Beweislage entscheidet das Gericht, nicht die Staatsanwaltschaft im Vorverfahren.</p>
+      <h4>Geschwister-Leitentscheide</h4>
+      <p>BGE 137 IV 219 E. 7.1-7.3 (gleicher Topos, leicht anderer Sachverhalt) und BGE 138 IV 86 E. 4.1.1 ff. (zentral zur Anklageschwelle) — alle drei werden in BGer-Praxis regelmässig kombiniert zitiert.</p>
       <h4>Klausurrelevanz</h4>
       <p>Klassische Aargauer Aufgabe an Anwaltspraktikanten: Kann der Geschädigte die Einstellungsverfügung anfechten? Argumentation muss in dubio pro duriore-Linie folgen · die Beschwerdebegründung ist mit dieser BGer-Linie zu unterlegen.</p>
       <div class="pillar"><strong>Klausuranker:</strong> Die zwei Grundsätze stehen nicht im Widerspruch · in dubio pro duriore steuert die Anklage, in dubio pro reo das Urteil. Anklageschwelle ist tief, Verurteilungsschwelle ist hoch.</div>
-      <div class="pillar"><strong>Verifikation empfohlen:</strong> BGE-Nummer beim Lerngebrauch verifizieren.</div>
     `
   },
 
-  /* [PRÜFEN] BGE 143 IV 63 als Anklagegrundsatz-Leitentscheid · der Anklage-
-     grundsatz ist mehrfach in der BGer-Praxis behandelt · Verifikation
-     empfohlen, ob diese Nummer der einschlägige Leitentscheid ist */
+  /* [VERIFIZIERT · Etappe 8.1] BGE 143 IV 63 E. 2.2 ist Anklagegrundsatz-
+     Leitentscheid · in BGer-Praxis regelmässig zusammen mit BGE 147 IV 439
+     E. 7.2 und BGE 144 I 234 E. 5.6.1 als Trias zitiert */
   {
     id: "BGE-04", type: "bge", category: "bge",
     topic: "Verfahren · Anklageschrift",
     prompt: "Welche Anforderungen stellt der Anklagegrundsatz an die Anklageschrift?",
     hint: "Umgrenzungs- und Informationsfunktion.",
     answerTitle: "BGE 143 IV 63 · Anklagegrundsatz",
-    answerRef: "BGE 143 IV 63 · Art. 9 + 325 StPO",
+    answerRef: "BGE 143 IV 63 E. 2.2 · Art. 9 + 325 StPO · vgl. BGE 147 IV 439 E. 7.2, BGE 144 I 234 E. 5.6.1",
     answerHTML: `
       <h4>Sachverhalt</h4>
-      <p>Verurteilung wegen Tatbestandsmerkmalen, die in der Anklageschrift nicht enthalten waren. Frage: Welche Anforderungen stellt der Anklagegrundsatz?</p>
-      <h4>Leitsatz</h4>
+      <p>Verurteilung wegen Tatbestandsmerkmalen, die in der Anklageschrift nicht genügend konkretisiert waren. Frage: Welche Anforderungen stellt der Anklagegrundsatz?</p>
+      <h4>Leitsatz · E. 2.2</h4>
       <p>Die Anklage hat zwei Funktionen:</p>
       <ul>
-        <li><strong>Umgrenzungsfunktion</strong> · was wird beurteilt</li>
-        <li><strong>Informationsfunktion</strong> · der Beschuldigte muss seine Verteidigung vorbereiten können</li>
+        <li><strong>Umgrenzungsfunktion</strong> · was wird beurteilt (Immutabilitätsprinzip — Gericht ist an Sachverhalt der Anklage gebunden, nicht aber an deren rechtliche Würdigung, Art. 350 StPO)</li>
+        <li><strong>Informationsfunktion</strong> · der Beschuldigte muss seine Verteidigung vorbereiten können — er darf nicht Gefahr laufen, erst an der Hauptverhandlung mit neuen Anschuldigungen konfrontiert zu werden</li>
       </ul>
-      <p>Das Gericht ist an die Anklage gebunden und kann nicht über den umgrenzten Sachverhalt hinausgehen. Tatsachen, die in der Anklageschrift fehlen, können nicht zur Verurteilung führen.</p>
+      <p>Die Anklage hat die zur Last gelegten Delikte in objektiver und subjektiver Hinsicht genügend konkretisiert zu beschreiben. In Bezug auf den subjektiven Tatbestand sind die Anforderungen geringer (E. 2.3): Hinweis auf den gesetzlichen Tatbestand genügt grundsätzlich, wenn dieser nur vorsätzlich begangen werden kann.</p>
+      <h4>Aktualisierte Trias</h4>
+      <p>BGer zitiert in jüngeren Urteilen regelmässig BGE 143 IV 63 zusammen mit BGE 147 IV 439 E. 7.2 und BGE 144 I 234 E. 5.6.1 — die drei Entscheide bilden die aktuelle Anklagegrundsatz-Trias.</p>
       <h4>Klausurrelevanz</h4>
       <p>Häufiger Aargauer Verteidigungsansatz · Mängel der Anklageschrift identifizieren, Antrag auf Verfahrenseinstellung oder Freispruch stellen. Aargauer Anwaltspraktikanten erhalten regelmässig Aufgaben, in denen die Anklageschrift kritisch zu prüfen ist.</p>
       <div class="pillar"><strong>Klausuranker:</strong> Anklagegrundsatz ist zentrales Verteidigungsrecht. Wer als Anwalt Anklageschrift nicht systematisch auf Tatbestandsabdeckung prüft, lässt Verteidigungspotenzial liegen.</div>
-      <div class="pillar"><strong>Verifikation empfohlen:</strong> BGE-Nummer beim Lerngebrauch verifizieren.</div>
     `
   },
 
   /* ── Block 2 · StGB AT · BGE-05 bis BGE-08 ─────────────────── */
 
-  /* [PRÜFEN] BGE 144 IV 345 als Eventualvorsatz-Leitentscheid · BGer hat
-     vielfache Rechtsprechung zum Eventualvorsatz · Verifikation, ob
-     diese Nummer der prägende Leitentscheid ist oder eine spezifische
-     Anwendungslinie betrifft */
+  /* [VERIFIZIERT · Etappe 8.1 · KORREKTUR] Vorherige Karte zitierte
+     fälschlich BGE 144 IV 345 als Eventualvorsatz-Leitentscheid · 144 IV 345
+     ist Mord/Beweiswürdigung (jetzt in BGE-02 verarbeitet) · Karte umgestellt
+     auf BGE 130 IV 58 (Gelfingen-Raserfall) als prägenden Eventualvorsatz-
+     Leitentscheid bei Risikoverhalten · ergänzend BGE 133 IV 9 (Muri) und
+     BGE 147 IV 439 E. 7.3.1 (jüngere Linie zur Überprüfungstiefe) */
   {
     id: "BGE-05", type: "bge", category: "bge",
     topic: "AT · Vorsatzdogmatik",
     prompt: "Wie zieht das Bundesgericht die Trennlinie zwischen Eventualvorsatz und bewusster Fahrlässigkeit?",
-    hint: "Wahrscheinlichkeitsgrad und Inkaufnahme.",
-    answerTitle: "BGE 144 IV 345 · Eventualvorsatz",
-    answerRef: "BGE 144 IV 345 · Art. 12 Abs. 2 StGB",
+    hint: "Wahrscheinlichkeitsgrad und Inkaufnahme — Gelfingen-Linie.",
+    answerTitle: "BGE 130 IV 58 · Eventualvorsatz Gelfingen",
+    answerRef: "BGE 130 IV 58 · Art. 12 Abs. 2 StGB · ergänzend BGE 133 IV 9 (Muri), BGE 147 IV 439 E. 7.3.1",
     answerHTML: `
-      <h4>Sachverhalt</h4>
-      <p>Schwere Körperverletzung durch riskantes Verhalten ohne ausdrücklichen Tötungs- oder Verletzungswillen. Frage: Eventualvorsatz oder bewusste Fahrlässigkeit?</p>
+      <h4>Sachverhalt · Gelfingen</h4>
+      <p>Illegales Strassenrennen über mehrere Kilometer in Gelfingen LU mit massiv überhöhter Geschwindigkeit, in der Folge Tötung. Frage: Eventualvorsatz oder bewusste Fahrlässigkeit hinsichtlich der Tötung?</p>
       <h4>Leitsatz</h4>
-      <p>Eventualvorsatz liegt vor, wenn der Täter den Erfolgseintritt für möglich hält und sich damit abfindet. Der <strong>Wahrscheinlichkeitsgrad</strong> ist starkes Indiz · je näher der Erfolg, desto eher Eventualvorsatz statt bewusster Fahrlässigkeit. Massgeblich sind ausserdem die Schwere der Pflichtverletzung, die Beweggründe und das Verhalten nach der Tat.</p>
+      <p>Eventualvorsatz liegt vor, wenn der Täter den Erfolgseintritt für möglich hält und sich damit abfindet (Art. 12 Abs. 2 StGB). Aus dem Wissen wird in der Praxis auf das Wollen geschlossen. Massgeblich sind:</p>
+      <ul>
+        <li><strong>Wahrscheinlichkeitsgrad</strong> · je näher der Erfolg, desto eher Eventualvorsatz statt bewusster Fahrlässigkeit</li>
+        <li><strong>Schwere der Pflichtverletzung</strong></li>
+        <li><strong>Beweggründe</strong> des Täters</li>
+        <li><strong>Verhalten nach der Tat</strong></li>
+      </ul>
+      <p>Bei extremem Risikoverhalten im Strassenverkehr (Renndistanz, krass überhöhte Geschwindigkeit) liegt eventualvorsätzliche Tötung näher als bewusste Fahrlässigkeit.</p>
+      <h4>Folge-Rechtsprechung</h4>
+      <p>Linie weitergeführt in BGE 133 IV 9 (Muri-Fall) und BGE 6S.114/2005 (Winterthur, Renndistanz über 15 km). Aktualisierende Rechtsprechung BGE 147 IV 439 E. 7.3.1 zur Überprüfungstiefe: Sachfrage (mit Willkürkognition) ist die Beweiswürdigung, Rechtsfrage ist die Subsumtion unter Eventualvorsatz/bewusste Fahrlässigkeit.</p>
       <h4>Klausurrelevanz</h4>
       <p>Die zentrale Vorsatz-Klippe in jedem Aargauer Klausurfall mit Risikoverhalten · Schussabgabe, gefährliche Fahrweise, Tätlichkeiten ohne klaren Tötungswillen. Methodisch zu verbinden mit AT-03 und VN-11.</p>
-      <div class="pillar"><strong>Klausuranker:</strong> Aus dem Wissen wird in der Praxis auf das Wollen geschlossen. Die Beweisführung bleibt beim Wahrscheinlichkeitsgrad und der Verhaltensweise nach der Tat.</div>
-      <div class="pillar"><strong>Verifikation empfohlen:</strong> BGE-Nummer beim Lerngebrauch verifizieren · BGer hat mehrere Leitentscheide zum Eventualvorsatz.</div>
+      <div class="pillar"><strong>Klausuranker:</strong> Aus dem Wissen wird auf das Wollen geschlossen. Indizien sind Wahrscheinlichkeitsgrad, Pflichtverletzungsschwere, Beweggründe und Nachtatverhalten. Bei Strassenverkehr-Konstellationen ist die Gelfingen-Linie der methodische Anker.</div>
     `
   },
 
@@ -10104,25 +10663,37 @@ const CARDS = [
     `
   },
 
-  /* [PRÜFEN] BGE 140 IV 19 als Ausführungsgefahr-Leitentscheid für
-     Sicherungsverwahrung · Verifikation, ob diese Nummer der einschlägige
-     Leitentscheid zum Massnahmenrecht ist */
+  /* [VERIFIZIERT · Etappe 8.1 · KORREKTUR · TOPIC-WECHSEL] Vorherige
+     Karte zitierte BGE 140 IV 19 fälschlich als Sicherungsverwahrungs-
+     Leitentscheid (Art. 64 StGB) · BGE 140 IV 19 ist in Wahrheit ein
+     Aargauer Untersuchungshaft-Entscheid zur Ausführungsgefahr nach
+     Art. 221 Abs. 2 StPO und Ersatzmassnahmen nach Art. 237 StPO
+     (1B_456/2013, Brugg-Zurzach, häusliche Gewalt) · Karte umkonzipiert,
+     thematisch gewechselt von "AT/Strafzumessung" zu "Verfahren/U-Haft" */
   {
     id: "BGE-08", type: "bge", category: "bge",
-    topic: "AT · Strafzumessung · Sicherungsverwahrung",
-    prompt: "Welche Anforderungen stellt der Begriff der Ausführungsgefahr bei Massnahmen?",
-    hint: "Konkrete Wahrscheinlichkeit künftiger Straftaten.",
-    answerTitle: "BGE 140 IV 19 · Ausführungsgefahr",
-    answerRef: "BGE 140 IV 19 · Art. 64 StGB",
+    topic: "Verfahren · Untersuchungshaft · Ausführungsgefahr",
+    prompt: "Welche Schwelle setzt der Haftgrund der Ausführungsgefahr, und wann genügen Ersatzmassnahmen?",
+    hint: "Sehr hohe Wahrscheinlichkeit eines schweren Verbrechens · Verhältnismässigkeit.",
+    answerTitle: "BGE 140 IV 19 · Ausführungsgefahr und Ersatzmassnahmen",
+    answerRef: "BGE 140 IV 19 · Art. 221 Abs. 2 + Art. 237 StPO · Aargauer Sachverhalt",
     answerHTML: `
-      <h4>Sachverhalt</h4>
-      <p>Anordnung der Sicherungsverwahrung wegen prognostizierter Gefährlichkeit des Täters. Frage: Welche Anforderungen stellt das Tatbestandsmerkmal der Ausführungsgefahr?</p>
-      <h4>Leitsatz</h4>
-      <p>Ausführungsgefahr verlangt eine <strong>konkrete, durch Anhaltspunkte belegte Wahrscheinlichkeit</strong> künftiger schwerer Straftaten. <strong>Abstrakte Gefährlichkeit oder allgemeine Persönlichkeitsmerkmale genügen nicht</strong>. Die Prognose muss auf konkreten, individualisierten Anhaltspunkten beruhen · psychiatrisches Gutachten, Vortaten, Verhalten in Haft.</p>
+      <h4>Sachverhalt · Aargauer Fall</h4>
+      <p>Strafuntersuchung der Staatsanwaltschaft Brugg-Zurzach gegen Beschuldigten wegen Körperverletzung, Drohung, Nötigung. Auf seinen iPhones Texte mit Tötungsphantasien gegen Lebenspartnerin gefunden. Frage: Liegt Ausführungsgefahr vor, und reichen Ersatzmassnahmen?</p>
+      <h4>Leitsatz · Art. 221 Abs. 2 StPO</h4>
+      <p>Ausführungsgefahr besteht, wenn ernsthaft zu befürchten ist, dass eine Person ihre Drohung, ein <strong>schweres Verbrechen</strong> auszuführen, wahrmachen werde. Voraussetzungen:</p>
+      <ul>
+        <li>Die rein hypothetische Möglichkeit der Verübung von Delikten genügt nicht</li>
+        <li>Erforderlich ist eine <strong>sehr ungünstige Prognose</strong> aufgrund einer Gesamtbewertung der persönlichen Verhältnisse</li>
+        <li>Konkrete Anstalten zur Tatausführung sind nicht zwingend erforderlich</li>
+        <li>Je schwerer die angedrohte Straftat, desto eher rechtfertigt sich die Inhaftierung</li>
+        <li>Auch der psychische Zustand und die Unberechenbarkeit sind zu berücksichtigen</li>
+      </ul>
+      <h4>Ersatzmassnahmen · Art. 237 StPO</h4>
+      <p>Untersuchungshaft ist <strong>ultima ratio</strong>. Wenn mildere Massnahmen den gleichen Zweck erfüllen, sind sie anzuordnen (Verhältnismässigkeit). Im Aargauer Fall genügten Rayon- und Kontaktverbot (Art. 237 Abs. 2 lit. c und g StPO), allenfalls verbunden mit Electronic Monitoring (Art. 237 Abs. 3 StPO).</p>
       <h4>Klausurrelevanz</h4>
-      <p>Bei Strafzumessungs- und Massnahmen-Aufgaben in Aargauer Klausuren · besonders bei Verteidigungsstrategien gegen Sicherungsverwahrung. Methodisch zu verbinden mit AT-09.</p>
-      <div class="pillar"><strong>Klausuranker:</strong> Massnahmen-Recht setzt prognostizierte Gefährlichkeit voraus, die durch konkrete Anhaltspunkte belegt sein muss. Pauschale Risikobeurteilung trägt nicht.</div>
-      <div class="pillar"><strong>Verifikation empfohlen:</strong> BGE-Nummer beim Lerngebrauch verifizieren.</div>
+      <p>Klassische Aargauer Konstellation in häuslicher Gewalt, Drohung, Stalking. Anwaltspraktikanten erleben das in U-Haft-Mandaten regelmässig. Verteidigungsstrategie: Ausführungsgefahr substantiiert bestreiten und Ersatzmassnahmen-Katalog konkret vorschlagen, um Haft abzuwenden oder aufzuheben.</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Ausführungsgefahr verlangt sehr ungünstige Prognose, kein konkretes Anstaltentreffen nötig. U-Haft ist nur bei Versagen milderer Mittel zulässig — Verteidigungsplädoyer setzt mit Ersatzmassnahmen-Vorschlag an.</div>
     `
   },
 
@@ -10247,100 +10818,135 @@ const CARDS = [
 
   /* ── Block 4 · StPO / Verfahren · BGE-14 bis BGE-16 ────────── */
 
-  /* [PRÜFEN] BGE 145 IV 438 als Strafbefehl-nach-Einsprache-Leitentscheid ·
-     Verifikation, ob diese Nummer den BGer-Entscheid zum reformatio in
-     peius im Strafbefehlsverfahren betrifft */
+  /* [VERIFIZIERT · Etappe 8.1] BGE 145 IV 438 ist Strafbefehl-nach-
+     Einsprache-Leitentscheid (Schaffhauser Verkehrsfall) · Linie weiter
+     präzisiert in Urteil 6B_222/2022 vom 18.1.2023 (Nidwalden, zur
+     amtl. Publikation vorgesehen) */
   {
     id: "BGE-14", type: "bge", category: "bge",
-    topic: "Verfahren · Strafbefehl · reformatio",
-    prompt: "Darf die Staatsanwaltschaft nach Einsprache einen schärferen Strafbefehl erlassen?",
-    hint: "Verschlechterungsverbot greift nicht im Vorverfahren.",
+    topic: "Verfahren · Strafbefehl · zweiter Strafbefehl",
+    prompt: "Wann darf nach Einsprache ein neuer Strafbefehl ergehen, und gilt das Verschlechterungsverbot?",
+    hint: "Geänderte Sach-/Rechtslage als Voraussetzung.",
     answerTitle: "BGE 145 IV 438 · neuer Strafbefehl nach Einsprache",
-    answerRef: "BGE 145 IV 438 · Art. 354 + 355 StPO",
+    answerRef: "BGE 145 IV 438 · Art. 354 + 355 + 356 StPO · vgl. Urteil 6B_222/2022 vom 18.1.2023",
     answerHTML: `
       <h4>Sachverhalt</h4>
-      <p>Nach Einsprache gegen einen Strafbefehl erlässt die Staatsanwaltschaft einen neuen, schärferen Strafbefehl.</p>
+      <p>Nach Einsprache gegen einen Strafbefehl erlässt die Staatsanwaltschaft Schaffhausen einen zweiten Strafbefehl, der in Schuld und Sanktion mit dem ersten identisch, aber besser begründet ist und höhere Kosten enthält.</p>
       <h4>Leitsatz</h4>
-      <p>Im Strafbefehlsverfahren gilt das <strong>Verschlechterungsverbot nicht in der gleichen Strenge</strong> wie nach erstinstanzlichem Urteil. Die Staatsanwaltschaft kann nach Einsprache einen neuen Strafbefehl mit höherer Strafe erlassen, sofern sich der Sachverhalt nicht zugunsten des Beschuldigten geklärt hat.</p>
+      <p>Ein zweiter, im Schuld- und Strafpunkt mit dem ersten <strong>identischer</strong> Strafbefehl ist nicht zulässig. Ein neuer Strafbefehl im Sinne von Art. 355 Abs. 3 lit. c StPO darf nur ergehen, wenn:</p>
+      <ul>
+        <li>Sich die Sach- oder Rechtslage geändert hat</li>
+        <li>Ein anderes Strafmass aufgrund neuer Tatsachen aufdrängt</li>
+        <li>Die rechtliche Qualifikation neu vorgenommen werden muss</li>
+        <li>Neue Straftaten bekannt werden</li>
+      </ul>
+      <p>Bei geänderter Lage ist die Staatsanwaltschaft <strong>nicht an den ursprünglichen Strafbefehl gebunden</strong>. Das Verschlechterungsverbot greift im Strafbefehlsverfahren nicht in der gleichen Strenge wie nach erstinstanzlichem Urteil — die Staatsanwaltschaft darf nach Einsprache schärfer reagieren.</p>
+      <h4>Aktuelle Linie · Urteil 6B_222/2022 vom 18.1.2023</h4>
+      <p>Nidwaldener SVG-Fall (zur amtlichen Publikation vorgesehen): Linie bestätigt und präzisiert. Die Einsprache ist nicht risikolos · bei Mandatsberatung muss auf das Risiko eines schärferen Strafbefehls hingewiesen werden.</p>
       <h4>Klausurrelevanz</h4>
-      <p>Aargauer Anwaltspraktikanten erleben das in der Praxis · klassische Klausurfrage zur Einspracheberatung. Bei Mandatsberatung muss auf das Risiko eines schärferen Strafbefehls hingewiesen werden, sonst droht Beratungshaftung.</p>
-      <div class="pillar"><strong>Klausuranker:</strong> Die Einsprache ist nicht risikolos · bei Mandatsberatung muss auf die Möglichkeit eines schärferen Strafbefehls hingewiesen werden.</div>
-      <div class="pillar"><strong>Verifikation empfohlen:</strong> BGE-Nummer beim Lerngebrauch verifizieren.</div>
+      <p>Aargauer Anwaltspraktikanten erleben das in der Praxis · klassische Klausurfrage zur Einspracheberatung. Bei Mandatsberatung muss explizit auf das Risiko hingewiesen werden, sonst droht Beratungshaftung.</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Die Einsprache ist nicht risikolos · bei Mandatsberatung schriftlich auf die Möglichkeit eines schärferen Strafbefehls hinweisen. Reformatio in peius gilt im Strafbefehlsverfahren nicht in gleicher Strenge.</div>
     `
   },
 
-  /* [PRÜFEN] BGE 134 IV 82 als Strafhierarchie-Leitentscheid · BGer hat
-     mehrere Entscheide zur Wahl zwischen Geld- und Freiheitsstrafe ·
-     Verifikation der Nummer */
+  /* [VERIFIZIERT · Etappe 8.1 · AKTUALISIERT] BGE 134 IV 82 (2008) ist
+     historischer Strafhierarchie-Leitentscheid · Achtung: Revision Art. 41
+     StGB per 1.1.2018 hat kurze Freiheitsstrafe wieder zugelassen · aktuelle
+     Linie BGE 144 IV 313 E. 1.1.1: Verschulden ist für Strafartwahl nicht
+     massgeblich · ergänzend BGE 147 IV 241 E. 3.2 */
   {
     id: "BGE-15", type: "bge", category: "bge",
     topic: "Sanktionsrecht · Strafarten",
-    prompt: "In welcher Hierarchie stehen die Strafarten zueinander?",
-    hint: "Geldstrafe vor Freiheitsstrafe als Grundsatz.",
-    answerTitle: "BGE 134 IV 82 · Strafhierarchie",
-    answerRef: "BGE 134 IV 82 · Art. 41 StGB",
+    prompt: "Welche Kriterien bestimmen die Wahl zwischen Geldstrafe und Freiheitsstrafe nach der Revision 2018?",
+    hint: "Zweckmässigkeit, Auswirkungen, präventive Effizienz — Verschulden NICHT massgeblich.",
+    answerTitle: "BGE 134 IV 82 · Strafhierarchie · aktualisiert durch Revision 2018",
+    answerRef: "BGE 134 IV 82 · Art. 41 StGB (revidiert 1.1.2018) · aktuelle Linie BGE 144 IV 313 E. 1.1.1, BGE 147 IV 241 E. 3.2",
     answerHTML: `
-      <h4>Sachverhalt</h4>
-      <p>Anordnung einer kurzen Freiheitsstrafe ohne ausreichende Begründung der Wahl gegenüber Geldstrafe.</p>
-      <h4>Leitsatz</h4>
-      <p>Bei Strafrahmen, der mehrere Strafarten zulässt, gilt <strong>Vorrang der milderen Strafart</strong>. <strong>Kurze Freiheitsstrafen unter sechs Monaten verlangen besondere Begründung</strong> · die Geldstrafe ist im Regelfall vorzuziehen. Die Wahl der Freiheitsstrafe ist begründungspflichtig nach Art. 41 StGB.</p>
+      <h4>Historischer Leitsatz · BGE 134 IV 82 (2008)</h4>
+      <p>Bei Strafrahmen, der mehrere Strafarten zulässt, gilt <strong>Vorrang der milderen Strafart</strong>. Ursprünglich (vor Revision 2018) waren <strong>kurze Freiheitsstrafen unter sechs Monaten</strong> nur ausnahmsweise zulässig — die Geldstrafe war im Regelfall vorzuziehen.</p>
+      <h4>Wichtig · Revision Art. 41 StGB per 1. Januar 2018</h4>
+      <p>Mit der Sanktionenrechts-Revision wurde die kurze Freiheitsstrafe (3 Tage bis 6 Monate) wieder zugelassen. Sie ist heute zulässig, wenn:</p>
+      <ul>
+        <li>Eine Geldstrafe nicht spezialpräventiv wirkt, oder</li>
+        <li>Die Geldstrafe nicht vollziehbar erscheint (z.B. wegen wirtschaftlicher Drittleistung, Mittellosigkeit, ungewissem Aufenthalt)</li>
+      </ul>
+      <p>Die ursprüngliche Strenge der "Geldstrafe-vor-Freiheitsstrafe"-Regel ist damit relativiert.</p>
+      <h4>Aktuelle Kriterien · BGE 144 IV 313 E. 1.1.1</h4>
+      <p>Massgeblich sind:</p>
+      <ul>
+        <li><strong>Zweckmässigkeit</strong> der Sanktion</li>
+        <li><strong>Auswirkungen auf den Täter</strong> und sein soziales Umfeld</li>
+        <li><strong>Präventive Effizienz</strong></li>
+      </ul>
+      <p><strong>Nicht massgeblich</strong> ist namentlich das <strong>Verschulden</strong> — dieses schlägt sich ausschliesslich im Strafmass nieder, nicht in der Strafartwahl. Bestätigt in BGE 147 IV 241 E. 3.2.</p>
       <h4>Klausurrelevanz</h4>
-      <p>Strafzumessungs-Aufgabe mit Begründungsdiskussion · klassisches Verteidigungsplädoyer-Argument. Methodisch zu verbinden mit AT-09 (Strafzumessung) und AT-11 (bedingter Vollzug).</p>
-      <div class="pillar"><strong>Klausuranker:</strong> Kurze Freiheitsstrafe ist Ausnahme, nicht Regel · bei Verteidigungsplädoyer gegen Freiheitsstrafe argumentieren mit BGer-Rechtsprechung zur Mildermassnahme.</div>
-      <div class="pillar"><strong>Verifikation empfohlen:</strong> BGE-Nummer beim Lerngebrauch verifizieren.</div>
+      <p>Strafzumessungs-Aufgabe mit Begründungsdiskussion · klassisches Verteidigungsplädoyer-Argument. Methodisch zu verbinden mit AT-09 (Strafzumessung) und AT-11 (bedingter Vollzug). Wer noch nach der alten Vor-2018-Logik argumentiert, geht den dogmatischen Umweg.</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Verschulden steuert das Strafmass, nicht die Strafart. Strafartwahl folgt Zweckmässigkeit, sozialen Auswirkungen und präventiver Effizienz. Geldstrafe-Vorrang gilt seit Revision 2018 nicht mehr in alter Strenge.</div>
     `
   },
 
-  /* [PRÜFEN] BGE 142 III 65 als Wiedereingliederungsvorbehalt-Leitent-
-     scheid bei Einziehung · die Zuordnung zu Art. 71 StGB ist zu
-     verifizieren · Mischung mit zivilrechtlichen Aspekten möglich */
+  /* [VERIFIZIERT · Etappe 8.1 · KORREKTUR · KOMPLETT NEU] Vorherige Karte
+     zitierte BGE 142 III 65 — das ist ein Zivilrechts-Entscheid (Bd. III)
+     zu güterrechtlicher Aussonderung im Pfändungsverfahren · keinerlei
+     Bezug zur strafrechtlichen Einziehung · Karte komplett neu konzipiert
+     auf Ersatzforderung mit Wiedereingliederungsvorbehalt nach Art. 71
+     Abs. 2 StGB · Anker BGE 144 IV 1 */
   {
     id: "BGE-16", type: "bge", category: "bge",
-    topic: "Verfahren · Einziehung",
-    prompt: "Welche Schranken setzt der Wiedereingliederungsvorbehalt der Einziehung von Vermögenswerten?",
-    hint: "Existenzminimum und Resozialisierung als Korrektive.",
-    answerTitle: "BGE 142 III 65 · Wiedereingliederungsvorbehalt",
-    answerRef: "BGE 142 III 65 · Art. 71 StGB",
+    topic: "Sanktionsrecht · Ersatzforderung · Wiedereingliederung",
+    prompt: "Wann darf auf eine Ersatzforderung verzichtet werden?",
+    hint: "Uneinbringlichkeit oder ernstliche Behinderung der Wiedereingliederung.",
+    answerTitle: "BGE 144 IV 1 · Ersatzforderung mit Wiedereingliederungsvorbehalt",
+    answerRef: "BGE 144 IV 1 · Art. 71 Abs. 2 StGB",
     answerHTML: `
-      <h4>Sachverhalt</h4>
-      <p>Einziehung von Vermögenswerten bedroht die Resozialisierung des Verurteilten.</p>
-      <h4>Leitsatz</h4>
-      <p>Die Einziehung darf die <strong>Wiedereingliederung des Verurteilten nicht verunmöglichen</strong>. Korrekturfaktoren der richterlichen Praxis:</p>
+      <h4>Gesetzliche Grundlage · Art. 71 Abs. 2 StGB</h4>
+      <p>Wörtlich: <em>"Soweit die Ersatzforderung voraussichtlich uneinbringlich wäre oder die Wiedereingliederung des Betroffenen ernstlich behindern würde, kann darauf ganz oder teilweise verzichtet werden."</em></p>
+      <p>Der Wiedereingliederungsvorbehalt ist also <strong>gesetzlich</strong> verankert, nicht nur richterlich entwickelt.</p>
+      <h4>Leitsatz · BGE 144 IV 1</h4>
+      <p>Die Anordnung einer Ersatzforderung ist verhältnismässig zu prüfen. Zwei Verzichtsgründe:</p>
       <ul>
-        <li>Existenzminimum des Verurteilten</li>
-        <li>Beruflicher Wiederaufbau</li>
-        <li>Schuldenfreiheit nach der Sanktion</li>
+        <li><strong>Voraussichtliche Uneinbringlichkeit</strong> · die Forderung würde bei realistischer Einschätzung nicht durchsetzbar sein</li>
+        <li><strong>Ernstliche Behinderung der Wiedereingliederung</strong> · die finanzielle Belastung würde die Resozialisierung des Verurteilten gefährden</li>
       </ul>
-      <p>Quotale Einziehung statt voller Einziehung kann die richtige richterliche Antwort sein.</p>
+      <p>Massgebend ist eine <strong>Gesamtbetrachtung</strong> der wirtschaftlichen Verhältnisse, der Erwerbsperspektiven und der sozialen Situation. Quotale (teilweise) Reduktion ist möglich, nicht nur vollständiger Verzicht.</p>
+      <h4>Abgrenzung zur Einziehung nach Art. 70 StGB</h4>
+      <p>Bei der Einziehung von Vermögenswerten gibt es keinen ausdrücklichen Wiedereingliederungsvorbehalt, aber Verhältnismässigkeit und Härtefallklauseln (vgl. Art. 70 Abs. 2 StGB · Drittunschuld). Die Ersatzforderung kommt erst zum Tragen, wenn die unmittelbare Einziehung nicht mehr möglich ist (z.B. weil der Vermögenswert nicht mehr greifbar ist).</p>
       <h4>Klausurrelevanz</h4>
-      <p>Bei Vermögensdelikten mit hohem Schaden und Mittellosigkeit des Täters · klassisches Verteidigungsargument bei Strafzumessungs-Aufgaben. Methodisch zu verbinden mit AT-09.</p>
-      <div class="pillar"><strong>Klausuranker:</strong> Einziehung ist nicht selbstläufig in voller Höhe · Verteidigung kann mit Wiedereingliederungsargument quotale Einziehung erreichen.</div>
-      <div class="pillar"><strong>Verifikation empfohlen:</strong> BGE-Nummer beim Lerngebrauch verifizieren · Zuordnung zu Art. 71 StGB prüfen.</div>
+      <p>Bei Vermögensdelikten mit hohem Schaden und Mittellosigkeit des Täters · klassisches Verteidigungsargument bei Strafzumessungs- und Sanktions-Aufgaben. Methodisch zu verbinden mit AT-09 (Strafzumessung) und BT-25 ff. (Vermögensdelikte).</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Ersatzforderung ist nicht selbstläufig in voller Höhe · Art. 71 Abs. 2 StGB erlaubt ganzen oder teilweisen Verzicht. Verteidigung kann mit Wiedereingliederungs- und Uneinbringlichkeits-Argumenten quotale Reduktion erreichen.</div>
     `
   },
 
   /* ── Block 5 · Strafvollzug / Sanktionen · BGE-17 ──────────── */
 
-  /* [PRÜFEN] BGE 148 IV 234 als BGer-Leitentscheid zum revidierten
-     Sexualstrafrecht · Revision 2024 ist erst seit 1. Juli 2024 in Kraft ·
-     BGer-Rechtsprechung dazu ist jung · Verifikation, ob diese Nummer
-     den massgeblichen Anwendungs-Leitentscheid bildet */
+  /* [VERIFIZIERT · Etappe 8.1 · UMSTRUKTURIERT] BGE 148 IV 234 (Genfer
+     Fall, 6B_894/2021, datiert 2022) behandelt das ALTE Sexualstrafrecht
+     (Nötigungsprinzip vor Revision) · Revision per 1.7.2024 in Kraft ·
+     BGer-Praxis zur Revision 2024 ist noch im Aufbau · Karte umstrukturiert
+     auf Übergang altes/neues Recht mit klarer dogmatischer Trennung */
   {
     id: "BGE-17", type: "bge", category: "bge",
-    topic: "BT · Sexualstrafrecht · Revision 2024",
-    prompt: "Wie wendet das BGer die Revision 2024 im Sexualstrafrecht an?",
-    hint: "Schreckens-Klausel und Erkennbarkeits-Massstab.",
-    answerTitle: "BGE 148 IV 234 · neues Sexualstrafrecht",
-    answerRef: "BGE 148 IV 234 · Art. 189 + 190 StGB",
+    topic: "BT · Sexualstrafrecht · Übergang Revision 2024",
+    prompt: "Wie unterscheidet sich das alte vom revidierten Sexualstrafrecht in der BGer-Praxis?",
+    hint: "Vom Nötigungsprinzip zur Zustimmungslösung — Übergang seit 1.7.2024.",
+    answerTitle: "Sexualstrafrecht · Übergang Revision 2024",
+    answerRef: "Altes Recht: BGE 148 IV 234, BGE 148 IV 329 · Neues Recht: Art. 189, 190 StGB rev. (i.K. 1.7.2024) — BGer-Praxis im Aufbau",
     answerHTML: `
-      <h4>Sachverhalt</h4>
-      <p>Sexuelle Handlung gegen erkennbar entgegenstehenden Willen · Anwendung der neuen Tatbestandsstruktur seit 1. Juli 2024.</p>
-      <h4>Leitsatz</h4>
-      <p>Erkennbarkeit des entgegenstehenden Willens ist <strong>objektiv aus Sicht eines vernünftigen Beobachters</strong> zu beurteilen. Die <strong>Schreckens-Klausel</strong> erfasst Überraschungsangriffe ohne lange Gewalteinwirkung. Die alte Nötigungsmittel-Dogmatik ist überholt, soweit sie qualifizierte Mittel zwingend voraussetzte.</p>
+      <h4>Altes Recht · Nötigungsprinzip · BGE 148 IV 234 (2022)</h4>
+      <p>Genfer Fall (6B_894/2021): Im Kernbereich des alten Sexualstrafrechts setzte die Strafbarkeit einen <strong>qualifizierten Übergriff</strong> voraus — bei sexuellen Nötigungsdelikten Art. 189 f. StGB den Einsatz von Gewalt oder anderen Zwangsmitteln, mittels derer ein Widerstand gebrochen wird (E. 3.3). Der entgegenstehende Wille allein war strafrechtlich nicht geschützt — das wurde regelmässig als gesetzgeberische Lücke kritisiert.</p>
+      <h4>Revision per 1. Juli 2024 · Zustimmungslösung</h4>
+      <p>Die Bundesversammlung hat die Tatbestände Art. 189 (sexuelle Nötigung) und Art. 190 StGB (Vergewaltigung) grundlegend revidiert. Kernelemente:</p>
+      <ul>
+        <li><strong>Erkennbar entgegenstehender Wille genügt</strong> · objektiv aus Sicht eines vernünftigen Beobachters zu beurteilen ("Nein heisst Nein")</li>
+        <li><strong>Schreckens-Klausel</strong> · erfasst Überraschungsangriffe ohne lange Gewalteinwirkung</li>
+        <li>Die alte Nötigungsmittel-Dogmatik ist überholt, soweit sie qualifizierte Mittel zwingend voraussetzte</li>
+      </ul>
+      <h4>BGer-Praxis zur Revision 2024 · Stand Mai 2026</h4>
+      <p>Die Revision ist seit knapp zwei Jahren in Kraft. Erste BGer-Urteile zum revidierten Recht liegen vor, ein gefestigter Leit-BGE in der amtlichen Sammlung ist <strong>noch nicht etabliert</strong>. Aktuelle Linie ist in den ZBJV-Jahresübersichten und ZStrR-Kommentaren zu verfolgen.</p>
       <h4>Klausurrelevanz</h4>
-      <p>Sehr klausurrelevant in der Aargauer Praxis. Methodisch zu verbinden mit BT-43 (sexuelle Nötigung und Vergewaltigung) und F-43 (Schreckens-Klausel-Mini-Fall). Wer noch nach altem Modell prüft, geht den dogmatischen Umweg.</p>
-      <div class="pillar"><strong>Klausuranker:</strong> Die Revision 2024 hat die Subsumtionsschwelle gesenkt · wer noch nach altem Modell prüft, geht den dogmatischen Umweg und verfehlt die saubere Antwort.</div>
-      <div class="pillar"><strong>Verifikation dringend empfohlen:</strong> BGer-Rechtsprechung zur Revision 2024 ist jung · BGE-Nummer und Aktualität beim Lerngebrauch sorgfältig prüfen.</div>
+      <p>Sehr klausurrelevant in der Aargauer Praxis. Methodisch zu verbinden mit BT-43 (sexuelle Nötigung und Vergewaltigung) und F-43 (Schreckens-Klausel-Mini-Fall). In Klausur-Sachverhalten ab Juli 2024 ist das neue Recht anwendbar — wer noch nach altem Modell prüft, geht den dogmatischen Umweg.</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Bei Sexualstrafrechts-Sachverhalten zuerst Tatzeit feststellen. Vor 1.7.2024 → altes Nötigungsprinzip (BGE 148 IV 234). Ab 1.7.2024 → revidierte Tatbestände mit Erkennbarkeits-Massstab und Schreckens-Klausel.</div>
+      <div class="pillar"><strong>Aktualität laufend prüfen:</strong> BGer-Praxis zur Revision 2024 ist im Aufbau. Aktuelle BGer-Urteile in ZBJV und ZStrR verfolgen, BGE-Nummern bei Erscheinen in die Karte einarbeiten.</div>
     `
   },
 
@@ -10936,141 +11542,183 @@ const CARDS = [
     `
   },
 
-  /* ── Block 4 · IRSG · NS-14 bis NS-16 · alle PRÜFEN ───────── */
+  /* ── Block 4 · IRSG · NS-14 bis NS-16 · alle VERIFIZIERT Etappe 9.1 ── */
 
-  /* [PRÜFEN] IRSG-Auslieferung · Verhältnis zu bilateralen Abkommen
-     komplex · Verifikation der konkreten Klausurfälle empfohlen */
+  /* [VERIFIZIERT · Etappe 9.1 · PRÄZISIERT] Auslieferung Art. 32 ff. IRSG
+     bestätigt als 2. Teil des IRSG · Mindestsanktion präzisiert: "Höchst-
+     mass von mindestens 1 Jahr" (Schwellenmethode nach Art. 35 Abs. 1
+     lit. a IRSG iVm Art. 1 II. ZP EAÜe / EUAÜe) statt verkürztes "Mindest-
+     drohung 1 Jahr" · Spezialitätsgrundsatz Art. 38 IRSG bestätigt
+     (BGE 112 Ib 339, BGE 125 II 569) */
   {
     id: "NS-14", type: "ns", category: "ns",
     topic: "IRSG · Auslieferung",
     prompt: "Welche Voraussetzungen hat die Auslieferung nach IRSG?",
-    hint: "Doppelte Strafbarkeit, Mindestdrohung, Ausschlussgründe.",
-    answerTitle: "Auslieferung · Art. 32-62 IRSG",
-    answerRef: "Art. 32-62 IRSG · SR 351.1",
+    hint: "Doppelte Strafbarkeit, Schwellenmethode, Ausschlussgründe.",
+    answerTitle: "Auslieferung · Art. 32 ff. IRSG",
+    answerRef: "Art. 32-62 IRSG (2. Teil) · SR 351.1 · BG vom 20.3.1981, in Kraft seit 1.1.1983",
     answerHTML: `
-      <h4>Doppelte Strafbarkeit</h4>
-      <p>Die Tat muss <strong>in beiden Staaten strafbar</strong> sein. Massgebend ist der Tatbestand, nicht der konkrete Tatbestandsname.</p>
-      <h4>Mindestdrohung · Art. 35</h4>
-      <p>In beiden Staaten Freiheitsstrafe von <strong>mindestens 1 Jahr</strong>. Bei kürzeren Strafdrohungen ist Auslieferung ausgeschlossen.</p>
+      <h4>Systematik · Art. 1 Abs. 1 IRSG</h4>
+      <p>Die Auslieferung ist einer der vier Hauptbereiche des IRSG (zusammen mit Rechtshilfe i.e.S., Delegation der Strafverfolgung und Vollstreckung ausländischer Strafurteile). Art. 32 IRSG eröffnet den 2. Teil des Gesetzes.</p>
+      <h4>Doppelte Strafbarkeit · Art. 35 Abs. 1 lit. a IRSG</h4>
+      <p>Die Tat muss <strong>in beiden Staaten strafbar</strong> sein. Massgebend ist der Tatbestand, nicht die Bezeichnung im Gesetzestext.</p>
+      <h4>Schwellenmethode · Mindestsanktion · Art. 35 Abs. 1 lit. a IRSG</h4>
+      <p>Anlass zur Auslieferung können nur Taten geben, die mit einer <strong>Freiheitsstrafe im Höchstmass von mindestens einem Jahr oder mit einer schwereren Strafe</strong> bedroht sind — sowohl nach Schweizer als auch nach ausländischem Recht. Modern «Schwellenmethode» (auch Eliminationsmethode) genannt; sie ersetzt die historische Methode des Deliktskatalogs.</p>
+      <p>Wichtige Präzisierung: Massgebend ist das gesetzliche <em>Höchstmass</em> der Strafdrohung, nicht das Mindestmass. Bei einer Strafdrohung "Geldstrafe oder Freiheitsstrafe bis zu sechs Monaten" ist die Auslieferung ausgeschlossen, weil das Höchstmass unter einem Jahr liegt.</p>
       <h4>Ausschlussgründe</h4>
       <ul>
         <li><strong>Politisches Delikt</strong> · Art. 3 Abs. 1 · echtes politisches Delikt absolut, relatives politisches Delikt im Einzelfall</li>
         <li><strong>Militärisches Delikt</strong> · Art. 3 Abs. 2</li>
-        <li><strong>Verfolgung wegen Rasse, Religion, Nationalität, politischer Anschauung</strong> · Art. 2</li>
-        <li><strong>Gefahr Folter oder unmenschlicher Behandlung</strong> · refoulement-Verbot</li>
-        <li><strong>Verjährung</strong> nach Schweizer Recht</li>
-        <li><strong>Schweizer Bürgerrecht</strong> · Art. 7 IRSG · keine Auslieferung von Schweizern (mit Ausnahmen)</li>
+        <li><strong>Verfolgung wegen Rasse, Religion, Nationalität, politischer Anschauung</strong> · Art. 2 lit. b</li>
+        <li><strong>Gefahr von Folter oder unmenschlicher Behandlung</strong> · Art. 2 lit. a (refoulement-Verbot)</li>
+        <li><strong>Verjährung</strong> nach Schweizer Recht · Art. 5 Abs. 1 lit. c</li>
+        <li><strong>Schweizer Bürgerrecht</strong> · <span class="norm">Art. 7 Abs. 1 IRSG</span> iVm Art. 25 Abs. 1 BV · Inländerprivileg, Auslieferung nur mit schriftlicher Zustimmung</li>
       </ul>
       <h4>Verfahren</h4>
       <ul>
-        <li><strong>Bundesamt für Justiz</strong> prüft Auslieferungsersuchen</li>
-        <li>Bei Bestreitung · Bundesstrafgericht (Beschwerdekammer)</li>
-        <li>Letztinstanzlich · Bundesgericht</li>
+        <li><strong>Bundesamt für Justiz (BJ)</strong> prüft Auslieferungsersuchen (Art. 17 ff. IRSG)</li>
+        <li>Bei Bestreitung · Beschwerdekammer des <strong>Bundesstrafgerichts</strong></li>
+        <li>Letztinstanzlich · <strong>Bundesgericht</strong> mit besonderem Zulassungsregime (Art. 84 BGG, nur bei besonders bedeutenden Fällen)</li>
+        <li>Vereinfachte Auslieferung mit Zustimmung der gesuchten Person · <span class="norm">Art. 54 IRSG</span></li>
       </ul>
-      <h4>Spezialitätsgrundsatz · Art. 38</h4>
-      <p>Der Ausgelieferte darf <strong>nur für die Tat verfolgt werden</strong>, für die ausgeliefert wurde. Andere Verfolgung verlangt erneutes Auslieferungsverfahren oder Verzicht des Ausgelieferten.</p>
-      <h4>Verhältnis zu bilateralen Abkommen</h4>
+      <h4>Spezialitätsgrundsatz · Art. 38 Abs. 1 lit. a IRSG</h4>
+      <p>Der Ausgelieferte darf <strong>nur für diejenigen Sachverhalte verfolgt werden</strong>, für welche die Schweiz die beidseitige Strafbarkeit bejaht und die Auslieferung bewilligt hat. Verfolgung wegen anderer, vor der Auslieferung begangener Handlungen verlangt ein <strong>nachträgliches Auslieferungsersuchen</strong> oder den Verzicht der ausgelieferten Person (<span class="norm">Art. 38 Abs. 2 lit. a IRSG</span>).</p>
+      <p>Leitentscheide: <strong>BGE 112 Ib 339</strong> · <strong>BGE 125 II 569 E. 6</strong> · BGer 1C_138/2007 vom 17.7.2007 E. 2.3.</p>
+      <h4>Verhältnis zu bilateralen Abkommen · Günstigkeitsprinzip · Art. 1 Abs. 1 lit. a IRSG</h4>
       <ul>
-        <li>Schengen-Übereinkommen · vereinfachtes Auslieferungsverfahren mit Schengen-Staaten</li>
-        <li>Europäisches Auslieferungsübereinkommen (EAUe) · Grundlage gegenüber Europaratstaaten</li>
-        <li>Bilaterale Abkommen mit einzelnen Staaten</li>
+        <li><strong>Europäisches Auslieferungsübereinkommen (EAUe)</strong> · Grundlage gegenüber Europaratstaaten; Schweiz ist seit 1985 Partei</li>
+        <li><strong>II. Zusatzprotokoll EAUe</strong> · konkretisiert Mindestsanktion (Höchstmass mindestens 1 Jahr)</li>
+        <li><strong>Schengen-Übereinkommen</strong> · vereinfachte Auslieferung mit Schengen-Staaten</li>
+        <li><strong>Bilaterale Abkommen</strong> mit USA (RVUS), Deutschland, Italien u.a.</li>
+        <li>IRSG ist <strong>subsidiär</strong>, sofern das Abkommen nicht ungünstiger ist als das IRSG</li>
       </ul>
       <h4>Klausurrelevanz</h4>
-      <p>Selten Hauptthema in Aargauer Klausur · Grundzüge prüfungsmöglich, aber nicht kernrelevant. Anwaltspraktikanten erleben IRSG-Verfahren in der Praxis nur ausnahmsweise.</p>
-      <div class="pillar"><strong>Pillarbox:</strong> Auslieferung verlangt doppelte Strafbarkeit und Mindestdrohung · die Ausschlussgründe sind völkerrechtlich verankert und nicht verzichtbar.</div>
-      <div class="pillar"><strong>Verifikation empfohlen:</strong> IRSG-Anwendung im Verhältnis zu bilateralen Abkommen ist komplex · konkrete Klausurfälle mit aktuellem Stand der Abkommen prüfen.</div>
+      <p>Selten Hauptthema in Aargauer Klausur · Grundzüge prüfungsmöglich, aber nicht kernrelevant. Anwaltspraktikanten erleben IRSG-Verfahren in der Praxis nur ausnahmsweise. Wenn doch, dann typischerweise zur Frage doppelter Strafbarkeit oder zum Spezialitätsgrundsatz.</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Auslieferung verlangt doppelte Strafbarkeit und Höchstmass von mindestens 1 Jahr Freiheitsstrafe (Schwellenmethode, Art. 35 Abs. 1 lit. a IRSG). Inländerprivileg Art. 7 Abs. 1 IRSG · Spezialitätsgrundsatz Art. 38 Abs. 1 lit. a IRSG. Bei Klausur immer zuerst klären: bilaterales Abkommen einschlägig oder IRSG direkt?</div>
     `
   },
 
-  /* [PRÜFEN] IRSG-Rechtshilfe · Sonderbereiche (Steuer, Geldwäscherei)
-     mit speziellen Voraussetzungen · Verifikation empfohlen */
+  /* [VERIFIZIERT · Etappe 9.1 · KORRIGIERT] Rechtshilfe Art. 63 ff. IRSG
+     bestätigt als 3. Teil ("kleine Rechtshilfe") · KORREKTUR: Steuer-
+     Rechtshilfe-Ausschluss steht in Art. 3 Abs. 3 IRSG (Allgemeine
+     Bestimmungen, gilt für ganzes Gesetz, Ausnahme Abgabebetrug nur
+     für 3. Teil), nicht in Art. 63 Abs. 3 IRSG · BGE 112 Ib 339 explizit
+     dazu · Spezialitätsprinzip in Rechtshilfe nun unter Art. 67 IRSG mit
+     Norm-Verweis · Art. 67a IRSG (unaufgeforderte Übermittlung,
+     Geldwäscherei-Kontext) ergänzt */
   {
     id: "NS-15", type: "ns", category: "ns",
-    topic: "IRSG · Rechtshilfe",
+    topic: "IRSG · Rechtshilfe i.e.S.",
     prompt: "Wann gewährt die Schweiz Rechtshilfe in Strafsachen?",
     hint: "Beweiserhebung, Zustellung, andere Verfahrenshandlungen für ausländische Behörden.",
-    answerTitle: "Rechtshilfe · Art. 63-80 IRSG",
-    answerRef: "Art. 63-80 IRSG",
+    answerTitle: "Rechtshilfe i.e.S. · Art. 63 ff. IRSG",
+    answerRef: "Art. 63-80 IRSG (3. Teil · «kleine» / akzessorische Rechtshilfe)",
     answerHTML: `
-      <h4>Begriff der Rechtshilfe</h4>
-      <p>Rechtshilfe umfasst <strong>Beweiserhebung, Zustellung, Übergabe von Gegenständen, Vermögenseinziehung</strong> für ein ausländisches Strafverfahren.</p>
-      <h4>Voraussetzungen · einfache Rechtshilfe</h4>
+      <h4>Begriff der Rechtshilfe i.e.S.</h4>
+      <p>Auch «kleine Rechtshilfe» oder «akzessorische Rechtshilfe» genannt. Sie umfasst <strong>Beweiserhebung, Zustellung, Übergabe von Gegenständen, Vermögenseinziehung</strong> für ein ausländisches Strafverfahren — anders als die Auslieferung also keine Übergabe einer Person, sondern Unterstützung des ausländischen Verfahrens.</p>
+      <h4>Voraussetzungen · einfache Rechtshilfe ohne Zwangsmassnahmen</h4>
       <ul>
-        <li><strong>Doppelte Strafbarkeit grundsätzlich nicht erforderlich</strong> bei einfachen Massnahmen ohne Zwangscharakter (Art. 64)</li>
+        <li><strong>Doppelte Strafbarkeit grundsätzlich nicht erforderlich</strong> bei einfachen Massnahmen ohne Zwangscharakter</li>
         <li>Aktenversand, Zeugeneinvernahme ohne Zwang, einfache Befragung möglich</li>
       </ul>
-      <h4>Voraussetzungen · Rechtshilfe mit Zwangsmassnahmen</h4>
+      <h4>Voraussetzungen · Rechtshilfe mit Zwangsmassnahmen · Art. 64 IRSG</h4>
       <ul>
-        <li><strong>Doppelte Strafbarkeit zwingend</strong></li>
-        <li><strong>Gesetzliche Grundlage</strong> in der Schweiz für die konkrete Massnahme</li>
-        <li>Beispiele · Hausdurchsuchung, Beschlagnahme, Telefonüberwachung</li>
+        <li><strong>Doppelte Strafbarkeit zwingend</strong> — Art. 64 IRSG übernimmt den Vorbehalt aus Art. 5 Abs. 1 lit. a EUeR ins innerstaatliche Recht</li>
+        <li><strong>Gesetzliche Grundlage in der Schweiz</strong> für die konkrete Massnahme</li>
+        <li>Beispiele · Hausdurchsuchung, Beschlagnahme, Telefonüberwachung, Bankunterlagen-Edition</li>
       </ul>
       <h4>Ausschlussgründe</h4>
       <ul>
-        <li>Wie bei Auslieferung (vgl. NS-14)</li>
-        <li>Politisches Delikt</li>
-        <li>Persönlichkeitsverfolgung</li>
-        <li>Verfahren in ersuchendem Staat verstösst gegen EMRK</li>
+        <li>Politisches Delikt · <span class="norm">Art. 3 Abs. 1 IRSG</span></li>
+        <li>Militärisches Delikt · <span class="norm">Art. 3 Abs. 2 IRSG</span></li>
+        <li><strong>Fiskaldelikte</strong> · <span class="norm">Art. 3 Abs. 3 Satz 1 IRSG</span> · grundsätzlicher Ausschluss <em>für das ganze Gesetz</em> (BGE 112 Ib 339)</li>
+        <li>Verfolgung wegen Persönlichkeitsmerkmalen · <span class="norm">Art. 2 IRSG</span></li>
+        <li>Verfahren in ersuchendem Staat verstösst gegen EMRK / UNO-Pakt II</li>
       </ul>
+      <h4>Sonderbereich Steuer-Rechtshilfe · Art. 3 Abs. 3 IRSG</h4>
+      <p>Wichtige dogmatische Klärung: Der Fiskaldelikt-Ausschluss steht in den <strong>Allgemeinen Bestimmungen (Art. 3 Abs. 3)</strong>, nicht im Rechtshilfe-Teil. Er gilt grundsätzlich für das ganze IRSG.</p>
+      <ul>
+        <li><strong>Satz 1</strong> · Rechtshilfe in Fiskalsachen grundsätzlich ausgeschlossen (gilt für ganzes Gesetz)</li>
+        <li><strong>Satz 2</strong> · Ausnahme für <strong>Abgabebetrug</strong> · Rechtshilfe zulässig, <em>aber nur für 3. Teil</em> (Rechtshilfe i.e.S.), nicht für Auslieferung</li>
+        <li>Internationale Abkommen (insbesondere bilaterale Steuerabkommen, OECD-Standards, AIA) erweitern den Anwendungsbereich heute deutlich</li>
+      </ul>
+      <p>Leitentscheid <strong>BGE 112 Ib 339</strong> · klärt explizit die Systematik: Fiskaldelikt-Ausschluss ist Grundprinzip des IRSG, nicht Rechtshilfe-Spezialnorm.</p>
+      <h4>Spezialitätsprinzip in der Rechtshilfe · Art. 67 IRSG</h4>
+      <p>Pendant zu Art. 38 IRSG für die Auslieferung. <strong>Art. 67 Abs. 1 IRSG</strong> enthält ein absolutes Verwertungsverbot: Die übermittelten Beweise dürfen <strong>nicht für ausgeschlossene Straftaten</strong> verwendet werden (politisch, militärisch, fiskalisch · vgl. Art. 3 IRSG). Anders als beim Auslieferungs-Spezialitätsprinzip <em>keine zeitliche Begrenzung</em>.</p>
+      <p><strong>Art. 67 Abs. 2 IRSG</strong> regelt die Zusatzverwendung: Verwendung für andere Verfahren bedarf grundsätzlich der Zustimmung des BJ; Ausnahmen für neue rechtliche Qualifizierung desselben Sachverhalts (lit. a) und Verwendung gegen Mittäter (lit. b).</p>
+      <h4>Unaufgeforderte Übermittlung · Art. 67a IRSG</h4>
+      <p>1997 in Kraft gesetzt im Kampf gegen organisiertes Verbrechen und Wirtschaftskriminalität, insbesondere <strong>Geldwäscherei</strong>. Die Schweiz kann ohne Ersuchen Informationen oder Beweismittel an einen anderen Staat übermitteln, wenn dies dort die Eröffnung eines Strafverfahrens ermöglicht oder hängige Verfahren unterstützt. Anwendung mit Zurückhaltung; relevante Linie BGE 139 IV 137 E. 5.2.3.</p>
       <h4>Verfahren</h4>
       <ul>
-        <li><strong>Bundesamt für Justiz</strong> oder kantonale Behörden je nach Massnahme</li>
-        <li>Bei Zwangsmassnahmen kantonales Zwangsmassnahmengericht oder Staatsanwaltschaft</li>
-        <li>Beschwerderecht für betroffene Personen</li>
-      </ul>
-      <h4>Spezialitätsvorbehalt</h4>
-      <p>Gelieferte Beweise dürfen <strong>nur für das ersuchende Verfahren</strong> verwendet werden. Verwendung in anderen Verfahren verlangt erneutes Rechtshilfeersuchen.</p>
-      <h4>Sonderbereiche</h4>
-      <ul>
-        <li><strong>Steuer-Rechtshilfe</strong> (Art. 63 Abs. 3) · Sondervoraussetzungen, früher restriktiv, heute durch internationale Abkommen weitreichender</li>
-        <li><strong>Geldwäscherei-Rechtshilfe</strong> · spezialisierte Verfahren, oft im Rahmen FATF-Standards</li>
+        <li><strong>Kantonale Behörden</strong> grundsätzlich zuständig (Art. 16 IRSG); BJ Aufsicht und Restzuständigkeit</li>
+        <li><strong>Bundesamt für Justiz</strong> bei Spezialfällen (Gegenrechtsgarantien, USA-Rechtshilfe nach RVUS)</li>
+        <li>Bei Zwangsmassnahmen · kantonales Zwangsmassnahmengericht oder Staatsanwaltschaft</li>
+        <li><strong>Beschwerderecht</strong> für betroffene Personen, ausschliesslich nach IRSG (Art. 80e ff.)</li>
       </ul>
       <h4>Klausurrelevanz</h4>
-      <p>Selten · ggf. Abgrenzungsfragen zu inländischen Verfahren oder bei grenzüberschreitenden Wirtschaftsstrafsachen.</p>
-      <div class="pillar"><strong>Pillarbox:</strong> Rechtshilfe ist niederschwelliger als Auslieferung · einfache Rechtshilfe ohne Zwangsmassnahme verlangt nicht zwingend doppelte Strafbarkeit, mit Zwangsmassnahme aber zwingend.</div>
-      <div class="pillar"><strong>Verifikation empfohlen:</strong> Sonderbereiche (Steuer, Geldwäscherei) haben spezielle Voraussetzungen · konkrete Klausurfälle mit aktuellem Stand der Rechtshilfeabkommen prüfen.</div>
+      <p>Selten · ggf. Abgrenzungsfragen zu inländischen Verfahren oder bei grenzüberschreitenden Wirtschaftsstrafsachen. In der Praxis von Aargauer Anwälten begegnet vor allem im Zusammenhang mit Bankunterlagen-Editionen und Geldwäscherei-Verfahren.</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Rechtshilfe ist niederschwelliger als Auslieferung · einfache Rechtshilfe ohne Zwangsmassnahme verlangt nicht zwingend doppelte Strafbarkeit, mit Zwangsmassnahme aber zwingend (Art. 64 IRSG). Spezialitätsprinzip in Art. 67 IRSG (Pendant zu Art. 38 für Auslieferung). Fiskaldelikt-Ausschluss in den Allgemeinen Bestimmungen Art. 3 Abs. 3 IRSG, nicht im Rechtshilfe-Teil.</div>
     `
   },
 
-  /* [PRÜFEN] IRSG-Stellvertretung und Vollstreckungshilfe · Verhältnis
-     zu Schengen und EU-Abkommen komplex · Verifikation empfohlen */
+  /* [VERIFIZIERT · Etappe 9.1 · STRUKTURELL KLARGESTELLT] Karte vermischte
+     bisher zwei IRSG-Teile (4. Teil Stellvertretende Strafverfolgung
+     Art. 85-87, und 5. Teil Vollstreckung ausländischer Strafurteile
+     Art. 94 ff.) · Klare Trennung eingeführt · Voraussetzungen Art. 88,
+     Art. 100 IRSG ergänzt */
   {
     id: "NS-16", type: "ns", category: "ns",
-    topic: "IRSG · stellvertretende Verfolgung und Vollstreckung",
+    topic: "IRSG · Stellvertretung & Vollstreckung",
     prompt: "Wann übernimmt die Schweiz Strafverfolgung oder Vollstreckung für einen anderen Staat?",
     hint: "Auslieferung nicht möglich · Schweiz handelt stellvertretend.",
-    answerTitle: "Stellvertretung · Art. 85-107 IRSG",
-    answerRef: "Art. 85-107 IRSG",
+    answerTitle: "Stellvertretende Strafverfolgung · Vollstreckung",
+    answerRef: "Art. 85-87 IRSG (4. Teil) · Art. 94-107 IRSG (5. Teil)",
     answerHTML: `
-      <h4>Stellvertretende Strafverfolgung · Art. 85-87</h4>
-      <p>Die Schweiz <strong>verfolgt eine Tat</strong>, die im Ausland begangen wurde, weil <strong>Auslieferung nicht möglich</strong> oder nicht zweckmässig ist.</p>
-      <h4>Anwendungsfälle stellvertretende Verfolgung</h4>
+      <h4>Systematik · Art. 1 Abs. 1 IRSG</h4>
+      <p>Die hier behandelten Materien sind die <strong>letzten zwei der vier Hauptbereiche</strong> des IRSG. Sie funktionieren als Lückenschluss-Instrumente, wenn Auslieferung nicht möglich oder nicht zweckmässig ist (Grundsatz <em>aut dedere aut judicare</em>).</p>
+      <h4 style="color:#005a9e;">A · Stellvertretende Strafverfolgung · Art. 85-87 IRSG (4. Teil)</h4>
+      <p>Die Schweiz <strong>verfolgt eine im Ausland begangene Tat</strong>, weil Auslieferung nicht möglich oder nicht zweckmässig ist.</p>
+      <h4>Voraussetzungen · Art. 85 Abs. 1 und 2 IRSG</h4>
       <ul>
-        <li>Schweizer Bürger · keine Auslieferung nach Art. 7 IRSG · Stellvertretung als Ersatz</li>
-        <li>Tat im Ausland mit Bezug zur Schweiz</li>
-        <li>Effizientere Verfolgung in der Schweiz</li>
+        <li>Tat im Ausland begangen, Auslieferung an den ersuchenden Staat ausgeschlossen oder unzweckmässig</li>
+        <li>Tat ist auch nach Schweizer Recht strafbar (doppelte Strafbarkeit)</li>
+        <li>Strafverfolgung in der Schweiz lässt <strong>bessere soziale Wiedereingliederung</strong> erwarten (Art. 85 Abs. 2 IRSG)</li>
       </ul>
-      <h4>Vollstreckungshilfe · Art. 94 ff.</h4>
-      <p>Die Schweiz <strong>vollzieht ein ausländisches Strafurteil</strong> in der Schweiz.</p>
-      <h4>Voraussetzungen Vollstreckungshilfe</h4>
+      <h4>Klassische Anwendungsfälle</h4>
       <ul>
-        <li><strong>Schweizer Bürgerrecht oder Wohnsitz</strong> der verurteilten Person</li>
+        <li><strong>Schweizer Bürger</strong> · keine Auslieferung nach <span class="norm">Art. 7 Abs. 1 IRSG</span> · Stellvertretung als Ersatz</li>
+        <li>Personen mit festem Wohnsitz und sozialer Integration in der Schweiz</li>
+        <li>Effizienzgründe · Beweismittel, Zeugen oder Mittäter sind in der Schweiz</li>
+      </ul>
+      <h4>Verfahren · Art. 86, 87 IRSG</h4>
+      <ul>
+        <li>Schweiz wendet bei Übernahme <strong>Schweizer Strafrecht</strong> an</li>
+        <li>Strafrahmen wird begrenzt durch das mildeste Recht (Schweiz oder Tatortstaat)</li>
+        <li>Bei der Strafzumessung werden im Ausland erlittene Untersuchungs- oder Strafhaft angerechnet</li>
+      </ul>
+      <h4 style="color:#005a9e;">B · Vollstreckung ausländischer Strafurteile · Art. 94-107 IRSG (5. Teil)</h4>
+      <p>Die Schweiz <strong>vollzieht ein im Ausland gefälltes Strafurteil</strong> (Freiheitsstrafe, Geldstrafe, Massnahme) im Inland — anders als die Auslieferung also kein Transport, sondern Übernahme der Vollstreckung.</p>
+      <h4>Voraussetzungen Vollstreckungshilfe · Art. 94 IRSG</h4>
+      <ul>
+        <li><strong>Schweizer Bürgerrecht oder Wohnsitz</strong> der verurteilten Person in der Schweiz</li>
         <li><strong>Doppelte Strafbarkeit</strong></li>
-        <li><strong>Verurteilung im Ausland rechtskräftig</strong></li>
-        <li>Fairness des ausländischen Verfahrens (EMRK-Konformität)</li>
+        <li><strong>Verurteilung im Ausland rechtskräftig und vollstreckbar</strong></li>
+        <li>Verfahren des ersuchenden Staates entsprach <strong>EMRK-Standards</strong> (vgl. Art. 2 IRSG, Art. 96 IRSG)</li>
+        <li>Soziale Wiedereingliederung wird durch Vollzug in der Schweiz besser ermöglicht</li>
       </ul>
-      <h4>Umrechnung der Strafe</h4>
-      <p>Die ausländische Strafe wird in eine <strong>entsprechende schweizerische Sanktion umgerechnet</strong>. Bei höheren ausländischen Strafrahmen Anpassung an Schweizer Höchstmasse.</p>
+      <h4>Schweizerische Vollstreckungshilfe ans Ausland · Art. 100 ff. IRSG</h4>
+      <p>Spiegelbild zu Art. 94 ff. · Die Schweiz kann auch <em>ihrerseits</em> ein in der Schweiz gefälltes Urteil im Ausland vollstrecken lassen, wenn dies der sozialen Wiedereingliederung der verurteilten Person dient.</p>
+      <h4>Umrechnung der Strafe · Art. 95 ff. IRSG</h4>
+      <p>Die ausländische Strafe wird in eine <strong>entsprechende schweizerische Sanktion umgerechnet</strong> (Exequatur-Verfahren). Bei höheren ausländischen Strafrahmen Anpassung an Schweizer Höchstmasse. Das Verfahren ist gerichtlich und mit dem Beschuldigtenrecht auf Gehör verknüpft.</p>
       <h4>Verhältnis zu bilateralen Abkommen</h4>
       <ul>
-        <li>Schengen-Übereinkommen · vereinfachte Vollstreckung innerhalb Schengen-Raum</li>
-        <li>EU-Vollstreckungsübereinkommen modifizieren die IRSG-Regeln</li>
-        <li>Europäisches Übereinkommen über die Übertragung verurteilter Personen</li>
+        <li><strong>Europäisches Übereinkommen über die Übertragung verurteilter Personen</strong> (1983) · zentrales multilaterales Instrument</li>
+        <li><strong>Schengen-Übereinkommen</strong> · vereinfachte Vollstreckung innerhalb des Schengen-Raums</li>
+        <li>EU-Vollstreckungsabkommen können IRSG-Regeln modifizieren</li>
       </ul>
       <h4>Klausurrelevanz</h4>
-      <p>Sehr selten · ggf. Abgrenzungsfragen oder als Randthema bei grenzüberschreitenden Sachverhalten.</p>
-      <div class="pillar"><strong>Pillarbox:</strong> Stellvertretende Verfolgung und Vollstreckung sind Ersatzinstrumente, wenn Auslieferung nicht möglich ist · die völkerrechtliche Logik ist Lückenschluss.</div>
-      <div class="pillar"><strong>Verifikation empfohlen:</strong> Verhältnis zu Schengen-Vollstreckungsabkommen und EU-Übereinkommen ist komplex · konkrete Klausurfälle mit aktuellem Stand der bilateralen und multilateralen Abkommen prüfen.</div>
+      <p>Sehr selten · ggf. Abgrenzungsfragen oder als Randthema bei grenzüberschreitenden Sachverhalten. In der Praxis von Aargauer Anwälten begegnet vor allem bei Schweizer Verurteilten, die ihre Strafe im Heimatland verbüssen wollen, oder bei Schweizer Bürgern, die im Ausland verurteilt wurden.</p>
+      <div class="pillar"><strong>Klausuranker:</strong> Stellvertretende Verfolgung (Art. 85-87 IRSG, 4. Teil) und Vollstreckungshilfe (Art. 94-107 IRSG, 5. Teil) sind <em>zwei eigenständige Bereiche</em> — Lückenschluss-Instrumente, wenn Auslieferung scheitert. Tragender Gedanke: <em>aut dedere aut judicare</em> · soziale Wiedereingliederung als Leitprinzip in beiden Teilen.</div>
     `
   }
 
@@ -11085,7 +11733,7 @@ const CARDS = [
    state.progress[kanton][rechtsbereich][cardId] = { ... }
    ════════════════════════════════════════════════════════════ */
 
-const TOOL_VERSION = '3.0';
+const TOOL_VERSION = '3.6';
 const DEFAULT_KANTON = 'AG';
 const DEFAULT_RECHTSBEREICH = 'strafrecht';
 
@@ -11429,6 +12077,8 @@ let state = {
   /* aktiver Kontext — bestimmt, welche Karten sichtbar sind */
   activeKanton: DEFAULT_KANTON,
   activeRechtsbereich: DEFAULT_RECHTSBEREICH,
+  /* M3 · Vorlese-Einstellungen, persistiert im STORAGE_KEY */
+  tts: { rate: 1.1, voiceURI: null },
 };
 
 /* ────────────────────────────────────────────────────────
@@ -11500,6 +12150,11 @@ function loadState() {
         state.status       = p.status       || 'all';
         state.activeKanton = p.activeKanton || DEFAULT_KANTON;
         state.activeRechtsbereich = p.activeRechtsbereich || DEFAULT_RECHTSBEREICH;
+        /* M3 · Vorlese-Einstellungen restaurieren, mit Defaults bei Fehlen */
+        if (p.tts && typeof p.tts === 'object') {
+          state.tts.rate     = (typeof p.tts.rate === 'number') ? p.tts.rate : 1.1;
+          state.tts.voiceURI = p.tts.voiceURI || null;
+        }
         return;
       }
     }
@@ -11589,6 +12244,7 @@ function saveState() {
       status:       state.status,
       activeKanton: state.activeKanton,
       activeRechtsbereich: state.activeRechtsbereich,
+      tts:          state.tts,    /* M3 · Vorlese-Einstellungen */
     }));
   } catch (e) {}
 }
@@ -11768,6 +12424,7 @@ function renderCard() {
           <div class="card-meta-tags">
             <span class="card-status-pill ${rating}">${STATUS_LABEL[rating]}</span>
             <div class="card-type-tag">${TYPE_LABEL[card.type]}</div>
+            ${ttsButtonHTML('front')}
           </div>
         </div>
         <div class="fall-front">
@@ -11791,6 +12448,7 @@ function renderCard() {
           <div class="card-meta-tags">
             <span class="card-status-pill ${rating}">${STATUS_LABEL[rating]}</span>
             <div class="card-type-tag">${TYPE_LABEL[card.type]}</div>
+            ${ttsButtonHTML('front')}
           </div>
         </div>
         <div class="card-front-content">
@@ -11807,7 +12465,10 @@ function renderCard() {
     <div class="face back">
       <div class="card-meta">
         <div class="card-id">${card.id}</div>
-        <div class="card-type-tag">${TYPE_LABEL[card.type]}</div>
+        <div class="card-meta-tags">
+          <div class="card-type-tag">${TYPE_LABEL[card.type]}</div>
+          ${ttsButtonHTML('back')}
+        </div>
       </div>
       <div class="card-answer">
         <div class="answer-title">
@@ -11822,14 +12483,28 @@ function renderCard() {
 
   /* Klick auf Vorderseite → Flip; bei Mini-Fall nicht, wenn auf Textarea geklickt wird */
   cardEl.querySelector('.face.front').addEventListener('click', e => {
+    if (e.target.closest('.tts-btn')) return;   /* M3 · TTS-Klick blockiert Flip */
     if (isFall && (e.target.tagName === 'TEXTAREA' || e.target.closest('.fall-notes-label'))) return;
     state.flipped = !state.flipped;
     cardEl.classList.toggle('flipped');
+    /* M3 · beim Flip Vorlesen stoppen */
+    ttsCancel();
   });
   cardEl.querySelector('.face.back').addEventListener('click', e => {
+    if (e.target.closest('.tts-btn')) return;   /* M3 · TTS-Klick blockiert Flip */
     if (e.target.closest('.rate') || e.target.closest('.card-answer')) return;
     state.flipped = false;
     cardEl.classList.remove('flipped');
+    ttsCancel();
+  });
+
+  /* M3 · TTS-Buttons aktivieren */
+  cardEl.querySelectorAll('.tts-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const seite = btn.dataset.seite;     /* 'front' oder 'back' */
+      ttsToggle(card, seite, btn);
+    });
   });
 
   /* Notiz-Speicherung bei Mini-Fall */
@@ -11936,6 +12611,7 @@ function rateCard(rating) {
 
 function next() {
   if (state.index < state.filtered.length - 1) {
+    if (typeof ttsCancel === 'function') ttsCancel();   /* M3 */
     state.index++;
     state.flipped = false;
     render();
@@ -11943,6 +12619,7 @@ function next() {
 }
 function prev() {
   if (state.index > 0) {
+    if (typeof ttsCancel === 'function') ttsCancel();   /* M3 */
     state.index--;
     state.flipped = false;
     render();
@@ -13077,6 +13754,7 @@ function saveVersuch(klausurId, versuch) {
 /* ── Modus-Wechsel ── */
 
 function setMode(mode) {
+  if (typeof ttsCancel === 'function') ttsCancel();   /* M3 · Vorlesen stoppen bei Modus-Wechsel */
   const kartenModule = document.getElementById('kartenModule');
   const klausurModule = document.getElementById('klausurModule');
   const btnKarten = document.getElementById('modeKarten');
@@ -13709,6 +14387,7 @@ document.getElementById('modeKlausur').addEventListener('click', () => setMode('
 
 const helpModal = document.getElementById('helpModal');
 document.getElementById('helpBtn').addEventListener('click', () => {
+  if (typeof ttsCancel === 'function') ttsCancel();   /* M3 · Vorlesen stoppen */
   helpModal.classList.add('show');
 });
 document.getElementById('helpClose').addEventListener('click', () => {
@@ -13730,6 +14409,244 @@ applyKantonConfigToUI();
 /* Block 1.3 · Karten-Klassifikation diagnostisch ausgeben */
 const stats = classifyCards();
 console.log(`[KaJa Tool v${TOOL_VERSION}] Kanton: ${activeConfig.code} · Karten: ${stats.total} (${stats.portabel} portabel, ${stats.kantonal} kantonsspezifisch)`);
+
+/* ════════════════════════════════════════════════════════════════════
+   M3 · Vorlesefunktion (Text-to-Speech)
+   Speech-Engine, deutsche Stimme finden, Karten-Inhalt extrahieren,
+   iOS-tauglich mit Chunking bei langen Texten.
+   ════════════════════════════════════════════════════════════════════ */
+
+const TTS = {
+  voices: [],            /* alle verfügbaren Stimmen, befüllt nach voiceschanged */
+  germanVoices: [],      /* gefiltert auf de-* */
+  activeButton: null,    /* gerade sprechender Button, oder null */
+  utteranceQueue: [],    /* Chunk-Queue für lange Texte */
+  chunkIndex: 0,
+  ready: false,          /* sind Voices schon geladen */
+};
+
+function ttsSupported() {
+  return typeof window.speechSynthesis !== 'undefined' && typeof window.SpeechSynthesisUtterance !== 'undefined';
+}
+
+function ttsLoadVoices() {
+  if (!ttsSupported()) return;
+  const all = window.speechSynthesis.getVoices() || [];
+  TTS.voices = all;
+  TTS.germanVoices = all.filter(v => v.lang && v.lang.toLowerCase().startsWith('de'));
+  /* Sortierung: de-CH zuerst, dann de-DE, dann Rest */
+  TTS.germanVoices.sort((a, b) => {
+    const score = v => {
+      const l = v.lang.toLowerCase();
+      if (l === 'de-ch') return 0;
+      if (l === 'de-de') return 1;
+      if (l.startsWith('de')) return 2;
+      return 3;
+    };
+    return score(a) - score(b);
+  });
+  TTS.ready = TTS.germanVoices.length > 0;
+  ttsRenderVoiceSelect();
+}
+
+function ttsPickDefaultVoice() {
+  if (TTS.germanVoices.length === 0) return null;
+  /* Falls vom State gespeichert: nimm die, sonst erste de-CH/de-DE */
+  if (state.tts.voiceURI) {
+    const found = TTS.germanVoices.find(v => v.voiceURI === state.tts.voiceURI);
+    if (found) return found;
+  }
+  return TTS.germanVoices[0];
+}
+
+function ttsRenderVoiceSelect() {
+  const sel = document.getElementById('ttsVoice');
+  if (!sel) return;
+  sel.innerHTML = '';
+  if (TTS.germanVoices.length === 0) {
+    const opt = document.createElement('option');
+    opt.textContent = 'keine deutsche Stimme verfügbar';
+    opt.disabled = true;
+    sel.appendChild(opt);
+    sel.disabled = true;
+    return;
+  }
+  sel.disabled = false;
+  TTS.germanVoices.forEach(v => {
+    const opt = document.createElement('option');
+    opt.value = v.voiceURI;
+    /* Beispiel-Anzeige: "Anna · de-DE" */
+    opt.textContent = `${v.name} · ${v.lang}`;
+    sel.appendChild(opt);
+  });
+  const picked = ttsPickDefaultVoice();
+  if (picked) {
+    sel.value = picked.voiceURI;
+    state.tts.voiceURI = picked.voiceURI;
+  }
+}
+
+/* SVG-Icons als Inline-Strings, dezent in Pergament */
+const TTS_ICON_PLAY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+const TTS_ICON_STOP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>';
+
+function ttsButtonHTML(seite) {
+  if (!ttsSupported()) return '';
+  const label = seite === 'front' ? 'Vorderseite vorlesen' : 'Rückseite vorlesen';
+  return `<button class="tts-btn" data-seite="${seite}" type="button" aria-label="${label}" title="${label}">${TTS_ICON_PLAY}</button>`;
+}
+
+/* Karteninhalt zu sprechendem Text aufbereiten — pro Seite */
+function ttsExtractText(card, seite) {
+  const isFall = card.type === 'fall';
+  if (seite === 'front') {
+    if (isFall) {
+      return [card.topic, card.prompt, card.sachverhalt, 'Aufgabe: ' + card.aufgabe]
+        .filter(Boolean).join('. ');
+    }
+    return [card.topic, card.prompt, card.hint].filter(Boolean).join('. ');
+  }
+  /* back */
+  /* answerHTML enthält HTML, daher in einen DIV legen und textContent abgreifen.
+     Strukturmarker (h4, li) durch Punkte ersetzen, damit die Stimme Pausen macht. */
+  const tmp = document.createElement('div');
+  tmp.innerHTML = card.answerHTML || '';
+  /* h4 als kurze Pause: vorher und nachher Punkt */
+  tmp.querySelectorAll('h4').forEach(h => { h.textContent = '. ' + h.textContent + '. '; });
+  /* li als Punkt am Ende */
+  tmp.querySelectorAll('li').forEach(li => {
+    if (!/[.!?]\s*$/.test(li.textContent)) li.textContent = li.textContent + '. ';
+  });
+  let txt = (card.answerTitle || '') + '. ' + (tmp.textContent || '');
+  /* Whitespace normalisieren */
+  txt = txt.replace(/\s+/g, ' ').replace(/\.\s*\.\s*/g, '. ').trim();
+  return txt;
+}
+
+/* Lange Texte in Chunks à max 180 Wörter splitten, an Satzgrenzen */
+function ttsChunkText(text, maxWords = 180) {
+  if (!text) return [];
+  /* An Satzgrenzen splitten — Punkt/Frage/Ausruf gefolgt von Whitespace */
+  const sentences = text.split(/(?<=[.!?])\s+/);
+  const chunks = [];
+  let buf = '';
+  let bufWords = 0;
+  for (const s of sentences) {
+    const sWords = s.split(/\s+/).length;
+    if (bufWords + sWords > maxWords && buf) {
+      chunks.push(buf.trim());
+      buf = s;
+      bufWords = sWords;
+    } else {
+      buf = buf ? buf + ' ' + s : s;
+      bufWords += sWords;
+    }
+  }
+  if (buf.trim()) chunks.push(buf.trim());
+  return chunks;
+}
+
+function ttsCancel() {
+  if (!ttsSupported()) return;
+  try { window.speechSynthesis.cancel(); } catch (e) {}
+  TTS.utteranceQueue = [];
+  TTS.chunkIndex = 0;
+  if (TTS.activeButton) {
+    TTS.activeButton.classList.remove('speaking');
+    TTS.activeButton.innerHTML = TTS_ICON_PLAY;
+    TTS.activeButton = null;
+  }
+}
+
+function ttsSpeakChunk() {
+  if (TTS.chunkIndex >= TTS.utteranceQueue.length) {
+    /* fertig — Button zurücksetzen */
+    if (TTS.activeButton) {
+      TTS.activeButton.classList.remove('speaking');
+      TTS.activeButton.innerHTML = TTS_ICON_PLAY;
+      TTS.activeButton = null;
+    }
+    return;
+  }
+  const text = TTS.utteranceQueue[TTS.chunkIndex];
+  const u = new SpeechSynthesisUtterance(text);
+  const voice = TTS.germanVoices.find(v => v.voiceURI === state.tts.voiceURI);
+  if (voice) {
+    u.voice = voice;
+    u.lang = voice.lang;
+  } else {
+    u.lang = 'de-DE';
+  }
+  u.rate = state.tts.rate || 1.1;
+  u.pitch = 1.0;
+  u.onend = () => {
+    TTS.chunkIndex++;
+    /* iOS-Workaround: kleine Pause vor nächstem Chunk */
+    setTimeout(ttsSpeakChunk, 80);
+  };
+  u.onerror = () => {
+    TTS.chunkIndex++;
+    setTimeout(ttsSpeakChunk, 80);
+  };
+  try { window.speechSynthesis.speak(u); } catch (e) { ttsCancel(); }
+}
+
+function ttsToggle(card, seite, btn) {
+  if (!ttsSupported()) return;
+  /* Klick auf den gerade sprechenden Button → Stop */
+  if (TTS.activeButton === btn) {
+    ttsCancel();
+    return;
+  }
+  /* Anderer Button war aktiv → den stoppen */
+  ttsCancel();
+  /* Neue Sequenz starten */
+  const text = ttsExtractText(card, seite);
+  if (!text) return;
+  TTS.utteranceQueue = ttsChunkText(text);
+  TTS.chunkIndex = 0;
+  TTS.activeButton = btn;
+  btn.classList.add('speaking');
+  btn.innerHTML = TTS_ICON_STOP;
+  ttsSpeakChunk();
+}
+
+/* Init: Voices laden (asynchron auf iOS) und Settings-UI binden */
+(function initTTS() {
+  if (!ttsSupported()) {
+    /* Fallback: ttsButtonHTML gibt leeren String, Settings-Section ausblenden */
+    const sec = document.getElementById('ttsSection');
+    if (sec) sec.style.display = 'none';
+    return;
+  }
+  /* Voices initial laden, dann auf Änderungs-Event hören */
+  ttsLoadVoices();
+  if (typeof window.speechSynthesis.onvoiceschanged !== 'undefined') {
+    window.speechSynthesis.onvoiceschanged = ttsLoadVoices;
+  }
+  /* Tempo-Slider */
+  const rateInput = document.getElementById('ttsRate');
+  const rateDisplay = document.getElementById('ttsRateDisplay');
+  if (rateInput && rateDisplay) {
+    rateInput.value = state.tts.rate;
+    rateDisplay.textContent = (state.tts.rate).toFixed(2).replace(/0$/, '') + '×';
+    rateInput.addEventListener('input', () => {
+      const v = parseFloat(rateInput.value);
+      state.tts.rate = v;
+      rateDisplay.textContent = v.toFixed(2).replace(/0$/, '') + '×';
+      saveState();
+    });
+  }
+  /* Stimmen-Select */
+  const voiceSel = document.getElementById('ttsVoice');
+  if (voiceSel) {
+    voiceSel.addEventListener('change', () => {
+      state.tts.voiceURI = voiceSel.value;
+      saveState();
+    });
+  }
+})();
+
 render();
 
 /* ════════════════════════════════════════════════════════════════════
