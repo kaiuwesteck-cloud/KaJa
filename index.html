@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KaJa · Strafrecht-Drill</title>
+<title>KaJa · Strafrecht · Lernwerkzeug</title>
 <!-- M4 · PWA-Konfiguration für iOS · Apple-Touch-Icon und App-Mode -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -396,7 +396,7 @@
     color: var(--ink-mute);
   }
 
-  /* Heatmap */
+  /* Aktivitätsraster · Etappe 13.3 erweitert */
   .heatmap {
     display: grid;
     grid-template-columns: repeat(20, 1fr);
@@ -407,15 +407,24 @@
     aspect-ratio: 1;
     background: var(--paper-edge);
     border-radius: 1.5px;
-    transition: background 0.2s ease;
+    transition: background 0.2s ease, transform 0.12s ease;
     opacity: 0.55;
+    cursor: pointer;
   }
-  .heatmap-cell.active {
-    background: var(--gold);
-    opacity: 1;
+  .heatmap-cell:hover {
+    transform: scale(1.18);
   }
+  /* Vier Helligkeitsstufen je nach Karten-Anzahl */
+  .heatmap-cell.level-1 { background: rgba(160, 122, 42, 0.35); opacity: 1; }
+  .heatmap-cell.level-2 { background: rgba(160, 122, 42, 0.6);  opacity: 1; }
+  .heatmap-cell.level-3 { background: rgba(160, 122, 42, 0.82); opacity: 1; }
+  .heatmap-cell.level-4 { background: rgba(122,  68, 24, 1);    opacity: 1; }
   .heatmap-cell.today {
     box-shadow: 0 0 0 1px var(--ink);
+  }
+  .heatmap-cell.selected {
+    box-shadow: 0 0 0 2px var(--burgundy, #7a2e2a);
+    transform: scale(1.18);
   }
   .heatmap-legend {
     display: flex;
@@ -425,6 +434,84 @@
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: var(--ink-faint);
+    margin-bottom: 8px;
+  }
+
+  /* Etappe 13.3 · Skala-Erklärung mit kleinen Probekästchen */
+  .heatmap-scale {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    margin-top: 4px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .heatmap-scale-cell {
+    width: 9px;
+    height: 9px;
+    border-radius: 1.5px;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .heatmap-scale-cell.empty { background: var(--paper-edge); opacity: 0.55; }
+
+  /* Etappe 13.3 · Detailbereich unter dem Raster */
+  .heatmap-detail {
+    margin-top: 10px;
+    padding: 9px 11px;
+    background: rgba(120, 80, 40, 0.06);
+    border-left: 2px solid rgba(160, 122, 42, 0.7);
+    border-radius: 3px;
+    font-family: var(--serif-body);
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    min-height: 56px;
+  }
+  .heatmap-detail-date {
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .heatmap-detail-count {
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .heatmap-detail-count strong { color: var(--burgundy, #7a2e2a); }
+  .heatmap-detail-breakdown {
+    margin-top: 4px;
+    font-size: 10.5px;
+    color: var(--ink-mute);
+  }
+  .heatmap-detail-empty {
+    font-style: italic;
+    color: var(--ink-faint);
+  }
+
+  /* Etappe 13.3 · Wochenstatistik */
+  .heatmap-summary {
+    margin-top: 8px;
+    padding: 8px 11px;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-mute);
+    line-height: 1.7;
+    border-top: 1px dotted var(--paper-edge);
+  }
+  .heatmap-summary span {
+    color: var(--ink);
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: var(--serif-body);
+    font-size: 12px;
   }
 
   /* ─── Main ─── */
@@ -858,6 +945,41 @@
   }
   .fall-notes-label .saved.show { opacity: 1; }
 
+  /* ─────────────────────────────────────────
+     Etappe 14.3 · Notizfeld auf normalen
+     Karten · Mittelweg-Variante:
+     • leere Notiz → kompakter Knopf
+     • bestehende Notiz → Feld permanent
+     ───────────────────────────────────────── */
+  .card-notes-section {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px dashed rgba(120, 80, 40, 0.22);
+  }
+  .card-notes-collapsed {
+    text-align: left;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(120, 80, 40, 0.22);
+  }
+  .card-notes-add {
+    font-family: var(--serif-body);
+    font-size: 12px;
+    color: var(--ink-mute);
+    background: transparent;
+    border: 1px dashed rgba(120, 80, 40, 0.4);
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-style: italic;
+  }
+  .card-notes-add:hover {
+    color: var(--burgundy, #7a2e2a);
+    border-color: rgba(122, 46, 42, 0.6);
+    border-style: solid;
+    background: rgba(122, 46, 42, 0.04);
+  }
+
   .flip-hint {
     position: absolute;
     bottom: 28px;
@@ -1202,6 +1324,137 @@
     display: none;
   }
 
+  /* ═══════════════════════════════════════════════════
+     Etappe 14.2 · Notizen-Modul
+     ═══════════════════════════════════════════════════ */
+  .notizen-module {
+    display: none;
+  }
+  .notizen-module.active {
+    display: block;
+  }
+  .notizen-saved-indicator {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .notizen-saved-indicator.show {
+    opacity: 1;
+    color: var(--gold-deep, #8a6f4a);
+  }
+  .notizen-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    background: rgba(120, 80, 40, 0.04);
+    border: 1px solid rgba(120, 80, 40, 0.18);
+    border-radius: 4px 4px 0 0;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .notizen-btn {
+    font-family: var(--serif-body);
+    font-size: 13px;
+    background: var(--card-face, #fbf7eb);
+    color: var(--ink);
+    border: 1px solid rgba(120, 80, 40, 0.25);
+    padding: 5px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-height: 30px;
+    line-height: 1.2;
+  }
+  .notizen-btn:hover {
+    background: rgba(122, 46, 42, 0.08);
+    border-color: rgba(122, 46, 42, 0.4);
+  }
+  .notizen-btn:active {
+    background: rgba(122, 46, 42, 0.18);
+    transform: translateY(1px);
+  }
+  .notizen-toolbar-sep {
+    display: inline-block;
+    width: 1px;
+    height: 20px;
+    background: rgba(120, 80, 40, 0.25);
+    margin: 0 4px;
+  }
+  .notizen-stage {
+    border: 1px solid rgba(120, 80, 40, 0.18);
+    border-top: none;
+    background: var(--card-face, #fbf7eb);
+  }
+  .notizen-editor {
+    min-height: 480px;
+    padding: 22px 26px;
+    font-family: var(--serif-body);
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink);
+    outline: none;
+    overflow-y: auto;
+  }
+  .notizen-editor:empty::before {
+    content: attr(data-placeholder);
+    color: var(--ink-faint);
+    font-style: italic;
+    pointer-events: none;
+  }
+  .notizen-editor h2,
+  .notizen-editor h3 {
+    font-family: var(--serif-display, var(--serif-body));
+    font-size: 17px;
+    font-weight: 600;
+    margin: 14px 0 8px;
+    color: var(--burgundy, #7a2e2a);
+  }
+  .notizen-editor ul {
+    padding-left: 22px;
+    margin: 8px 0;
+  }
+  .notizen-editor li { margin-bottom: 4px; }
+  .notizen-editor p { margin: 0 0 10px; }
+  .notizen-editor strong { font-weight: 700; }
+  .notizen-editor em { font-style: italic; }
+  .notizen-foot {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .notizen-hint {
+    font-family: var(--serif-body);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    text-transform: none;
+    letter-spacing: 0;
+    font-style: italic;
+  }
+  @media (max-width: 760px) {
+    .notizen-editor { min-height: 360px; padding: 16px 18px; font-size: 14px; }
+    .notizen-toolbar { gap: 4px; padding: 6px 8px; }
+    .notizen-btn { font-size: 12px; padding: 5px 10px; min-height: 36px; }
+    .notizen-foot { flex-direction: column; align-items: flex-start; gap: 4px; }
+  }
+  /* Mode-Toggle bei drei Knöpfen */
+  .mode-toggle {
+    flex-wrap: wrap;
+  }
+  .mode-toggle button {
+    flex: 1 1 0;
+  }
+
   /* Klausur-Auswahl */
   .klausur-list {
     display: grid;
@@ -1251,6 +1504,263 @@
     border-top: 1px solid rgba(120, 80, 40, 0.12);
     padding-top: 10px;
     margin-top: 4px;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     Etappe 15.1 · Verlaufsleiste in der Klausur-Liste
+     ═══════════════════════════════════════════════════ */
+  .klausur-verlauf {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(120, 80, 40, 0.2);
+  }
+  .klausur-verlauf-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--serif-body);
+    font-size: 12px;
+    color: var(--ink-mute);
+    background: transparent;
+    border: none;
+    padding: 4px 0;
+    cursor: pointer;
+    font-style: italic;
+    transition: color 0.15s ease;
+  }
+  .klausur-verlauf-toggle:hover {
+    color: var(--burgundy, #7a2e2a);
+  }
+  .klausur-verlauf-arrow {
+    font-style: normal;
+    font-size: 10px;
+    color: var(--burgundy, #7a2e2a);
+  }
+  .klausur-verlauf-list {
+    margin-top: 12px;
+    background: rgba(120, 80, 40, 0.04);
+    border: 1px solid rgba(120, 80, 40, 0.15);
+    border-radius: 4px;
+    padding: 4px 0;
+    overflow: hidden;
+  }
+  .klausur-verlauf-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 24px;
+    gap: 12px;
+    padding: 8px 14px;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+    border-bottom: 1px solid rgba(120, 80, 40, 0.1);
+  }
+  .klausur-verlauf-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 24px;
+    gap: 12px;
+    padding: 10px 14px;
+    font-family: var(--serif-body);
+    font-size: 13px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.15s ease;
+    align-items: center;
+  }
+  .klausur-verlauf-row:hover {
+    background: rgba(122, 46, 42, 0.06);
+  }
+  .klausur-verlauf-row + .klausur-verlauf-row {
+    border-top: 1px solid rgba(120, 80, 40, 0.08);
+  }
+  .klausur-verlauf-datum { color: var(--ink); }
+  .klausur-verlauf-dauer { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .klausur-verlauf-punkte { color: var(--burgundy, #7a2e2a); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .klausur-verlauf-prozent { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .klausur-verlauf-pfeil {
+    color: var(--ink-faint);
+    text-align: right;
+    font-size: 14px;
+  }
+  .klausur-verlauf-row:hover .klausur-verlauf-pfeil {
+    color: var(--burgundy, #7a2e2a);
+  }
+  @media (max-width: 760px) {
+    .klausur-verlauf-header { display: none; }
+    .klausur-verlauf-row {
+      grid-template-columns: 1fr auto;
+      gap: 4px 12px;
+      padding: 12px 14px;
+    }
+    .klausur-verlauf-datum { grid-column: 1 / 2; font-weight: 600; }
+    .klausur-verlauf-punkte { grid-column: 2 / 3; text-align: right; }
+    .klausur-verlauf-dauer { grid-column: 1 / 2; font-size: 11px; color: var(--ink-faint); }
+    .klausur-verlauf-prozent { grid-column: 2 / 3; text-align: right; font-size: 11px; }
+    .klausur-verlauf-pfeil { display: none; }
+  }
+
+  /* ═══════════════════════════════════════════════════
+     Etappe 15.2 · Versuchs-Detailansicht
+     ═══════════════════════════════════════════════════ */
+  .versuch-detail {
+    background: var(--card-face);
+    border: 1px solid rgba(120, 80, 40, 0.18);
+    border-radius: 10px;
+    padding: 28px 32px;
+  }
+  .versuch-detail-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--serif-body);
+    font-size: 13px;
+    color: var(--ink-mute);
+    background: transparent;
+    border: 1px solid rgba(120, 80, 40, 0.25);
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 18px;
+    transition: all 0.15s ease;
+  }
+  .versuch-detail-back:hover {
+    color: var(--burgundy, #7a2e2a);
+    border-color: rgba(122, 46, 42, 0.5);
+    background: rgba(122, 46, 42, 0.05);
+  }
+  .versuch-detail-header {
+    border-bottom: 1px solid rgba(120, 80, 40, 0.15);
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+  }
+  .versuch-detail-header h3 {
+    font-family: 'EB Garamond', 'Source Serif 4', Georgia, serif;
+    font-size: 24px;
+    color: var(--ink);
+    margin: 0 0 8px 0;
+  }
+  .versuch-detail-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .versuch-detail-meta strong {
+    color: var(--ink);
+    font-family: var(--serif-body);
+    font-size: 14px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 600;
+  }
+  .versuch-detail-section {
+    margin-bottom: 28px;
+  }
+  .versuch-detail-section h4 {
+    font-family: var(--serif-body);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--burgundy-dk, #5e1f1c);
+    font-style: italic;
+    margin: 0 0 12px 0;
+  }
+  .versuch-bewertung-tabelle {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--serif-body);
+    font-size: 13.5px;
+  }
+  .versuch-bewertung-tabelle th {
+    text-align: left;
+    padding: 8px 10px;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+    border-bottom: 1.5px solid rgba(120, 80, 40, 0.3);
+    font-weight: 400;
+  }
+  .versuch-bewertung-tabelle th.right { text-align: right; }
+  .versuch-bewertung-tabelle td {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(120, 80, 40, 0.08);
+    color: var(--ink);
+  }
+  .versuch-bewertung-tabelle td.right {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .versuch-bewertung-tabelle tr.summe td {
+    font-weight: 600;
+    border-top: 1.5px solid rgba(120, 80, 40, 0.3);
+    border-bottom: none;
+    padding-top: 12px;
+    color: var(--burgundy, #7a2e2a);
+  }
+  .versuch-bewertung-notizen {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(120, 80, 40, 0.05);
+    border-left: 2px solid rgba(160, 122, 42, 0.5);
+    font-family: var(--serif-body);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    white-space: pre-wrap;
+    border-radius: 0 3px 3px 0;
+  }
+  .versuch-bewertung-notizen-leer {
+    font-style: italic;
+    color: var(--ink-faint);
+  }
+  .versuch-bearbeitung-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--serif-body);
+    font-size: 13px;
+    color: var(--ink-mute);
+    background: transparent;
+    border: 1px dashed rgba(120, 80, 40, 0.4);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-style: italic;
+    transition: all 0.15s ease;
+  }
+  .versuch-bearbeitung-toggle:hover {
+    color: var(--burgundy, #7a2e2a);
+    border-color: rgba(122, 46, 42, 0.6);
+    border-style: solid;
+    background: rgba(122, 46, 42, 0.04);
+  }
+  .versuch-bearbeitung-text {
+    margin-top: 14px;
+    padding: 18px 22px;
+    background: rgba(246, 241, 227, 0.6);
+    border: 1px solid rgba(120, 80, 40, 0.15);
+    border-radius: 4px;
+    font-family: var(--serif-body);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink);
+    white-space: pre-wrap;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+  @media (max-width: 760px) {
+    .versuch-detail { padding: 18px 18px; }
+    .versuch-detail-header h3 { font-size: 20px; }
+    .versuch-detail-meta { gap: 12px; }
+    .versuch-bearbeitung-text { padding: 14px 16px; font-size: 13px; max-height: 480px; }
+    .versuch-bewertung-tabelle { font-size: 12.5px; }
+    .versuch-bewertung-tabelle th, .versuch-bewertung-tabelle td { padding: 6px 8px; }
   }
 
   /* Klausur-Bearbeitung */
@@ -1673,6 +2183,35 @@
     font-weight: 700;
     font-size: 13px;
     font-family: var(--serif-display);
+  }
+
+  /* ─────────────────────────────────────────
+     Etappe 13.1 · Prominent platzierter
+     Einführungs-Knopf direkt nach Modus-
+     Umschalter. Burgunder Akzentlinie,
+     leicht erhöhter Kontrast.
+     ───────────────────────────────────────── */
+  .help-prominent {
+    margin-bottom: 18px;
+  }
+  .help-btn-prominent {
+    border: 1px solid rgba(122, 46, 42, 0.35);
+    background: rgba(122, 46, 42, 0.06);
+    border-left: 3px solid rgba(122, 46, 42, 0.7);
+    padding: 11px 14px;
+    font-size: 13.5px;
+    line-height: 1.35;
+    text-align: left;
+  }
+  .help-btn-prominent:hover {
+    background: rgba(122, 46, 42, 0.12);
+    border-color: rgba(122, 46, 42, 0.5);
+    border-left-color: rgba(122, 46, 42, 1);
+  }
+  .help-btn-prominent .help-icon {
+    background: rgba(122, 46, 42, 0.85);
+    color: #fbf7eb;
+    flex-shrink: 0;
   }
 
   .modal-help {
@@ -2223,6 +2762,68 @@
     .tts-btn svg { width: 16px; height: 16px; }
   }
 
+  /* ─────────────────────────────────────────
+     Etappe 13.2 · Einmalige Hinweisblase
+     beim ersten Antippen des Lautsprecher-
+     Symbols. Pergament-Stil, dezent, ver-
+     schwindet nach 6 Sekunden oder Klick.
+     ───────────────────────────────────────── */
+  .tts-hint-bubble {
+    position: absolute;
+    z-index: 50;
+    background: linear-gradient(135deg, #f6f1e3 0%, #efe4c8 100%);
+    border: 1px solid rgba(122, 46, 42, 0.4);
+    border-left: 3px solid rgba(122, 46, 42, 0.8);
+    color: var(--ink);
+    padding: 10px 14px 10px 12px;
+    font-family: var(--serif-body);
+    font-size: 13px;
+    line-height: 1.45;
+    max-width: 280px;
+    box-shadow: 0 4px 14px rgba(60, 40, 20, 0.18);
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.28s ease, transform 0.28s ease;
+    pointer-events: auto;
+  }
+  .tts-hint-bubble.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .tts-hint-bubble::before {
+    content: "";
+    position: absolute;
+    top: -7px;
+    right: 24px;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(135deg, #f6f1e3 0%, #efe4c8 100%);
+    border-left: 1px solid rgba(122, 46, 42, 0.4);
+    border-top: 1px solid rgba(122, 46, 42, 0.4);
+    transform: rotate(45deg);
+  }
+  .tts-hint-bubble strong {
+    color: rgba(122, 46, 42, 0.9);
+    font-weight: 600;
+  }
+  .tts-hint-close {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--ink-mute);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  /* Mobile: Blase nimmt mehr Bildschirm ein */
+  @media (max-width: 760px) {
+    .tts-hint-bubble {
+      max-width: calc(100vw - 40px);
+      font-size: 13.5px;
+    }
+  }
+
   /* TTS-Section in der Sidebar */
   .tts-section .tts-row {
     display: flex;
@@ -2292,11 +2893,20 @@
     <button class="mobile-nav-close" id="mobileNavClose" aria-label="Menü schliessen" type="button">×</button>
     <div class="brand" id="brandLine">kaja · phase a</div>
     <h1 class="title" id="sidebarTitle">Strafrecht <em>—</em> Kartei</h1>
-    <div class="subtitle" id="sidebarSubtitle">Aargauer Anwaltsprüfung · Phase A · 95 Karten · Spaced Repetition</div>
+    <div class="subtitle" id="sidebarSubtitle">Aargauer Anwaltsprüfung · Phase A · 95 Karten · verteilte Wiederholung</div>
 
     <div class="mode-toggle">
-      <button class="active" data-mode="karten" id="modeKarten">Karteikarten</button>
+      <button class="active" data-mode="karten" id="modeKarten">Lernen</button>
       <button data-mode="klausur" id="modeKlausur">Klausur</button>
+      <button data-mode="notizen" id="modeNotizen">Notizen</button>
+    </div>
+
+    <!-- Etappe 13.1 · Einführungs-Knopf prominent direkt nach Modus-Umschalter -->
+    <div class="toc-section help-prominent">
+      <button class="help-btn help-btn-prominent" id="helpBtn" title="Einführung anzeigen">
+        <span class="help-icon">?</span>
+        <span>Einführung — so funktioniert das Werkzeug</span>
+      </button>
     </div>
 
     <div class="toc-section bereich-section" id="bereichSection">
@@ -2305,12 +2915,12 @@
     </div>
 
     <div class="toc-section">
-      <div class="toc-label">Kapitel</div>
+      <div class="toc-label">Karteikartenkapitel</div>
       <ul class="toc-list" id="categoryList"></ul>
     </div>
 
     <div class="toc-section">
-      <div class="toc-label">Kartentyp</div>
+      <div class="toc-label">Karteikartentyp</div>
       <div class="type-filters" id="typeFilters">
         <button class="type-filter active" data-type="all"><span class="type-dot all"></span><span>Alle Typen</span></button>
         <button class="type-filter" data-type="schema"><span class="type-dot schema"></span><span>Schemata</span></button>
@@ -2337,7 +2947,7 @@
     </div>
 
     <div class="toc-section streak-section">
-      <div class="toc-label">Lernstreak</div>
+      <div class="toc-label">Lernreihe</div>
       <div class="streak-display">
         <div class="streak-number" id="streakValue">0</div>
         <div class="streak-label">Tage in Folge</div>
@@ -2347,6 +2957,19 @@
         <span>vor 60 Tagen</span>
         <span>heute</span>
       </div>
+      <!-- Etappe 13.3 · Skala-Erklärung -->
+      <div class="heatmap-scale">
+        <span class="heatmap-scale-cell empty"></span><span>nichts</span>
+        <span class="heatmap-scale-cell level-1"></span>
+        <span class="heatmap-scale-cell level-2"></span>
+        <span class="heatmap-scale-cell level-3"></span>
+        <span class="heatmap-scale-cell level-4"></span>
+        <span>viele</span>
+      </div>
+      <!-- Etappe 13.3 · Detailbereich · zeigt heute oder angetippten Tag -->
+      <div class="heatmap-detail" id="heatmapDetail"></div>
+      <!-- Etappe 13.3 · Wochenstatistik -->
+      <div class="heatmap-summary" id="heatmapSummary"></div>
     </div>
 
     <div class="toc-section keyboard-info">
@@ -2371,13 +2994,6 @@
       <div class="tts-hint">Erst antworten, dann anhören.</div>
     </div>
 
-    <div class="toc-section">
-      <button class="help-btn" id="helpBtn" title="Gebrauchsanweisung anzeigen">
-        <span class="help-icon">?</span>
-        <span>Gebrauchsanweisung</span>
-      </button>
-    </div>
-
     <div class="version-footer" id="versionFooter">v3.0 · Aargau · Strafrecht + Lernmethodik + Prüfungsablauf + BT-Definitionen + Bestandsreview + BGE-Sammlung + Nebenstrafrecht + Klausur-Modul + Mobile-Layout + iOS-PWA + Vorlesefunktion</div>
   </aside>
 
@@ -2398,7 +3014,7 @@
     </div>
 
     <div class="preview-banner">
-      <strong>Ausbaustufe 4 · Spaced Repetition ·</strong> Das Tool zeigt Ihnen täglich nur die fälligen Karten. „Sicher" verlängert das Intervall (1 → 2 → 5 → 11 → 24 → 52 Tage), „Wackelig" setzt es auf 2 Tage zurück, „Schwer" zeigt heute nochmal. Lernstreak und Heatmap motivieren über die 18 Monate. Bisheriger Fortschritt aus Stufe 3 wurde automatisch migriert.
+      Das Werkzeug legt Ihnen jeden Tag nur die fälligen Karten vor. Die Bewertung „Sicher" verlängert den Wiederholungsabstand schrittweise (1 → 2 → 5 → 11 → 24 → 52 Tage), „Wackelig" setzt ihn auf zwei Tage zurück, „Schwer" zeigt die Karte am gleichen Tag noch einmal. Lernreihe und Aktivitätsraster begleiten Sie über die achtzehn Monate.
     </div>
 
     <div class="toolbar">
@@ -2431,10 +3047,45 @@
         </div>
       </div>
       <div class="preview-banner">
-        <strong>Klausur-Modul ·</strong> Drei Übungsklausuren im Aargauer Stil. Eingabe der Bearbeitung im freien Textfeld, automatischer Stichwort- und Strukturcheck, Vergleich mit Musterlösung, anschliessende Selbstbewertung mit Punkteraster. Versuche werden lokal gespeichert und können wiederholt werden. Klausuren sind als <em>Übungsklausuren</em> beschriftet, nicht als Originalklausuren.
+        Drei Übungsklausuren im Aargauer Stil. Sie geben Ihre Bearbeitung in ein Textfeld ein, das Werkzeug prüft auf Stichworte und Aufbau, gleicht mit der Musterlösung ab und führt durch eine Selbstbewertung mit Punkteraster. Versuche werden im Browser gespeichert und können wiederholt werden. Die Klausuren sind ausdrücklich als <em>Übungsklausuren</em> bezeichnet, nicht als Originalklausuren der Aargauer Anwaltsprüfung.
       </div>
       <div id="klausurStage"></div>
     </div><!-- /.klausur-module -->
+
+    <!-- ════════ Notizen-Modul · Etappe 14.2 ════════ -->
+    <div class="notizen-module" id="notizenModule">
+      <div class="top-bar">
+        <div>
+          <div class="breadcrumb">Allgemeine Notizen</div>
+          <h2>Eigener Notizblock</h2>
+        </div>
+        <div class="notizen-saved-indicator" id="notizenSavedIndicator">— gespeichert</div>
+      </div>
+      <div class="preview-banner">
+        Hier ist Platz für übergreifende Notizen — Gedanken zum Lernfortschritt, Stichworte aus Vorlesungen, Fragen an den Praxisanwalt, Erinnerungen an noch zu klärende Themen. Der Inhalt wird im Browser gespeichert und ist Teil von Sicherung und Wiederherstellung.
+      </div>
+      <div class="notizen-toolbar">
+        <button type="button" class="notizen-btn" data-format="bold" title="Fett · markieren und Knopf drücken oder Strg+B"><strong>F</strong></button>
+        <button type="button" class="notizen-btn" data-format="italic" title="Kursiv · markieren und Knopf drücken oder Strg+I"><em>K</em></button>
+        <button type="button" class="notizen-btn" data-format="underline" title="Unterstrichen"><u>U</u></button>
+        <span class="notizen-toolbar-sep"></span>
+        <button type="button" class="notizen-btn" data-format="list-ul" title="Aufzählungsliste">• Liste</button>
+        <button type="button" class="notizen-btn" data-format="heading" title="Überschrift">H</button>
+        <span class="notizen-toolbar-sep"></span>
+        <button type="button" class="notizen-btn" data-format="undo" title="Rückgängig (Strg+Z)">⟲</button>
+      </div>
+      <div class="notizen-stage">
+        <div class="notizen-editor"
+             id="notizenEditor"
+             contenteditable="true"
+             spellcheck="true"
+             data-placeholder="Beginnen Sie hier mit Ihren Notizen. Auswahl markieren und mit den Knöpfen oben formatieren."></div>
+      </div>
+      <div class="notizen-foot">
+        <span id="notizenStats">0 Zeichen</span>
+        <span class="notizen-hint">Format-Knöpfe wirken auf den markierten Text. Tastatur: Strg+B fett, Strg+I kursiv, Strg+U unterstrichen.</span>
+      </div>
+    </div><!-- /.notizen-module -->
 
   </main>
 </div>
@@ -2453,73 +3104,73 @@
   </div>
 </div>
 
-<!-- Hilfe-Modal · Gebrauchsanweisung -->
+<!-- Einführungs-Modal -->
 <div class="modal-overlay" id="helpModal">
   <div class="modal modal-help">
-    <h3>Gebrauchsanweisung</h3>
-    <div class="modal-subtitle">So nutzen Sie das Tool effektiv für Ihre Anwaltsprüfung</div>
+    <h3>Einführung</h3>
+    <div class="modal-subtitle">Wie Sie das Lernwerkzeug für Ihre Anwaltsprüfung nutzen</div>
     <div class="help-content">
 
-      <h4>Zwei Modi · Karteikarten und Klausur</h4>
-      <p>Oben in der Sidebar wechseln Sie zwischen den beiden Hauptmodi. <strong>Karteikarten</strong> ist der tägliche Lernmodus mit Spaced Repetition. <strong>Klausur</strong> ist das periodische Vertiefungstraining mit drei Übungsklausuren à 240 Minuten.</p>
+      <h4>Zwei Arbeitsweisen · Karteikarten und Klausur</h4>
+      <p>Oben in der Seitenleiste wechseln Sie zwischen den beiden Hauptarbeitsweisen. Im Modus <strong>Karteikarten</strong> arbeiten Sie täglich mit verteilter Wiederholung — kurze Einheiten, das Tagespensum richtet sich nach den fälligen Karten. Im Modus <strong>Klausur</strong> bearbeiten Sie eine der drei Übungsklausuren in voller Länge von 240 Minuten, mit anschliessender Selbstbewertung.</p>
 
-      <h4>Spaced Repetition · die Grundidee</h4>
-      <p>Das Tool zeigt Ihnen täglich nur die fälligen Karten. Was Sie sicher können, sehen Sie selten. Was wackelig ist, sehen Sie häufiger. Über 18 Monate entsteht so ein effizienter Lernrhythmus, der das Langzeitgedächtnis trainiert.</p>
+      <h4>Verteilte Wiederholung · die Grundidee</h4>
+      <p>Das Werkzeug zeigt Ihnen jeden Tag nur jene Karten, deren Wiederholungstermin erreicht ist. Was Sie sicher beherrschen, sehen Sie selten; was wackelig sitzt, sehen Sie häufiger. Über achtzehn Monate hinweg entsteht so ein abgestufter Lernrhythmus, der das Langzeitgedächtnis auf prüfungstaugliches Niveau bringt — ohne dass Sie täglich alles wiederholen müssten.</p>
 
-      <h4>Drei Bewertungsknöpfe nach jeder Karte</h4>
+      <h4>Die drei Bewertungsknöpfe nach jeder Karte</h4>
       <div class="help-rating-row">
         <div class="help-rating-key">1 · Sicher</div>
-        <div class="help-rating-explain">Sie wussten die Antwort flüssig und vollständig. Das Intervall verlängert sich nach diesem Schema:<br>
+        <div class="help-rating-explain">Sie wussten die Antwort flüssig und vollständig. Der Wiederholungsabstand verlängert sich schrittweise:<br>
         <span class="help-mono">1 → 2 → 5 → 11 → 24 → 52 Tage</span><br>
-        Eine Karte, die Sie fünfmal als Sicher bewertet haben, kommt erst in fast zwei Monaten wieder hoch.</div>
+        Eine Karte, die Sie fünfmal als sicher bewertet haben, kommt erst in fast zwei Monaten wieder zum Vorschein.</div>
       </div>
       <div class="help-rating-row">
         <div class="help-rating-key">2 · Wackelig</div>
-        <div class="help-rating-explain">Sie wussten die Antwort grundsätzlich, aber mit Lücken oder Unsicherheit. Das Intervall wird auf <strong>2 Tage zurückgesetzt</strong>, egal wie sicher Sie diese Karte bisher schon waren. Bewusst streng — wer wackelt, hat das Wissen noch nicht im Langzeitgedächtnis.</div>
+        <div class="help-rating-explain">Sie wussten die Antwort grundsätzlich, aber mit Lücken oder Unsicherheit. Der Abstand wird auf <strong>zwei Tage zurückgesetzt</strong>, gleichgültig wie sicher diese Karte zuvor schon sass. Bewusst streng — wer wackelt, hat das Wissen noch nicht verlässlich verankert.</div>
       </div>
       <div class="help-rating-row">
         <div class="help-rating-key">3 · Schwer</div>
-        <div class="help-rating-explain">Sie wussten die Antwort nicht oder nur fragmentarisch. Das Tool zeigt die Karte <strong>heute noch einmal</strong> im selben Drill-Durchgang. Die Karte fällt komplett auf Stufe 1 zurück.</div>
+        <div class="help-rating-explain">Sie wussten die Antwort nicht oder nur bruchstückhaft. Die Karte erscheint <strong>am gleichen Tag noch einmal</strong> im laufenden Durchgang und beginnt im Wiederholungszyklus von vorn.</div>
       </div>
 
-      <h4>„Heute fällig" als zentraler Filter</h4>
-      <p>In der Sidebar sehen Sie unter Lernstatus den Filter <strong>Heute fällig</strong> mit einer Zahl daneben. Das sind die Karten, die heute oder früher zur Wiederholung anstehen. Im normalen Lernrhythmus sind das 15-25 Karten pro Tag — machbar in 15-20 Minuten.</p>
+      <h4>„Heute fällig" als zentraler Hinweis</h4>
+      <p>In der Seitenleiste finden Sie unter dem Lernstatus die Anzeige <strong>Heute fällig</strong> mit einer Zahl daneben. Das sind die Karten, die heute oder bereits früher zur Wiederholung anstehen. Im eingeschwungenen Lernrhythmus sind dies fünfzehn bis fünfundzwanzig Karten pro Tag, was sich in fünfzehn bis zwanzig Minuten bewältigen lässt.</p>
 
-      <h4>Lernstreak und Heatmap</h4>
-      <p>Der <strong>Lernstreak</strong> zählt die Tage in Folge, an denen Sie mindestens eine Karte gedrillt haben. Wenn Sie einen Tag aussetzen, fängt er bei 0 wieder an. Die <strong>Heatmap</strong> darunter zeigt die letzten 60 Tage als Kästchen-Raster — helle Färbung wenig Aktivität, dunkle Färbung viele Karten gedrillt. So sehen Sie auf einen Blick, ob Sie regelmässig dranbleiben.</p>
+      <h4>Lernreihe und Aktivitätsraster</h4>
+      <p>Die <strong>Lernreihe</strong> zählt die Tage in Folge, an denen Sie mindestens eine Karte bearbeitet haben. Ein einziger ausgesetzter Tag setzt die Reihe auf null zurück. Das <strong>Aktivitätsraster</strong> darunter zeigt die letzten sechzig Tage in Form kleiner Felder — helle Färbung steht für wenig Aktivität, dunkle Färbung für viele bearbeitete Karten. So sehen Sie auf einen Blick, ob Sie regelmässig dranbleiben.</p>
 
-      <h4>Praktische Empfehlungen</h4>
+      <h4>Empfehlungen aus der Praxis</h4>
       <ul>
-        <li><strong>Sei ehrlich beim Bewerten.</strong> „Sicher" nur dann drücken, wenn Sie die Antwort flüssig und vollständig hatten. Im Zweifel lieber „Wackelig" — dann sehen Sie die Karte häufiger und das Wissen festigt sich.</li>
-        <li><strong>Tägliches Lernen schlägt Wochenend-Marathon.</strong> 15 Minuten pro Tag sind besser als 2 Stunden pro Woche, weil das Spaced-Repetition-System auf täglichen Rhythmus rechnet.</li>
-        <li><strong>Verständnis vor Wiederholung.</strong> Wenn eine Karte ständig als „Schwer" zurückfällt, ist das ein Signal: hier fehlt nicht Wiederholung, sondern Verständnis. Dann kurz im Lawbility oder Brändle nachschlagen, statt nur zu drillen.</li>
-        <li><strong>Erste Klausur nach 4-6 Wochen.</strong> Die Klausuren setzen Substanz aus den Karteikarten voraus. Zu früher Versuch führt zu Frustration.</li>
+        <li><strong>Bewerten Sie ehrlich.</strong> „Sicher" verdient nur, wer die Antwort flüssig und vollständig parat hatte. Im Zweifel besser „Wackelig" — dann sehen Sie die Karte häufiger und das Wissen festigt sich.</li>
+        <li><strong>Tägliche kurze Einheiten wirken stärker als seltene lange.</strong> Fünfzehn Minuten am Tag sind ergiebiger als zwei Stunden am Wochenende, weil das Verfahren der verteilten Wiederholung auf einen täglichen Rhythmus angelegt ist.</li>
+        <li><strong>Verständnis vor Wiederholung.</strong> Fällt eine Karte immer wieder als „Schwer" zurück, dann fehlt nicht weitere Wiederholung, sondern das zugrundeliegende Verständnis. Schlagen Sie kurz im Lawbility oder bei Brändle nach, statt nur weiterzudrillen.</li>
+        <li><strong>Erste Klausur erst nach vier bis sechs Wochen.</strong> Die Klausuren setzen Substanz aus den Karteikarten voraus. Ein zu früher Versuch führt zu Frustration, nicht zu Lernfortschritt.</li>
       </ul>
 
-      <h4>Karten-Filter und Ansichten</h4>
-      <p>In der Sidebar können Sie nach <strong>Kapitel</strong> (StGB AT, BT, StPO, Vernetzungen, Methoden, Mini-Fälle, BGE, Nebenstrafrecht), nach <strong>Kartentyp</strong> (Schemata, Definitionen, Konstellationen etc.) und nach <strong>Lernstatus</strong> (Heute fällig, Neu, Wackelig, Schwer) filtern. Mit der Toolbar oben können Sie die Reihenfolge mischen, sichern und wiederherstellen.</p>
+      <h4>Karten auswählen und filtern</h4>
+      <p>In der Seitenleiste können Sie nach <strong>Karteikartenkapitel</strong> auswählen (Strafgesetzbuch Allgemeiner Teil, Besonderer Teil, Strafprozessordnung, Vernetzungen, Methodik, Mini-Fälle, Bundesgerichtsentscheide, Nebenstrafrecht), nach <strong>Karteikartentyp</strong> (Aufbauschemata, Definitionen, Konstellationen und so weiter) und nach <strong>Lernstatus</strong> (Heute fällig, Neu, Wackelig, Schwer). Mit der Werkzeugleiste oben können Sie die Reihenfolge mischen, den Stand sichern oder eine ältere Fassung wiederherstellen.</p>
 
-      <h4>Tastatur-Steuerung</h4>
-      <p>Schneller als Klicken: <strong>Leertaste</strong> dreht die Karte um, <strong>← / →</strong> navigiert, <strong>1 / 2 / 3</strong> vergibt die Bewertung.</p>
+      <h4>Steuerung über die Tastatur</h4>
+      <p>Schneller als das Klicken: <strong>Leertaste</strong> dreht die Karte um, <strong>Pfeil links und rechts</strong> blättern, <strong>1, 2, 3</strong> vergeben die Bewertung.</p>
 
-      <h4>Lernfortschritt sichern</h4>
-      <p>Ihr Lernfortschritt wird lokal im Browser gespeichert. Mit den Knöpfen <strong>Sichern</strong> und <strong>Wiederherstellen</strong> in der Toolbar können Sie den Stand als JSON-Datei exportieren oder eine ältere Version laden — wichtig vor einem Browser-Wechsel oder einer Neuinstallation.</p>
+      <h4>Lernfortschritt sichern und wiederherstellen</h4>
+      <p>Ihr Lernfortschritt wird im Speicher des Browsers abgelegt. Mit den Knöpfen <strong>Sichern</strong> und <strong>Wiederherstellen</strong> in der Werkzeugleiste laden Sie den Stand als Datei herunter beziehungsweise wieder zurück — wichtig vor einem Wechsel des Browsers oder einer Neuinstallation.</p>
 
-      <h4>Auf dem iPhone als App nutzen</h4>
-      <p>Das Tool kann als App-Kachel auf den Home-Bildschirm gelegt werden, dann öffnet es sich im Vollbild ohne Safari-Adressleiste:</p>
+      <h4>Auf dem iPhone als Anwendung nutzen</h4>
+      <p>Das Werkzeug lässt sich als Kachel auf den Startbildschirm legen und öffnet dann im Vollbild ohne Adressleiste:</p>
       <ol>
         <li>Datei in Safari auf dem iPhone öffnen</li>
-        <li>Auf das <strong>Teilen-Symbol</strong> tippen (Quadrat mit Pfeil nach oben, in der Safari-Leiste)</li>
+        <li>Auf das <strong>Teilen-Symbol</strong> tippen (das Quadrat mit dem Pfeil nach oben in der Safari-Leiste)</li>
         <li><strong>„Zum Home-Bildschirm"</strong> wählen</li>
-        <li>Name bestätigen (KaJa) und auf Hinzufügen tippen</li>
+        <li>Den Namen bestätigen (KaJa) und auf Hinzufügen tippen</li>
       </ol>
-      <p>Das App-Icon erscheint mit einer Justitia-Waage auf Pergament. Auf Tap öffnet sich das Tool im Vollbild-Modus. Der Lernfortschritt bleibt im selben Browser-Speicher wie zuvor.</p>
-      <div class="pillar"><strong>Hinweis:</strong> Mobile-Drill ergänzt die Hauptarbeit am Computer. Klausurbearbeitung (4 Stunden Tippen) bleibt sinnvollerweise auf dem Computer. Karteikarten-Drill in S-Bahn, Wartezimmer und Mittagspause ist die typische Nutzung.</div>
+      <p>Die Kachel zeigt eine Justitia-Waage auf Pergament. Beim Antippen öffnet sich das Werkzeug im Vollbild. Der Lernfortschritt verbleibt im Speicher desselben Browsers.</p>
+      <div class="pillar"><strong>Hinweis:</strong> Die Arbeit auf dem Mobilgerät ergänzt die Hauptarbeit am Computer. Eine vierstündige Klausurbearbeitung bleibt sinnvoll am Computer; das Karteikarten-Lernen unterwegs in S-Bahn, Wartezimmer oder Mittagspause ist die typische Nutzung des Mobilgeräts.</p>
 
       <h4>Karten vorlesen lassen</h4>
-      <p>Auf jeder Karteikarte gibt es oben rechts ein dezentes Lautsprecher-Symbol — auf Vorder- und Rückseite. Antippen liest den jeweiligen Karteninhalt mit deutscher Stimme vor. Erneutes Antippen stoppt. Beim Umdrehen, Wechseln zur nächsten Karte oder Verlassen des Karteikarten-Modus wird das Vorlesen automatisch beendet.</p>
-      <p>In der Sidebar lassen sich unter <strong>Vorlesen</strong> Tempo (Standard 1.1×) und die deutsche Stimme einstellen. Welche Stimmen verfügbar sind, hängt vom Gerät und Betriebssystem ab — auf iOS sind das in der Regel Anna oder Petra, optional zusätzliche Premium-Stimmen aus den iOS-Einstellungen.</p>
-      <div class="pillar"><strong>Methodische Disziplin:</strong> Vorlesen ist Wiederholungswerkzeug, kein Ersatz für aktiven Abruf. Die Karte erst selbst durchdenken und mündlich beantworten, dann zur Kontrolle anhören. Hörendes Wiederholen festigt die korrekte Aussprache schwieriger Termini (Verwaltungsgerichtsbeschwerde, Spezialverwaltungsgericht, Anschlussgebühren) — das zahlt sich in der mündlichen Prüfung aus.</div>
+      <p>Auf jeder Karteikarte finden Sie oben rechts ein dezentes Lautsprecher-Symbol — sowohl auf Vorder- als auch auf Rückseite. Tippen Sie es an, wird der Karteninhalt mit deutscher Stimme vorgelesen. Erneutes Antippen beendet das Vorlesen. Auch beim Umdrehen, beim Wechsel zur nächsten Karte oder beim Verlassen des Karteikarten-Modus wird die Vorlesung automatisch unterbrochen.</p>
+      <p>In der Seitenleiste unter <strong>Vorlesen</strong> stellen Sie das Tempo (Voreinstellung 1.1-fach) und die deutsche Stimme ein. Welche Stimmen verfügbar sind, hängt vom Gerät und vom Betriebssystem ab — auf einem iPhone sind dies in der Regel Anna oder Petra; weitere Stimmen lassen sich in den iOS-Einstellungen hinzufügen.</p>
+      <div class="pillar"><strong>Methodischer Hinweis:</strong> Das Vorlesen ist ein Werkzeug der Wiederholung, kein Ersatz für den aktiven Abruf. Denken Sie zuerst selbst durch, formulieren Sie die Antwort mündlich aus, und hören Sie dann zur Kontrolle. Das hörende Wiederholen festigt zudem die Aussprache schwieriger Begriffe (Verwaltungsgerichtsbeschwerde, Spezialverwaltungsgericht, Anschlussgebühren) — was sich in der mündlichen Prüfung auszahlt.</div>
 
     </div>
     <div class="modal-buttons">
@@ -7112,7 +7763,7 @@ const CARDS = [
       </ul>
       <h4>Praktischer Bezug Aargauer Praktikum</h4>
       <p>Wer im Praktikum an Strafverfahren mitarbeitet, hat zu StPO und materiellem Strafrecht oft mehr Vorwissen als gefühlt. Die Standortbestimmung deckt das auf und verhindert, dass Wochen für vermeintlich neuen Stoff verbraucht werden.</p>
-      <div class="pillar"><strong>Konkret:</strong> Vor jedem Themenblock fünf bis zehn Repetitionsfragen aus dem Tool ziehen. Was sicher beantwortet wird, ist aktives Wissen. Was unsicher ist, definiert den Lernstart.</div>
+      <div class="pillar"><strong>Konkret:</strong> Vor jedem Themenblock fünf bis zehn Repetitionsfragen aus dem Karteikarten-Werkzeug ziehen. Was sicher beantwortet wird, ist aktives Wissen. Was unsicher ist, definiert den Lernstart.</div>
     `
   },
 
@@ -7131,7 +7782,7 @@ const CARDS = [
       </ol>
       <h4>Warum die Reihenfolge wichtig ist</h4>
       <p>Schritt 1 allein (Lesen, Markieren) erzeugt das trügerische Gefühl von Verständnis. Erst Schritt 2 zeigt Lücken. Erst Schritt 3 festigt das Wissen im Langzeitgedächtnis durch aktiven Abruf.</p>
-      <div class="pillar"><strong>Bezug zum Tool:</strong> Das Karteikarten-Tool deckt Schritt 3 systematisch ab. Schritt 1 und 2 müssen vor der Karte passiert sein, sonst ist die Karte nur ein Test ohne Verarbeitung.</div>
+      <div class="pillar"><strong>Bezug zum Werkzeug:</strong> Das Karteikarten-Werkzeug deckt Schritt 3 systematisch ab. Schritt 1 und 2 müssen vor der Karte passiert sein, sonst ist die Karte nur ein Test ohne Verarbeitung.</div>
     `
   },
 
@@ -7207,7 +7858,7 @@ const CARDS = [
       <p>Beim Lesen eines fertigen Repetitoriums findet keine vergleichbare Verarbeitung statt — der Stoff fühlt sich vertraut an, ist aber passiv aufgenommen.</p>
       <h4>Praktische Konsequenz</h4>
       <ul>
-        <li><strong>Eigene Karten erstellen</strong> ist Lernarbeit, nicht Tool-Bauarbeit. Die Karte zu schreiben ist die Hälfte des Lerneffekts</li>
+        <li><strong>Eigene Karten erstellen</strong> ist Lernarbeit, nicht reine Werkzeugarbeit. Die Karte zu schreiben ist die Hälfte des Lerneffekts</li>
         <li><strong>Gekaufte Lerntafeln</strong> bleiben nützlich — aber als <em>Abgleichsmaterial</em> nach der eigenen Erarbeitung, nicht davor</li>
         <li><strong>Schemata selber zeichnen</strong> — auch wenn fertige existieren. Der Akt des Zeichnens festigt mehr als das Studium des fertigen Schemas</li>
       </ul>
@@ -7253,10 +7904,10 @@ const CARDS = [
       <h4>Konkretes Vorgehen</h4>
       <ul>
         <li>Stichwortliste vom Vortag durchgehen — drei zentrale Begriffe ohne Vorlage erklären</li>
-        <li>Drei Repetitionsfragen aus dem Karteikarten-Tool beantworten — die fälligen Karten der Spaced Repetition</li>
+        <li>Drei Repetitionsfragen aus dem Karteikarten-Werkzeug beantworten — die fälligen Karten der verteilten Wiederholung</li>
         <li><em>Erst dann</em> neuen Stoff aufnehmen</li>
       </ul>
-      <div class="pillar"><strong>Bezug zum Tool:</strong> Spaced Repetition deckt diese Routine automatisch ab. Die fälligen Karten zu Beginn jeder Lerneinheit zu bearbeiten, ersetzt die manuelle Stichwortliste.</div>
+      <div class="pillar"><strong>Bezug zum Werkzeug:</strong> Die verteilte Wiederholung deckt diese Routine automatisch ab. Die fälligen Karten zu Beginn jeder Lerneinheit zu bearbeiten, ersetzt die manuelle Stichwortliste.</div>
     `
   },
 
@@ -7600,7 +8251,7 @@ const CARDS = [
         <li><strong>Aus Sackgassen kommen</strong> — wer das Detail nicht weiss, kann antworten: „Die Lösung ist um Art. X herum geregelt", und damit die Frage in den richtigen Erlass-Kontext setzen</li>
       </ol>
       <h4>Lerntechnik</h4>
-      <p>Bei jeder Karteikarte den Artikel und die Stellung im Erlass mitlernen, nicht nur den Inhalt. Beim Karten-Bauen: oben Artikel + Erlass, dann Inhalt. Spaced Repetition prüft auf beides.</p>
+      <p>Bei jeder Karteikarte den Artikel und die Stellung im Erlass mitlernen, nicht nur den Inhalt. Beim Karten-Bauen: oben Artikel + Erlass, dann Inhalt. Die verteilte Wiederholung prüft auf beides.</p>
       <div class="pillar"><strong>Lernziel:</strong> Bei jedem zentralen Begriff drei Sekunden für die Verortung — „Vorkaufsrecht — Art. 216 OR" — bevor inhaltlich geantwortet wird.</div>
     `
   },
@@ -11733,7 +12384,7 @@ const CARDS = [
    state.progress[kanton][rechtsbereich][cardId] = { ... }
    ════════════════════════════════════════════════════════════ */
 
-const TOOL_VERSION = '3.6';
+const TOOL_VERSION = '3.11';
 const DEFAULT_KANTON = 'AG';
 const DEFAULT_RECHTSBEREICH = 'strafrecht';
 
@@ -11798,7 +12449,7 @@ const KANTON_CONFIGS = {
 
     /* UI-Texte, die kantonsspezifisch sind */
     ui: {
-      sidebarSubtitle: 'Aargauer Anwaltsprüfung · Phase A · Spaced Repetition',
+      sidebarSubtitle: 'Aargauer Anwaltsprüfung · Phase A · verteilte Wiederholung',
       headerKantonShort: 'Aargau',
     },
   },
@@ -12024,13 +12675,31 @@ function recordReview(cardId, rating) {
     reviewCount: (existing.reviewCount || 0) + 1,
   });
 
-  /* Streak: heute hat eine Bewertung stattgefunden */
+  /* Lernreihe: heute hat eine Bewertung stattgefunden */
   if (!state.activityDays.includes(today)) {
     state.activityDays.push(today);
     /* alte Tage > 365 Tage abschneiden für Performance */
     const cutoff = addDays(today, -365);
     state.activityDays = state.activityDays.filter(d => d >= cutoff).sort();
   }
+
+  /* Etappe 13.3 · ActivityLog mit Karten-Zählung pro Tag und Aufschlüsselung
+     nach Bewertung (sicher / wackelig / schwer). Struktur:
+     state.activityLog = { "2026-05-02": { total: 23, safe: 14, wobbly: 6, hard: 3 } } */
+  if (!state.activityLog) state.activityLog = {};
+  if (!state.activityLog[today]) {
+    state.activityLog[today] = { total: 0, safe: 0, wobbly: 0, hard: 0 };
+  }
+  state.activityLog[today].total += 1;
+  if (rating === 'safe')   state.activityLog[today].safe   += 1;
+  if (rating === 'wobbly') state.activityLog[today].wobbly += 1;
+  if (rating === 'hard')   state.activityLog[today].hard   += 1;
+
+  /* alte Log-Einträge > 365 Tage abschneiden */
+  const logCutoff = addDays(today, -365);
+  Object.keys(state.activityLog).forEach(d => {
+    if (d < logCutoff) delete state.activityLog[d];
+  });
 }
 
 function computeStreak() {
@@ -12070,7 +12739,9 @@ let state = {
    */
   progress: {},
   notes: {},
-  activityDays: [],      // ISO-Daten, an denen gelernt wurde (für Streak/Heatmap)
+  activityDays: [],      // ISO-Daten, an denen gelernt wurde (für Lernreihe und Aktivitätsraster)
+  activityLog: {},       // Etappe 13.3 · Karten-Zählung pro Tag mit Aufschlüsselung
+  notizblock: '',        // Etappe 14.2 · Allgemeiner Notizblock (HTML)
   index: 0,
   flipped: false,
   filtered: [],
@@ -12079,7 +12750,56 @@ let state = {
   activeRechtsbereich: DEFAULT_RECHTSBEREICH,
   /* M3 · Vorlese-Einstellungen, persistiert im STORAGE_KEY */
   tts: { rate: 1.1, voiceURI: null },
+  /* Etappe 13.2 · einmalige UI-Hinweise, die nach dem ersten Erscheinen abgeschaltet werden */
+  uiHints: {
+    ttsHintShown: false,
+  },
 };
+
+/* ────────────────────────────────────────────────────────
+   Etappe 14 · NOTIZ-API · Migration und Zugriff
+   Mini-Fälle:    { front: "...", back: "..." }
+   Normale Karten: { back: "..." }
+   Alte String-Notizen werden beim Lesen migriert.
+   ──────────────────────────────────────────────────────── */
+function getNote(cardId, seite) {
+  if (!state.notes) state.notes = {};
+  const entry = state.notes[cardId];
+  if (!entry) return '';
+  /* Alte String-Notiz · gehört methodisch zur Vorderseite (Mini-Fall) */
+  if (typeof entry === 'string') {
+    return seite === 'front' ? entry : '';
+  }
+  /* Objekt-Schema */
+  if (typeof entry === 'object') {
+    return entry[seite] || '';
+  }
+  return '';
+}
+
+function setNote(cardId, seite, text) {
+  if (!state.notes) state.notes = {};
+  let entry = state.notes[cardId];
+  /* Migration: String → Objekt */
+  if (typeof entry === 'string') {
+    entry = { front: entry, back: '' };
+  } else if (!entry || typeof entry !== 'object') {
+    entry = {};
+  }
+  entry[seite] = text;
+  /* Aufräumen: Objekt entfernen, wenn beide Seiten leer sind */
+  const front = entry.front || '';
+  const back  = entry.back  || '';
+  if (!front && !back) {
+    delete state.notes[cardId];
+  } else {
+    state.notes[cardId] = entry;
+  }
+}
+
+/* Rückwärtskompatible Aliasse für bestehenden Mini-Fall-Code */
+const getFallNote = getNote;
+const setFallNote = setNote;
 
 /* ────────────────────────────────────────────────────────
    PROGRESS-API · einzige Schnittstelle für Karten-Zugriff
@@ -12145,6 +12865,8 @@ function loadState() {
         state.progress     = p.progress     || {};
         state.notes        = p.notes        || {};
         state.activityDays = p.activityDays || [];
+        state.activityLog  = p.activityLog  || {};
+        state.notizblock   = p.notizblock   || '';
         state.category     = p.category     || 'all';
         state.type         = p.type         || 'all';
         state.status       = p.status       || 'all';
@@ -12154,6 +12876,10 @@ function loadState() {
         if (p.tts && typeof p.tts === 'object') {
           state.tts.rate     = (typeof p.tts.rate === 'number') ? p.tts.rate : 1.1;
           state.tts.voiceURI = p.tts.voiceURI || null;
+        }
+        /* Etappe 13.2 · UI-Hinweise (einmalige Einblendungen) restaurieren */
+        if (p.uiHints && typeof p.uiHints === 'object') {
+          state.uiHints.ttsHintShown = !!p.uiHints.ttsHintShown;
         }
         return;
       }
@@ -12239,12 +12965,15 @@ function saveState() {
       progress:     state.progress,
       notes:        state.notes,
       activityDays: state.activityDays,
+      activityLog:  state.activityLog,  /* Etappe 13.3 · Karten-Zählung pro Tag */
+      notizblock:   state.notizblock,   /* Etappe 14.2 · Allgemeiner Notizblock */
       category:     state.category,
       type:         state.type,
       status:       state.status,
       activeKanton: state.activeKanton,
       activeRechtsbereich: state.activeRechtsbereich,
       tts:          state.tts,    /* M3 · Vorlese-Einstellungen */
+      uiHints:      state.uiHints, /* Etappe 13.2 · einmalige UI-Hinweise */
     }));
   } catch (e) {}
 }
@@ -12385,13 +13114,13 @@ function renderCard() {
     if (state.status === 'due') {
       msg = `<div class="empty-state">
         <h3>Heute geschafft</h3>
-        <p>Alle für heute fälligen Karten sind durchgegangen. Streak weiterführen oder eine Karte zur Vertiefung wählen.</p>
+        <p>Alle für heute fälligen Karten sind durchgegangen. Lernreihe weiterführen oder eine Karte zur Vertiefung wählen.</p>
         <button class="tool-btn" style="margin-top:18px" onclick="state.status='all'; saveState(); render();">Alle ${cardsInBereich} Karten anzeigen</button>
       </div>`;
     } else {
       msg = `<div class="empty-state">
         <h3>Keine Karten in dieser Auswahl</h3>
-        <p>Passen Sie Kapitel, Kartentyp oder Lernstatus an.</p>
+        <p>Passen Sie Karteikartenkapitel, Karteikartentyp oder Lernstatus an.</p>
         <button class="tool-btn" style="margin-top:18px" onclick="state.status='all'; state.category='all'; state.type='all'; saveState(); render();">Filter zurücksetzen</button>
       </div>`;
     }
@@ -12416,7 +13145,7 @@ function renderCard() {
   /* Vorderseite je nach Typ */
   let frontHTML;
   if (isFall) {
-    const savedNote = (state.notes && state.notes[card.id]) || '';
+    const savedNoteFront = getFallNote(card.id, 'front');
     frontHTML = `
       <div class="face front">
         <div class="card-meta">
@@ -12433,10 +13162,10 @@ function renderCard() {
           <div class="fall-sachverhalt">${card.sachverhalt}</div>
           <div class="fall-aufgabe"><strong>Aufgabe:</strong> ${card.aufgabe}</div>
           <div class="fall-notes-label">
-            <span>Ihre Lösungsskizze</span>
-            <span class="saved" id="notesSaved">— gespeichert</span>
+            <span>Eigene Lösungsskizze</span>
+            <span class="saved" id="notesSavedFront">— gespeichert</span>
           </div>
-          <textarea class="fall-notes" id="fallNotes" placeholder="Skizzieren Sie hier Ihre Lösung — Aufbau, einschlägige Normen, Subsumtion. Wird automatisch im Browser gespeichert.">${savedNote.replace(/</g,'&lt;')}</textarea>
+          <textarea class="fall-notes" id="fallNotesFront" placeholder="Skizzieren Sie hier Ihre Lösung — Aufbau, einschlägige Normen, Subsumtion. Wird automatisch im Browser gespeichert.">${savedNoteFront.replace(/</g,'&lt;')}</textarea>
         </div>
         <div class="flip-hint"><span>Leertaste · Musterlösung anzeigen</span></div>
       </div>`;
@@ -12460,8 +13189,11 @@ function renderCard() {
       </div>`;
   }
 
-  cardEl.innerHTML = `
-    ${frontHTML}
+  /* Rückseite · bei Mini-Fall mit zweitem Notizfeld für Vergleichsanmerkungen */
+  let backHTML;
+  if (isFall) {
+    const savedNoteBack = getFallNote(card.id, 'back');
+    backHTML = `
     <div class="face back">
       <div class="card-meta">
         <div class="card-id">${card.id}</div>
@@ -12476,9 +13208,58 @@ function renderCard() {
           <span class="ref">${card.answerRef}</span>
         </div>
         <div class="answer-block">${card.answerHTML}</div>
+        <div class="fall-notes-label fall-notes-label-back">
+          <span>Vergleichsanmerkungen</span>
+          <span class="saved" id="notesSavedBack">— gespeichert</span>
+        </div>
+        <textarea class="fall-notes fall-notes-back" id="fallNotesBack" placeholder="Was haben Sie übersehen? Was war abweichend? Welche Punkte wollen Sie sich für künftige Klausuren merken?">${savedNoteBack.replace(/</g,'&lt;')}</textarea>
       </div>
       <div class="rating-row" id="ratingRow"></div>
-    </div>
+    </div>`;
+  } else {
+    /* Etappe 14.3 · Normale Karten · Notizfeld auf der Rückseite
+       Wenn Notiz vorhanden: Feld permanent sichtbar
+       Wenn Notiz leer: nur Knopf "Eigene Anmerkung hinzufügen" */
+    const savedNoteBack = getNote(card.id, 'back');
+    const hasNote = savedNoteBack.trim().length > 0;
+    const notesBlockHTML = hasNote
+      ? `
+        <div class="card-notes-section">
+          <div class="fall-notes-label">
+            <span>Eigene Anmerkungen</span>
+            <span class="saved" id="notesSavedBack">— gespeichert</span>
+          </div>
+          <textarea class="fall-notes fall-notes-back" id="cardNotesBack" placeholder="Eigene Anmerkungen, Querverweise, Erinnerungen.">${savedNoteBack.replace(/</g,'&lt;')}</textarea>
+        </div>`
+      : `
+        <div class="card-notes-section card-notes-collapsed">
+          <button type="button" class="card-notes-add" id="cardNotesAddBtn">+ Eigene Anmerkung hinzufügen</button>
+        </div>`;
+
+    backHTML = `
+    <div class="face back">
+      <div class="card-meta">
+        <div class="card-id">${card.id}</div>
+        <div class="card-meta-tags">
+          <div class="card-type-tag">${TYPE_LABEL[card.type]}</div>
+          ${ttsButtonHTML('back')}
+        </div>
+      </div>
+      <div class="card-answer">
+        <div class="answer-title">
+          ${card.answerTitle}
+          <span class="ref">${card.answerRef}</span>
+        </div>
+        <div class="answer-block">${card.answerHTML}</div>
+        ${notesBlockHTML}
+      </div>
+      <div class="rating-row" id="ratingRow"></div>
+    </div>`;
+  }
+
+  cardEl.innerHTML = `
+    ${frontHTML}
+    ${backHTML}
   `;
 
   /* Klick auf Vorderseite → Flip; bei Mini-Fall nicht, wenn auf Textarea geklickt wird */
@@ -12493,6 +13274,9 @@ function renderCard() {
   cardEl.querySelector('.face.back').addEventListener('click', e => {
     if (e.target.closest('.tts-btn')) return;   /* M3 · TTS-Klick blockiert Flip */
     if (e.target.closest('.rate') || e.target.closest('.card-answer')) return;
+    if (isFall && (e.target.tagName === 'TEXTAREA' || e.target.closest('.fall-notes-label'))) return;
+    /* Etappe 14.3 · Klicks im Notizbereich (auch ausserhalb .card-answer) blockieren Flip */
+    if (e.target.closest('.card-notes-section')) return;
     state.flipped = false;
     cardEl.classList.remove('flipped');
     ttsCancel();
@@ -12507,28 +13291,118 @@ function renderCard() {
     });
   });
 
-  /* Notiz-Speicherung bei Mini-Fall */
+  /* Notiz-Speicherung bei Mini-Fall · Vorder- und Rückseite */
   if (isFall) {
-    const ta = cardEl.querySelector('#fallNotes');
-    const saved = cardEl.querySelector('#notesSaved');
-    let saveTimer = null;
-    ta.addEventListener('input', () => {
-      if (!state.notes) state.notes = {};
-      state.notes[card.id] = ta.value;
-      clearTimeout(saveTimer);
-      saveTimer = setTimeout(() => {
-        saveState();
-        saved.classList.add('show');
-        setTimeout(() => saved.classList.remove('show'), 1200);
-      }, 400);
-    });
-    /* Klick auf Textarea blockiert Flip; Stop propagation für Sicherheit */
-    ta.addEventListener('click', e => e.stopPropagation());
-    ta.addEventListener('keydown', e => {
-      if (e.code === 'Space' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    /* Vorderseite */
+    const taFront = cardEl.querySelector('#fallNotesFront');
+    const savedFront = cardEl.querySelector('#notesSavedFront');
+    let saveTimerFront = null;
+    if (taFront) {
+      taFront.addEventListener('input', () => {
+        setFallNote(card.id, 'front', taFront.value);
+        clearTimeout(saveTimerFront);
+        saveTimerFront = setTimeout(() => {
+          saveState();
+          if (savedFront) {
+            savedFront.classList.add('show');
+            setTimeout(() => savedFront.classList.remove('show'), 1200);
+          }
+        }, 400);
+      });
+      taFront.addEventListener('click', e => e.stopPropagation());
+      taFront.addEventListener('keydown', e => {
+        if (e.code === 'Space' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          e.stopPropagation();
+        }
+      });
+    }
+    /* Rückseite */
+    const taBack = cardEl.querySelector('#fallNotesBack');
+    const savedBack = cardEl.querySelector('#notesSavedBack');
+    let saveTimerBack = null;
+    if (taBack) {
+      taBack.addEventListener('input', () => {
+        setFallNote(card.id, 'back', taBack.value);
+        clearTimeout(saveTimerBack);
+        saveTimerBack = setTimeout(() => {
+          saveState();
+          if (savedBack) {
+            savedBack.classList.add('show');
+            setTimeout(() => savedBack.classList.remove('show'), 1200);
+          }
+        }, 400);
+      });
+      taBack.addEventListener('click', e => e.stopPropagation());
+      taBack.addEventListener('keydown', e => {
+        if (e.code === 'Space' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          e.stopPropagation();
+        }
+      });
+    }
+  }
+
+  /* Etappe 14.3 · Notiz-Speicherung bei normalen Karten · nur Rückseite */
+  if (!isFall) {
+    const taCard = cardEl.querySelector('#cardNotesBack');
+    const savedCard = cardEl.querySelector('#notesSavedBack');
+    let saveTimerCard = null;
+    if (taCard) {
+      taCard.addEventListener('input', () => {
+        setNote(card.id, 'back', taCard.value);
+        clearTimeout(saveTimerCard);
+        saveTimerCard = setTimeout(() => {
+          saveState();
+          if (savedCard) {
+            savedCard.classList.add('show');
+            setTimeout(() => savedCard.classList.remove('show'), 1200);
+          }
+        }, 400);
+      });
+      taCard.addEventListener('click', e => e.stopPropagation());
+      taCard.addEventListener('keydown', e => {
+        if (e.code === 'Space' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          e.stopPropagation();
+        }
+      });
+    }
+    /* Knopf "+ Eigene Anmerkung hinzufügen" entfaltet das Notizfeld */
+    const addBtn = cardEl.querySelector('#cardNotesAddBtn');
+    if (addBtn) {
+      addBtn.addEventListener('click', e => {
         e.stopPropagation();
-      }
-    });
+        const section = addBtn.closest('.card-notes-section');
+        if (!section) return;
+        section.classList.remove('card-notes-collapsed');
+        section.innerHTML = `
+          <div class="fall-notes-label">
+            <span>Eigene Anmerkungen</span>
+            <span class="saved" id="notesSavedBack">— gespeichert</span>
+          </div>
+          <textarea class="fall-notes fall-notes-back" id="cardNotesBack" placeholder="Eigene Anmerkungen, Querverweise, Erinnerungen."></textarea>
+        `;
+        const ta = section.querySelector('#cardNotesBack');
+        const savedNew = section.querySelector('#notesSavedBack');
+        let saveTimerNew = null;
+        ta.addEventListener('input', () => {
+          setNote(card.id, 'back', ta.value);
+          clearTimeout(saveTimerNew);
+          saveTimerNew = setTimeout(() => {
+            saveState();
+            if (savedNew) {
+              savedNew.classList.add('show');
+              setTimeout(() => savedNew.classList.remove('show'), 1200);
+            }
+          }, 400);
+        });
+        ta.addEventListener('click', ev => ev.stopPropagation());
+        ta.addEventListener('keydown', ev => {
+          if (ev.code === 'Space' || ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') {
+            ev.stopPropagation();
+          }
+        });
+        ta.focus();
+      });
+    }
   }
 
   stage.appendChild(cardEl);
@@ -12564,20 +13438,131 @@ function render() {
   renderCard();
 }
 
+/* ════════════════════════════════════════════════════════════
+   Etappe 13.3 · Aktivitätsraster mit vier Helligkeitsstufen,
+   Detailbereich pro Tag, Wochenstatistik
+   ════════════════════════════════════════════════════════════ */
+
+/* Bestimmt die Helligkeitsstufe (1-4) für eine Karten-Anzahl */
+function activityLevel(count) {
+  if (!count || count === 0) return 0;
+  if (count < 8)  return 1;   // wenig
+  if (count < 16) return 2;   // mittel
+  if (count < 28) return 3;   // viel
+  return 4;                   // sehr viel
+}
+
+/* Liefert das Aktivitäts-Objekt für einen Tag (oder leer-Default) */
+function activityFor(day) {
+  if (state.activityLog && state.activityLog[day]) {
+    return state.activityLog[day];
+  }
+  return { total: 0, safe: 0, wobbly: 0, hard: 0 };
+}
+
+/* Datums-Formatierung lang (z.B. "Donnerstag, 30. April 2026") */
+function formatDateLong(iso) {
+  try {
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString('de-CH', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+  } catch (e) {
+    return iso;
+  }
+}
+
+/* Aktuell ausgewählter Tag im Detailbereich (null = heute) */
+let selectedHeatmapDay = null;
+
 function renderHeatmap() {
   const el = document.getElementById('heatmap');
   if (!el) return;
   el.innerHTML = '';
   const today = todayISO();
   const days = 60;
-  const activitySet = new Set(state.activityDays || []);
   for (let i = days - 1; i >= 0; i--) {
     const d = addDays(today, -i);
+    const act = activityFor(d);
+    const lvl = activityLevel(act.total);
     const cell = document.createElement('div');
-    cell.className = 'heatmap-cell' + (activitySet.has(d) ? ' active' : '') + (i === 0 ? ' today' : '');
-    cell.title = d + (activitySet.has(d) ? ' · gelernt' : '');
+    let cls = 'heatmap-cell';
+    if (lvl > 0) cls += ` level-${lvl}`;
+    if (i === 0) cls += ' today';
+    if (selectedHeatmapDay === d) cls += ' selected';
+    cell.className = cls;
+    cell.dataset.day = d;
+    cell.title = `${d} · ${act.total} ${act.total === 1 ? 'Karte' : 'Karten'}`;
+    cell.addEventListener('click', () => {
+      selectedHeatmapDay = (selectedHeatmapDay === d) ? null : d;
+      renderHeatmap();
+      renderHeatmapDetail();
+    });
     el.appendChild(cell);
   }
+  renderHeatmapDetail();
+  renderHeatmapSummary();
+}
+
+/* Detailbereich · zeigt entweder den ausgewählten Tag oder heute */
+function renderHeatmapDetail() {
+  const el = document.getElementById('heatmapDetail');
+  if (!el) return;
+  const today = todayISO();
+  const day = selectedHeatmapDay || today;
+  const act = activityFor(day);
+  const isToday = (day === today);
+
+  if (act.total === 0) {
+    el.innerHTML = `
+      <div class="heatmap-detail-date">${formatDateLong(day)}${isToday ? ' · heute' : ''}</div>
+      <div class="heatmap-detail-empty">An diesem Tag wurden keine Karten bearbeitet.</div>
+    `;
+    return;
+  }
+
+  const kartenWort = act.total === 1 ? 'Karte' : 'Karten';
+  el.innerHTML = `
+    <div class="heatmap-detail-date">${formatDateLong(day)}${isToday ? ' · heute' : ''}</div>
+    <div class="heatmap-detail-count"><strong>${act.total}</strong> ${kartenWort} bearbeitet</div>
+    <div class="heatmap-detail-breakdown">
+      Davon ${act.safe} sicher · ${act.wobbly} wackelig · ${act.hard} schwer
+    </div>
+  `;
+}
+
+/* Wochenstatistik · diese Woche / Vorwoche / Tagesschnitt 30 Tage */
+function renderHeatmapSummary() {
+  const el = document.getElementById('heatmapSummary');
+  if (!el) return;
+  const today = todayISO();
+
+  /* Diese Woche · Montag bis heute */
+  const todayDate = new Date(today + 'T00:00:00');
+  const dayOfWeek = todayDate.getDay() || 7;   // Sonntag=0 → 7
+  const mondayOffset = dayOfWeek - 1;
+  let thisWeek = 0;
+  for (let i = 0; i <= mondayOffset; i++) {
+    thisWeek += activityFor(addDays(today, -i)).total;
+  }
+
+  /* Vorwoche · Montag bis Sonntag der vorigen Woche */
+  let lastWeek = 0;
+  for (let i = mondayOffset + 1; i <= mondayOffset + 7; i++) {
+    lastWeek += activityFor(addDays(today, -i)).total;
+  }
+
+  /* Tagesschnitt der letzten 30 Tage */
+  let sum30 = 0;
+  for (let i = 0; i < 30; i++) {
+    sum30 += activityFor(addDays(today, -i)).total;
+  }
+  const avg30 = (sum30 / 30).toFixed(1).replace('.0', '');
+
+  el.innerHTML = `
+    Diese Woche: <span>${thisWeek}</span> Karten<br>
+    Vorwoche: <span>${lastWeek}</span> · Tagesschnitt 30 Tage: <span>${avg30}</span>
+  `;
 }
 
 function rateCard(rating) {
@@ -12639,6 +13624,7 @@ function resetRatings() {
   if (!confirm('Alle Bewertungen und Lernfortschritte zurücksetzen? Notizen bleiben erhalten.')) return;
   clearAllProgress();
   state.activityDays = [];
+  state.activityLog  = {};
   saveState();
   render();
   showToast('Lernfortschritt zurückgesetzt');
@@ -12659,6 +13645,9 @@ function exportProgress() {
     progress: state.progress,
     notes: state.notes,
     activityDays: state.activityDays,
+    activityLog: state.activityLog,  /* Etappe 13.3 · Karten-Zählung pro Tag */
+    notizblock: state.notizblock,    /* Etappe 14.2 · Allgemeiner Notizblock */
+    klausurversuche: loadKlausurversuche(),  /* Etappe 15.3 · Klausur-Verlauf mitsichern */
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -12672,7 +13661,8 @@ function exportProgress() {
 
   const ratedCount = progressCount();
   const noteCount = Object.keys(state.notes).length;
-  showToast(`Gesichert · ${ratedCount} Bewertungen, ${noteCount} Notizen`);
+  const versuchCount = Object.values(loadKlausurversuche()).reduce((sum, arr) => sum + arr.length, 0);
+  showToast(`Gesichert · ${ratedCount} Bewertungen, ${noteCount} Notizen, ${versuchCount} Klausurversuche`);
 }
 
 function startImport() {
@@ -12710,7 +13700,7 @@ function validateAndPreviewImport(data) {
     openModal({
       title: 'Datei nicht passend',
       subtitle: 'Das Format wurde nicht erkannt',
-      body: `<div class="modal-error">Diese Datei stammt nicht aus diesem Karteikarten-Tool. Bitte wählen Sie eine zuvor mit „Sichern" exportierte Datei.</div>`,
+      body: `<div class="modal-error">Diese Datei stammt nicht aus diesem Karteikarten-Werkzeug. Bitte wählen Sie eine zuvor mit „Sichern" exportierte Datei.</div>`,
       confirmLabel: null,
       cancelLabel: 'Schliessen',
     });
@@ -12744,11 +13734,17 @@ function validateAndPreviewImport(data) {
 
   const incomingNotes        = data.notes        || {};
   const incomingActivityDays = data.activityDays || [];
+  const incomingActivityLog  = data.activityLog  || {};
+  const incomingNotizblock   = data.notizblock   || '';
+  const incomingKlausurversuche = data.klausurversuche || {};
 
   const currentRatings = progressCount();
   const currentNotes   = Object.keys(state.notes).length;
   const currentDays    = state.activityDays.length;
   const incomingNotesCount = Object.keys(incomingNotes).length;
+  /* Etappe 15.3 · Klausurversuche zählen */
+  const currentKlausurversuche = Object.values(loadKlausurversuche()).reduce((sum, arr) => sum + arr.length, 0);
+  const incomingKlausurversucheCount = Object.values(incomingKlausurversuche).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
 
   /* Datum lesbar formatieren */
   let exportDate = 'unbekannt';
@@ -12780,11 +13776,12 @@ function validateAndPreviewImport(data) {
       <div style="margin-top:10px;line-height:1.9">
         Bewertungen: <strong>${currentRatings}</strong> <span class="arrow">→</span> <strong>${incomingRatings}</strong><br>
         Notizen: <strong>${currentNotes}</strong> <span class="arrow">→</span> <strong>${incomingNotesCount}</strong><br>
+        Klausurversuche: <strong>${currentKlausurversuche}</strong> <span class="arrow">→</span> <strong>${incomingKlausurversucheCount}</strong><br>
         Lerntage: <strong>${currentDays}</strong> <span class="arrow">→</span> <strong>${incomingActivityDays.length}</strong><br>
-        Streak: <strong>${computeStreak()}</strong> Tage <span class="arrow">→</span> <strong>${incomingStreak}</strong> Tage
+        Lernreihe: <strong>${computeStreak()}</strong> Tage <span class="arrow">→</span> <strong>${incomingStreak}</strong> Tage
       </div>
     </div>
-    ${currentRatings > 0 || currentNotes > 0
+    ${currentRatings > 0 || currentNotes > 0 || currentKlausurversuche > 0
       ? `<div class="modal-warning"><strong>Hinweis:</strong> Der Import überschreibt Ihren aktuellen Lernfortschritt vollständig. Falls Sie ihn behalten möchten, klicken Sie zuerst „Abbrechen" und sichern dann den aktuellen Stand.</div>`
       : '' }
   `;
@@ -12799,11 +13796,15 @@ function validateAndPreviewImport(data) {
       state.progress     = incomingProgress;
       state.notes        = incomingNotes;
       state.activityDays = incomingActivityDays;
+      state.activityLog  = incomingActivityLog;
+      state.notizblock   = incomingNotizblock;
       state.index        = 0;
       state.flipped      = false;
       saveState();
+      /* Etappe 15.3 · Klausurversuche separat wiederherstellen */
+      saveKlausurversuche(incomingKlausurversuche);
       render();
-      showToast(`Wiederhergestellt · ${incomingRatings} Bewertungen, ${incomingNotesCount} Notizen`);
+      showToast(`Wiederhergestellt · ${incomingRatings} Bewertungen, ${incomingNotesCount} Notizen, ${incomingKlausurversucheCount} Klausurversuche`);
     },
   });
 }
@@ -13753,25 +14754,126 @@ function saveVersuch(klausurId, versuch) {
 
 /* ── Modus-Wechsel ── */
 
+/* ════════════════════════════════════════════════════════════
+   Etappe 14.2 · Allgemeiner Notizblock
+   ContentEditable mit Format-Tasten und Auto-Save
+   ════════════════════════════════════════════════════════════ */
+
+let notizenBound = false;
+let notizenSaveTimer = null;
+
+function renderNotizen() {
+  const editor = document.getElementById('notizenEditor');
+  if (!editor) return;
+  /* Inhalt aus State setzen, ohne Cursor-Sprünge zu provozieren */
+  if (editor.innerHTML !== (state.notizblock || '')) {
+    editor.innerHTML = state.notizblock || '';
+  }
+  updateNotizenStats();
+
+  /* Handler nur einmal binden */
+  if (notizenBound) return;
+  notizenBound = true;
+
+  /* Auto-Save bei jeder Eingabe */
+  editor.addEventListener('input', () => {
+    state.notizblock = editor.innerHTML;
+    updateNotizenStats();
+    clearTimeout(notizenSaveTimer);
+    notizenSaveTimer = setTimeout(() => {
+      saveState();
+      const ind = document.getElementById('notizenSavedIndicator');
+      if (ind) {
+        ind.classList.add('show');
+        setTimeout(() => ind.classList.remove('show'), 1400);
+      }
+    }, 500);
+  });
+
+  /* Tastatur-Kürzel · Strg+B/I/U */
+  editor.addEventListener('keydown', e => {
+    if (!(e.ctrlKey || e.metaKey)) return;
+    const k = e.key.toLowerCase();
+    if (k === 'b') { e.preventDefault(); applyNotizFormat('bold'); }
+    if (k === 'i') { e.preventDefault(); applyNotizFormat('italic'); }
+    if (k === 'u') { e.preventDefault(); applyNotizFormat('underline'); }
+  });
+
+  /* Format-Tasten in der Toolbar */
+  document.querySelectorAll('.notizen-toolbar .notizen-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const fmt = btn.dataset.format;
+      applyNotizFormat(fmt);
+      editor.focus();
+    });
+    /* Mousedown abfangen, sonst verliert der Editor den Fokus
+       und damit die Auswahl, bevor execCommand läuft */
+    btn.addEventListener('mousedown', e => e.preventDefault());
+  });
+}
+
+function applyNotizFormat(fmt) {
+  const editor = document.getElementById('notizenEditor');
+  if (!editor) return;
+  /* document.execCommand ist offiziell veraltet, funktioniert aber
+     in allen aktuellen Browsern für formatierte Inhalte zuverlässig
+     und ist die einfachste Lösung ohne externe Bibliothek. */
+  switch (fmt) {
+    case 'bold':      document.execCommand('bold');      break;
+    case 'italic':    document.execCommand('italic');    break;
+    case 'underline': document.execCommand('underline'); break;
+    case 'list-ul':   document.execCommand('insertUnorderedList'); break;
+    case 'heading':   document.execCommand('formatBlock', false, 'h3'); break;
+    case 'undo':      document.execCommand('undo');      break;
+  }
+  /* Inhalt nach Format-Änderung sofort sichern */
+  state.notizblock = editor.innerHTML;
+  updateNotizenStats();
+  clearTimeout(notizenSaveTimer);
+  notizenSaveTimer = setTimeout(saveState, 300);
+}
+
+function updateNotizenStats() {
+  const editor = document.getElementById('notizenEditor');
+  const stats = document.getElementById('notizenStats');
+  if (!editor || !stats) return;
+  /* Reine Textlänge ohne HTML-Tags */
+  const txt = editor.textContent || '';
+  const chars = txt.length;
+  stats.textContent = chars === 1 ? '1 Zeichen' : `${chars} Zeichen`;
+}
+
 function setMode(mode) {
   if (typeof ttsCancel === 'function') ttsCancel();   /* M3 · Vorlesen stoppen bei Modus-Wechsel */
   const kartenModule = document.getElementById('kartenModule');
   const klausurModule = document.getElementById('klausurModule');
+  const notizenModule = document.getElementById('notizenModule');
   const btnKarten = document.getElementById('modeKarten');
   const btnKlausur = document.getElementById('modeKlausur');
+  const btnNotizen = document.getElementById('modeNotizen');
+
+  /* Alle Module ausblenden, alle Knöpfe deaktivieren */
+  kartenModule.classList.add('hidden');
+  if (klausurModule) klausurModule.classList.remove('active');
+  if (notizenModule) notizenModule.classList.remove('active');
+  btnKarten.classList.remove('active');
+  if (btnKlausur) btnKlausur.classList.remove('active');
+  if (btnNotizen) btnNotizen.classList.remove('active');
 
   if (mode === 'klausur') {
-    kartenModule.classList.add('hidden');
-    klausurModule.classList.add('active');
-    btnKarten.classList.remove('active');
-    btnKlausur.classList.add('active');
+    if (klausurModule) klausurModule.classList.add('active');
+    if (btnKlausur) btnKlausur.classList.add('active');
     renderKlausurListe();
+  } else if (mode === 'notizen') {
+    if (notizenModule) notizenModule.classList.add('active');
+    if (btnNotizen) btnNotizen.classList.add('active');
+    renderNotizen();
   } else {
+    /* karten */
     kartenModule.classList.remove('hidden');
-    klausurModule.classList.remove('active');
     btnKarten.classList.add('active');
-    btnKlausur.classList.remove('active');
-    if (klausurState.timerInterval) {
+    if (klausurState && klausurState.timerInterval) {
       clearInterval(klausurState.timerInterval);
       klausurState.timerInterval = null;
     }
@@ -13866,6 +14968,18 @@ function renderKlausurListe() {
       ? 'Noch nicht bearbeitet'
       : `${versuche.length} Versuch${versuche.length > 1 ? 'e' : ''} · letzter: ${formatDatum(versuche[versuche.length - 1].datum)} · ${versuche[versuche.length - 1].punkte_erreicht}/${k.punkte_total} Punkte`;
 
+    /* Etappe 15.1 · Aufklappbare Verlaufsleiste */
+    const verlaufsleiste = versuche.length > 0
+      ? `
+        <div class="klausur-verlauf">
+          <button type="button" class="klausur-verlauf-toggle" data-klausur="${k.id}" data-state="closed">
+            <span class="klausur-verlauf-arrow">▸</span>
+            <span class="klausur-verlauf-label">Versuche anzeigen</span>
+          </button>
+          <div class="klausur-verlauf-list" id="verlauf-${k.id}" hidden></div>
+        </div>`
+      : '';
+
     html += `
       <div class="klausur-card" data-klausur="${k.id}">
         <div class="klausur-card-id">${k.id} · ${k.schwerpunkt}</div>
@@ -13876,6 +14990,7 @@ function renderKlausurListe() {
           <span>🎯 <strong>${k.punkte_total}</strong> Punkte</span>
         </div>
         <div class="klausur-card-versuche">${versuchsInfo}</div>
+        ${verlaufsleiste}
       </div>
     `;
   });
@@ -13883,11 +14998,204 @@ function renderKlausurListe() {
   html += '</div>';
   stage.innerHTML = html;
 
+  /* Klick auf die Karte selbst startet die Klausur · ausser bei Verlaufselementen */
   document.querySelectorAll('.klausur-card').forEach(card => {
-    card.addEventListener('click', () => {
+    card.addEventListener('click', e => {
+      if (e.target.closest('.klausur-verlauf')) return;
       const id = card.getAttribute('data-klausur');
       startKlausur(id);
     });
+  });
+
+  /* Etappe 15.1 · Verlaufsleiste auf-/zuklappen */
+  document.querySelectorAll('.klausur-verlauf-toggle').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const klausurId = btn.getAttribute('data-klausur');
+      const list = document.getElementById(`verlauf-${klausurId}`);
+      if (!list) return;
+      const isOpen = btn.getAttribute('data-state') === 'open';
+      if (isOpen) {
+        list.hidden = true;
+        btn.setAttribute('data-state', 'closed');
+        btn.querySelector('.klausur-verlauf-arrow').textContent = '▸';
+        btn.querySelector('.klausur-verlauf-label').textContent = 'Versuche anzeigen';
+      } else {
+        list.innerHTML = renderVerlaufsListe(klausurId);
+        list.hidden = false;
+        btn.setAttribute('data-state', 'open');
+        btn.querySelector('.klausur-verlauf-arrow').textContent = '▾';
+        btn.querySelector('.klausur-verlauf-label').textContent = 'Versuche ausblenden';
+        /* Klicks auf Versuchszeilen → Detailansicht */
+        list.querySelectorAll('.klausur-verlauf-row').forEach(row => {
+          row.addEventListener('click', ev => {
+            ev.stopPropagation();
+            const idx = parseInt(row.getAttribute('data-versuch-idx'), 10);
+            renderVersuchDetail(klausurId, idx);
+          });
+        });
+      }
+    });
+  });
+}
+
+/* Etappe 15.1 · Tabelle aller Versuche einer Klausur */
+function renderVerlaufsListe(klausurId) {
+  const versuche = getVersuche(klausurId);
+  const klausur = KLAUSUREN.find(k => k.id === klausurId);
+  if (!klausur || versuche.length === 0) return '';
+
+  let rows = '';
+  versuche.forEach((v, idx) => {
+    const datum = formatDatum(v.datum);
+    /* Bearbeitungsdauer formatieren · Sekunden zu hh:mm */
+    const sek = v.bearbeitungszeit_sekunden || 0;
+    const std = Math.floor(sek / 3600);
+    const min = Math.floor((sek % 3600) / 60);
+    const dauer = std > 0 ? `${std}h ${min}min` : `${min}min`;
+    const prozent = klausur.punkte_total > 0
+      ? Math.round((v.punkte_erreicht / klausur.punkte_total) * 100)
+      : 0;
+    rows += `
+      <div class="klausur-verlauf-row" data-versuch-idx="${idx}">
+        <span class="klausur-verlauf-datum">${datum}</span>
+        <span class="klausur-verlauf-dauer">${dauer}</span>
+        <span class="klausur-verlauf-punkte">${v.punkte_erreicht}/${klausur.punkte_total}</span>
+        <span class="klausur-verlauf-prozent">${prozent}%</span>
+        <span class="klausur-verlauf-pfeil">→</span>
+      </div>`;
+  });
+  return `
+    <div class="klausur-verlauf-header">
+      <span>Datum</span>
+      <span>Dauer</span>
+      <span>Punkte</span>
+      <span>Anteil</span>
+      <span></span>
+    </div>
+    ${rows}`;
+}
+
+/* ════════════════════════════════════════════════════════════
+   Etappe 15.2 · Versuchs-Detailansicht
+   Eigene Hauptfläche, ersetzt die Klausurliste
+   ════════════════════════════════════════════════════════════ */
+function renderVersuchDetail(klausurId, versuchIdx) {
+  const versuche = getVersuche(klausurId);
+  const klausur = KLAUSUREN.find(k => k.id === klausurId);
+  if (!klausur || !versuche[versuchIdx]) {
+    renderKlausurListe();
+    return;
+  }
+  const v = versuche[versuchIdx];
+  klausurState.phase = 'detail';
+
+  /* Datum und Dauer formatieren */
+  const datum = formatDatum(v.datum);
+  let uhrzeit = '';
+  try {
+    const dObj = new Date(v.datum);
+    uhrzeit = dObj.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' });
+  } catch (e) {}
+  const sek = v.bearbeitungszeit_sekunden || 0;
+  const std = Math.floor(sek / 3600);
+  const min = Math.floor((sek % 3600) / 60);
+  const dauer = std > 0 ? `${std}h ${min}min` : `${min}min`;
+  const prozent = klausur.punkte_total > 0
+    ? Math.round((v.punkte_erreicht / klausur.punkte_total) * 100)
+    : 0;
+
+  /* Bewertungs-Aufschlüsselung */
+  let bewertungRows = '';
+  if (v.bewertung_detail && klausur.bewertungsraster) {
+    klausur.bewertungsraster.forEach(rasterEintrag => {
+      const erreicht = v.bewertung_detail[rasterEintrag.kategorie] || 0;
+      bewertungRows += `
+        <tr>
+          <td>${escapeHtml(rasterEintrag.kategorie)}</td>
+          <td class="right">${erreicht}</td>
+          <td class="right">${rasterEintrag.max}</td>
+        </tr>`;
+    });
+    bewertungRows += `
+      <tr class="summe">
+        <td>Gesamt</td>
+        <td class="right">${v.punkte_erreicht}</td>
+        <td class="right">${klausur.punkte_total}</td>
+      </tr>`;
+  }
+
+  const eigeneNotizen = v.notizen && v.notizen.trim().length > 0
+    ? `<div class="versuch-bewertung-notizen">${escapeHtml(v.notizen)}</div>`
+    : `<div class="versuch-bewertung-notizen versuch-bewertung-notizen-leer">Keine eigenen Notizen zur Selbstbewertung erfasst.</div>`;
+
+  const stage = document.getElementById('klausurStage');
+  const versuchsZahl = `${versuchIdx + 1}. von ${versuche.length}`;
+  stage.innerHTML = `
+    <button type="button" class="versuch-detail-back" id="versuchDetailBack">
+      <span>←</span> <span>Zurück zur Klausur-Übersicht</span>
+    </button>
+    <div class="versuch-detail">
+      <div class="versuch-detail-header">
+        <h3>${escapeHtml(klausur.title)}</h3>
+        <div class="versuch-detail-meta">
+          <span>Versuch <strong>${versuchsZahl}</strong></span>
+          <span>Datum <strong>${datum}${uhrzeit ? ' · ' + uhrzeit : ''}</strong></span>
+          <span>Dauer <strong>${dauer}</strong></span>
+          <span>Punkte <strong>${v.punkte_erreicht} / ${klausur.punkte_total}</strong> (${prozent}%)</span>
+        </div>
+      </div>
+
+      <div class="versuch-detail-section">
+        <h4>Bewertungs-Aufschlüsselung</h4>
+        ${bewertungRows
+          ? `<table class="versuch-bewertung-tabelle">
+              <thead>
+                <tr>
+                  <th>Kategorie</th>
+                  <th class="right">Erreicht</th>
+                  <th class="right">Maximum</th>
+                </tr>
+              </thead>
+              <tbody>${bewertungRows}</tbody>
+            </table>`
+          : '<p style="color: var(--ink-faint); font-style: italic;">Keine Detailaufschlüsselung gespeichert.</p>'}
+      </div>
+
+      <div class="versuch-detail-section">
+        <h4>Eigene Notizen zur Selbstbewertung</h4>
+        ${eigeneNotizen}
+      </div>
+
+      <div class="versuch-detail-section">
+        <h4>Eigene Bearbeitung</h4>
+        <button type="button" class="versuch-bearbeitung-toggle" id="versuchBearbeitungToggle">
+          + Bearbeitung anzeigen
+        </button>
+        <div class="versuch-bearbeitung-text" id="versuchBearbeitungText" hidden></div>
+      </div>
+    </div>
+  `;
+
+  /* Zurück-Knopf */
+  document.getElementById('versuchDetailBack').addEventListener('click', () => {
+    renderKlausurListe();
+  });
+
+  /* Bearbeitung ein-/ausklappen */
+  const toggleBtn = document.getElementById('versuchBearbeitungToggle');
+  const textEl = document.getElementById('versuchBearbeitungText');
+  let bearbeitungOffen = false;
+  toggleBtn.addEventListener('click', () => {
+    bearbeitungOffen = !bearbeitungOffen;
+    if (bearbeitungOffen) {
+      textEl.textContent = v.bearbeitung_text || '(kein Bearbeitungstext gespeichert)';
+      textEl.hidden = false;
+      toggleBtn.textContent = '− Bearbeitung ausblenden';
+    } else {
+      textEl.hidden = true;
+      toggleBtn.textContent = '+ Bearbeitung anzeigen';
+    }
   });
 }
 
@@ -14382,6 +15690,8 @@ function escapeHtml(s) {
 
 document.getElementById('modeKarten').addEventListener('click', () => setMode('karten'));
 document.getElementById('modeKlausur').addEventListener('click', () => setMode('klausur'));
+const _btnNotizen = document.getElementById('modeNotizen');
+if (_btnNotizen) _btnNotizen.addEventListener('click', () => setMode('notizen'));
 
 /* ── Hilfe-Modal ── */
 
@@ -14600,6 +15910,12 @@ function ttsToggle(card, seite, btn) {
   }
   /* Anderer Button war aktiv → den stoppen */
   ttsCancel();
+  /* Etappe 13.2 · Einmalige Hinweisblase beim ersten Antippen */
+  if (state.uiHints && !state.uiHints.ttsHintShown) {
+    showTtsHintBubble(btn);
+    state.uiHints.ttsHintShown = true;
+    saveState();
+  }
   /* Neue Sequenz starten */
   const text = ttsExtractText(card, seite);
   if (!text) return;
@@ -14609,6 +15925,60 @@ function ttsToggle(card, seite, btn) {
   btn.classList.add('speaking');
   btn.innerHTML = TTS_ICON_STOP;
   ttsSpeakChunk();
+}
+
+/* Etappe 13.2 · Einmalige Hinweisblase einblenden */
+function showTtsHintBubble(anchorBtn) {
+  /* Bestehende Blase entfernen, falls vorhanden */
+  const existing = document.querySelector('.tts-hint-bubble');
+  if (existing) existing.remove();
+
+  const bubble = document.createElement('div');
+  bubble.className = 'tts-hint-bubble';
+  bubble.innerHTML = `
+    <strong>Tempo und Stimme einstellen</strong><br>
+    Stimme und Vorlesegeschwindigkeit lassen sich
+    unten links in der Seitenleiste unter <em>Vorlesen</em> anpassen.
+    <div class="tts-hint-close">Verstanden</div>
+  `;
+
+  /* Position relativ zum Karten-Container */
+  const cardEl = anchorBtn.closest('.card');
+  if (cardEl) {
+    cardEl.style.position = cardEl.style.position || 'relative';
+    cardEl.appendChild(bubble);
+    /* Position direkt unterhalb des Buttons */
+    const btnRect = anchorBtn.getBoundingClientRect();
+    const cardRect = cardEl.getBoundingClientRect();
+    const top = btnRect.bottom - cardRect.top + 12;
+    let right = cardRect.right - btnRect.right - 4;
+    /* Auf Mobil: links bündig statt rechts, damit die Blase nicht überläuft */
+    if (window.innerWidth < 760) {
+      bubble.style.right = '12px';
+      bubble.style.left = '12px';
+      bubble.style.maxWidth = 'none';
+    } else {
+      bubble.style.right = `${Math.max(12, right)}px`;
+    }
+    bubble.style.top = `${top}px`;
+  } else {
+    /* Fallback: feste Position oben rechts */
+    bubble.style.top = '80px';
+    bubble.style.right = '20px';
+  }
+
+  /* Einblenden mit kurzer Verzögerung für CSS-Übergang */
+  requestAnimationFrame(() => {
+    bubble.classList.add('visible');
+  });
+
+  /* Entfernen nach 6 Sekunden oder Klick */
+  const remove = () => {
+    bubble.classList.remove('visible');
+    setTimeout(() => bubble.remove(), 320);
+  };
+  bubble.addEventListener('click', remove);
+  setTimeout(remove, 6000);
 }
 
 /* Init: Voices laden (asynchron auf iOS) und Settings-UI binden */
