@@ -1054,6 +1054,28 @@
     margin-top: 4px;
   }
 
+  /* Etappe 16.2 · Norm-Links in answerRef und Gesetze-Modus */
+  .norm-link {
+    color: var(--burgundy, #7a2e2a);
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(122, 46, 42, 0.45);
+    transition: all 0.15s ease;
+    cursor: pointer;
+  }
+  .norm-link:hover {
+    color: var(--burgundy-dk, #5e1f1c);
+    border-bottom-style: solid;
+    border-bottom-color: rgba(122, 46, 42, 0.85);
+  }
+  .norm-link-bge {
+    color: var(--gold-deep, #8a6f4a);
+    border-bottom-color: rgba(160, 122, 42, 0.45);
+  }
+  .norm-link-bge:hover {
+    color: var(--ink, #2b2418);
+    border-bottom-color: rgba(160, 122, 42, 0.85);
+  }
+
   .answer-block {
     font-family: var(--serif-body);
     font-size: 15px;
@@ -1277,8 +1299,13 @@
      Klausur-Modul · v3.0 Etappe 10
      ════════════════════════════════════════════════════════════════ */
 
+  /* Etappe 16.4 · Modus-Umschaltung als 2×2-Raster
+     Vier Knöpfe (Lernen, Klausur, Notizen, Gesetze) in zwei Reihen
+     mit jeweils zwei Knöpfen, beide Reihen gleichbreit. So bleiben
+     alle Beschriftungen vollständig lesbar — auf Desktop wie auf Mobil. */
   .mode-toggle {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 4px;
     margin-bottom: 24px;
     padding: 4px;
@@ -1286,21 +1313,19 @@
     border-radius: 8px;
   }
   .mode-toggle button {
-    flex: 1;
-    padding: 9px 6px;
+    padding: 11px 8px;
     border: none;
     background: transparent;
     font-family: inherit;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     color: #6e5b3f;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.18s ease;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     letter-spacing: 0.2px;
+    text-align: center;
+    line-height: 1.2;
   }
   .mode-toggle button.active {
     background: var(--paper);
@@ -1332,6 +1357,167 @@
   }
   .notizen-module.active {
     display: block;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     Etappe 16.2 · Gesetze-Modul
+     ═══════════════════════════════════════════════════ */
+  .gesetze-module {
+    display: none;
+  }
+  .gesetze-module.active {
+    display: block;
+  }
+  .gesetze-suche {
+    margin: 24px 0 32px;
+    padding: 20px 22px;
+    background: var(--paper-light, #fbf7eb);
+    border: 1px solid rgba(120, 80, 40, 0.18);
+    border-radius: 6px;
+  }
+  .gesetze-suche-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .gesetze-suche-row {
+    display: flex;
+    gap: 8px;
+  }
+  .gesetze-suche-input {
+    flex: 1;
+    font-family: var(--serif-body);
+    font-size: 14px;
+    padding: 10px 14px;
+    border: 1px solid rgba(120, 80, 40, 0.3);
+    border-radius: 4px;
+    background: var(--card-face, #fbf7eb);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .gesetze-suche-input:focus {
+    border-color: var(--burgundy, #7a2e2a);
+  }
+  .gesetze-suche-btn {
+    font-family: var(--serif-body);
+    font-size: 14px;
+    padding: 10px 20px;
+    background: var(--burgundy, #7a2e2a);
+    color: var(--paper, #f6f1e3);
+    border: 1px solid var(--burgundy-dk, #5e1f1c);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .gesetze-suche-btn:hover {
+    background: var(--burgundy-dk, #5e1f1c);
+  }
+  .gesetze-suche-hint {
+    margin-top: 10px;
+    font-family: var(--serif-body);
+    font-size: 12px;
+    color: var(--ink-mute);
+    line-height: 1.55;
+    font-style: italic;
+  }
+  .gesetze-suche-hint strong {
+    font-style: normal;
+    color: var(--ink);
+  }
+  .gesetze-suche-fehler {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: rgba(122, 46, 42, 0.08);
+    border-left: 3px solid var(--burgundy, #7a2e2a);
+    font-family: var(--serif-body);
+    font-size: 13px;
+    color: var(--burgundy-dk, #5e1f1c);
+    border-radius: 0 3px 3px 0;
+  }
+  .gesetze-section-title {
+    font-family: var(--serif-display, var(--serif-body));
+    font-size: 18px;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--burgundy-dk, #5e1f1c);
+    margin: 32px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(120, 80, 40, 0.2);
+  }
+  .gesetze-liste {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .gesetze-liste-eintrag {
+    display: block;
+    padding: 12px 16px;
+    background: var(--card-face, #fbf7eb);
+    border: 1px solid rgba(120, 80, 40, 0.18);
+    border-left: 3px solid rgba(122, 46, 42, 0.45);
+    border-radius: 3px;
+    color: var(--ink);
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  .gesetze-liste-eintrag:hover {
+    border-left-color: var(--burgundy, #7a2e2a);
+    background: rgba(122, 46, 42, 0.04);
+    transform: translateX(2px);
+  }
+  .gesetze-liste-kuerzel {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--burgundy, #7a2e2a);
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  .gesetze-liste-name {
+    font-family: var(--serif-body);
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .gesetze-liste-sr {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-faint);
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+  }
+  .gesetze-bge {
+    margin-top: 14px;
+    padding: 18px 22px;
+    background: var(--paper-light, #fbf7eb);
+    border: 1px solid rgba(120, 80, 40, 0.18);
+    border-radius: 6px;
+  }
+  .gesetze-bge-text {
+    font-family: var(--serif-body);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin: 0 0 14px 0;
+  }
+  .gesetze-bge-text strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  @media (max-width: 760px) {
+    .gesetze-suche { padding: 16px; margin: 18px 0 24px; }
+    .gesetze-suche-row { flex-direction: column; gap: 8px; }
+    .gesetze-suche-btn { padding: 12px; }
+    .gesetze-liste { grid-template-columns: 1fr; }
+    .gesetze-section-title { font-size: 16px; margin: 24px 0 12px; }
   }
   .notizen-saved-indicator {
     font-family: var(--mono);
@@ -1446,13 +1632,6 @@
     .notizen-toolbar { gap: 4px; padding: 6px 8px; }
     .notizen-btn { font-size: 12px; padding: 5px 10px; min-height: 36px; }
     .notizen-foot { flex-direction: column; align-items: flex-start; gap: 4px; }
-  }
-  /* Mode-Toggle bei drei Knöpfen */
-  .mode-toggle {
-    flex-wrap: wrap;
-  }
-  .mode-toggle button {
-    flex: 1 1 0;
   }
 
   /* Klausur-Auswahl */
@@ -2899,6 +3078,7 @@
       <button class="active" data-mode="karten" id="modeKarten">Lernen</button>
       <button data-mode="klausur" id="modeKlausur">Klausur</button>
       <button data-mode="notizen" id="modeNotizen">Notizen</button>
+      <button data-mode="gesetze" id="modeGesetze">Gesetze</button>
     </div>
 
     <!-- Etappe 13.1 · Einführungs-Knopf prominent direkt nach Modus-Umschalter -->
@@ -3087,6 +3267,56 @@
       </div>
     </div><!-- /.notizen-module -->
 
+    <!-- ════════ Gesetze-Modul · Etappe 16.2 ════════ -->
+    <div class="gesetze-module" id="gesetzeModule">
+      <div class="top-bar">
+        <div>
+          <div class="breadcrumb">Rechtsquellen</div>
+          <h2>Gesetze und Bundesgerichtsentscheide</h2>
+        </div>
+      </div>
+      <div class="preview-banner">
+        Direktzugriff auf die Bundesgesetze über Fedlex, die Aargauer Erlasse über die kantonale Gesetzessammlung sowie eine Volltext-Suche in den Bundesgerichtsentscheiden. Auf den Karten werden die jeweiligen Hauptnormen ebenfalls verlinkt — alles, was nicht direkt verlinkt ist, kann hier nachgeschlagen werden. Alle Quellen öffnen sich in einem neuen Browser-Fenster.
+      </div>
+
+      <div class="gesetze-suche">
+        <label class="gesetze-suche-label" for="gesetzeSucheInput">Norm direkt aufrufen</label>
+        <div class="gesetze-suche-row">
+          <input type="text" id="gesetzeSucheInput" class="gesetze-suche-input"
+            placeholder="z.B. Art. 102 StGB · Art. 263 StPO · Art. 12 BGFA"
+            autocomplete="off" autocorrect="off" spellcheck="false">
+          <button type="button" class="gesetze-suche-btn" id="gesetzeSucheBtn">Aufrufen</button>
+        </div>
+        <div class="gesetze-suche-hint">
+          Erkennt das Format <strong>Art. NNN ERLASS</strong>. Verfügbare Erlasse:
+          StGB · StPO · JStG · JStPO · BV · EMRK · OR · ZGB · ZPO · SchKG · BGFA · GwG · OHG · IRSG · SVG · OBG · KV AG · EG StPO · EG ZPO · GOG.
+        </div>
+        <div class="gesetze-suche-fehler" id="gesetzeSucheFehler" hidden></div>
+      </div>
+
+      <h3 class="gesetze-section-title">Bundesgesetze</h3>
+      <div class="gesetze-liste" id="gesetzeListeBund"></div>
+
+      <h3 class="gesetze-section-title">Aargauer Erlasse</h3>
+      <div class="gesetze-liste" id="gesetzeListeKanton"></div>
+
+      <h3 class="gesetze-section-title">Bundesgerichtsentscheide</h3>
+      <div class="gesetze-bge">
+        <p class="gesetze-bge-text">
+          Volltextsuche in den Bundesgerichtsentscheiden über die
+          <strong>Leitentscheide-Datenbank des Bundesgerichts</strong>.
+          Geeignet für die Recherche zu konkreten BGE-Zitaten ebenso
+          wie zu Stichworten.
+        </p>
+        <div class="gesetze-suche-row">
+          <input type="text" id="bgeSucheInput" class="gesetze-suche-input"
+            placeholder="z.B. BGE 144 IV 345 · oder Stichwort wie ‚Eventualvorsatz‘"
+            autocomplete="off" autocorrect="off" spellcheck="false">
+          <button type="button" class="gesetze-suche-btn" id="bgeSucheBtn">Suchen</button>
+        </div>
+      </div>
+    </div><!-- /.gesetze-module -->
+
   </main>
 </div>
 
@@ -3111,8 +3341,14 @@
     <div class="modal-subtitle">Wie Sie das Lernwerkzeug für Ihre Anwaltsprüfung nutzen</div>
     <div class="help-content">
 
-      <h4>Zwei Arbeitsweisen · Karteikarten und Klausur</h4>
-      <p>Oben in der Seitenleiste wechseln Sie zwischen den beiden Hauptarbeitsweisen. Im Modus <strong>Karteikarten</strong> arbeiten Sie täglich mit verteilter Wiederholung — kurze Einheiten, das Tagespensum richtet sich nach den fälligen Karten. Im Modus <strong>Klausur</strong> bearbeiten Sie eine der drei Übungsklausuren in voller Länge von 240 Minuten, mit anschliessender Selbstbewertung.</p>
+      <h4>Vier Arbeitsweisen</h4>
+      <p>Oben in der Seitenleiste wechseln Sie zwischen vier Modi:</p>
+      <ul>
+        <li><strong>Lernen</strong> · der tägliche Karteikartenbetrieb mit verteilter Wiederholung. Kurze Einheiten, das Tagespensum richtet sich nach den fälligen Karten.</li>
+        <li><strong>Klausur</strong> · drei Übungsklausuren in voller Länge von 240 Minuten, mit anschliessender Selbstbewertung. Ihre Versuche werden mitsamt Bewertung und Bearbeitungstext dauerhaft gespeichert.</li>
+        <li><strong>Notizen</strong> · ein eigener Notizblock für übergreifende Mitschriften — Stichworte aus Vorlesungen, Fragen an den Praxisanwalt, Erinnerungen an noch zu klärende Themen.</li>
+        <li><strong>Gesetze</strong> · Direktzugang zu allen relevanten Erlassen über Fedlex und zur Volltextsuche in den Bundesgerichtsentscheiden.</li>
+      </ul>
 
       <h4>Verteilte Wiederholung · die Grundidee</h4>
       <p>Das Werkzeug zeigt Ihnen jeden Tag nur jene Karten, deren Wiederholungstermin erreicht ist. Was Sie sicher beherrschen, sehen Sie selten; was wackelig sitzt, sehen Sie häufiger. Über achtzehn Monate hinweg entsteht so ein abgestufter Lernrhythmus, der das Langzeitgedächtnis auf prüfungstaugliches Niveau bringt — ohne dass Sie täglich alles wiederholen müssten.</p>
@@ -3137,7 +3373,23 @@
       <p>In der Seitenleiste finden Sie unter dem Lernstatus die Anzeige <strong>Heute fällig</strong> mit einer Zahl daneben. Das sind die Karten, die heute oder bereits früher zur Wiederholung anstehen. Im eingeschwungenen Lernrhythmus sind dies fünfzehn bis fünfundzwanzig Karten pro Tag, was sich in fünfzehn bis zwanzig Minuten bewältigen lässt.</p>
 
       <h4>Lernreihe und Aktivitätsraster</h4>
-      <p>Die <strong>Lernreihe</strong> zählt die Tage in Folge, an denen Sie mindestens eine Karte bearbeitet haben. Ein einziger ausgesetzter Tag setzt die Reihe auf null zurück. Das <strong>Aktivitätsraster</strong> darunter zeigt die letzten sechzig Tage in Form kleiner Felder — helle Färbung steht für wenig Aktivität, dunkle Färbung für viele bearbeitete Karten. So sehen Sie auf einen Blick, ob Sie regelmässig dranbleiben.</p>
+      <p>Die <strong>Lernreihe</strong> zählt die Tage in Folge, an denen Sie mindestens eine Karte bearbeitet haben. Ein einziger ausgesetzter Tag setzt die Reihe auf null zurück.</p>
+      <p>Das <strong>Aktivitätsraster</strong> darunter zeigt die letzten sechzig Tage in vier Helligkeitsstufen — von hell für wenige Karten bis dunkel für viele. Tippen Sie ein Tageskästchen an: darunter erscheint die genaue Aufschlüsselung, wie viele Karten an dem Tag bearbeitet wurden und wie viele davon als sicher, wackelig oder schwer bewertet sind. Eine Wochenstatistik mit aktueller Woche, Vorwoche und Tagesschnitt der letzten dreissig Tage gibt Ihnen ergänzend ein Gefühl für Ihren Rhythmus.</p>
+
+      <h4>Eigene Anmerkungen auf den Karten</h4>
+      <p>Jede Karte hat auf der Rückseite Platz für eigene Anmerkungen — für Querverweise zu anderen Karten, Aktualisierungen aus der BGer-Praxis, Hinweise vom Praxisanwalt. Wenn noch nichts notiert ist, sehen Sie dort den Knopf <em>„+ Eigene Anmerkung hinzufügen"</em>. Sobald Sie etwas eintragen, ist das Feld beim erneuten Drehen der Karte automatisch wieder sichtbar.</p>
+      <p>Bei den <strong>Mini-Fällen</strong> finden Sie zwei getrennte Notizfelder. Auf der Vorderseite, beim Sachverhalt, das Feld <em>„Eigene Lösungsskizze"</em> — hier skizzieren Sie Ihre Lösung, bevor Sie zur Musterlösung wechseln. Auf der Rückseite, neben der Lösung, das Feld <em>„Vergleichsanmerkungen"</em> — hier halten Sie fest, was Sie übersehen haben oder was Sie sich für künftige Klausuren merken wollen. Beide Felder werden automatisch gespeichert.</p>
+
+      <h4>Notizblock · der allgemeine Bereich</h4>
+      <p>Im Modus <strong>Notizen</strong> öffnet sich ein Notizblock mit Format-Tasten für fett, kursiv, unterstrichen, Listen und Überschriften. Tastatur-Kürzel <strong>Strg+B</strong>, <strong>Strg+I</strong>, <strong>Strg+U</strong> arbeiten parallel. Auto-Save mit kurzer Bestätigung. Hier ist der Ort für übergreifende Gedanken, die zu keiner einzelnen Karte gehören.</p>
+
+      <h4>Gesetze und Bundesgerichtsentscheide</h4>
+      <p>Im Modus <strong>Gesetze</strong> finden Sie eine Übersicht aller relevanten Bundesgesetze (StGB, StPO, JStG, BV, EMRK, OR, ZGB, ZPO, SchKG, BGFA und weitere) sowie der Aargauer Erlasse (KV, EG StPO, EG ZPO, GOG). Ein Klick auf einen Erlass öffnet ihn auf Fedlex in einem neuen Browser-Fenster.</p>
+      <p>Über das obere Eingabefeld <strong>Norm direkt aufrufen</strong> springen Sie mit einer Eingabe wie <em>„Art. 102 StGB"</em> direkt zum Artikel. Über das untere Suchfeld <strong>Bundesgerichtsentscheide</strong> recherchieren Sie zu einem konkreten BGE-Zitat oder zu einem Stichwort wie <em>„Eventualvorsatz"</em>.</p>
+      <p>Auf den Karten selbst sind die jeweiligen <strong>Hauptnormen verlinkt</strong> — wenn Sie auf der Rückseite einer Karte einen Verweis wie <em>„Art. 102 StGB"</em> sehen, ist er klickbar. BGE-Verweise (in goldener Tönung) sind ebenfalls verlinkt.</p>
+
+      <h4>Klausur-Verlauf</h4>
+      <p>Im Modus <strong>Klausur</strong> finden Sie unter jeder Klausur, die Sie schon bearbeitet haben, einen Knopf <em>„Versuche anzeigen"</em>. Ein Klick öffnet eine Tabelle aller Versuche mit Datum, Bearbeitungsdauer, Punkten und Anteil. Eine weitere Klick auf eine Versuchszeile öffnet die <strong>Detailansicht</strong> — dort sehen Sie die Bewertungs-Aufschlüsselung pro Kategorie, Ihre eigenen Notizen zur Selbstbewertung und auf Wunsch den vollständigen Bearbeitungstext, den Sie damals geschrieben haben. Versuche bleiben unveränderlich; jeder Versuch ist eine ehrliche Momentaufnahme Ihres Stands.</p>
 
       <h4>Empfehlungen aus der Praxis</h4>
       <ul>
@@ -3151,10 +3403,10 @@
       <p>In der Seitenleiste können Sie nach <strong>Karteikartenkapitel</strong> auswählen (Strafgesetzbuch Allgemeiner Teil, Besonderer Teil, Strafprozessordnung, Vernetzungen, Methodik, Mini-Fälle, Bundesgerichtsentscheide, Nebenstrafrecht), nach <strong>Karteikartentyp</strong> (Aufbauschemata, Definitionen, Konstellationen und so weiter) und nach <strong>Lernstatus</strong> (Heute fällig, Neu, Wackelig, Schwer). Mit der Werkzeugleiste oben können Sie die Reihenfolge mischen, den Stand sichern oder eine ältere Fassung wiederherstellen.</p>
 
       <h4>Steuerung über die Tastatur</h4>
-      <p>Schneller als das Klicken: <strong>Leertaste</strong> dreht die Karte um, <strong>Pfeil links und rechts</strong> blättern, <strong>1, 2, 3</strong> vergeben die Bewertung.</p>
+      <p>Schneller als das Klicken: <strong>Leertaste</strong> dreht die Karte um, <strong>Pfeil links und rechts</strong> blättern, <strong>1, 2, 3</strong> vergeben die Bewertung. Die Tastatur-Steuerung wirkt nur im Modus <em>Lernen</em> — in den Eingabefeldern der anderen Modi bleiben Leertaste und Zifferntasten selbstverständlich für die normale Texteingabe verfügbar.</p>
 
       <h4>Lernfortschritt sichern und wiederherstellen</h4>
-      <p>Ihr Lernfortschritt wird im Speicher des Browsers abgelegt. Mit den Knöpfen <strong>Sichern</strong> und <strong>Wiederherstellen</strong> in der Werkzeugleiste laden Sie den Stand als Datei herunter beziehungsweise wieder zurück — wichtig vor einem Wechsel des Browsers oder einer Neuinstallation.</p>
+      <p>Ihr Lernfortschritt wird im Speicher des Browsers abgelegt. Mit den Knöpfen <strong>Sichern</strong> und <strong>Wiederherstellen</strong> in der Werkzeugleiste laden Sie den Stand als Datei herunter beziehungsweise wieder zurück. Die Sicherung umfasst Bewertungen, Notizen aller Art, Aktivitätshistorie und sämtliche Klausurversuche — wichtig vor einem Wechsel des Browsers oder einer Neuinstallation.</p>
 
       <h4>Auf dem iPhone als Anwendung nutzen</h4>
       <p>Das Werkzeug lässt sich als Kachel auf den Startbildschirm legen und öffnet dann im Vollbild ohne Adressleiste:</p>
@@ -3165,10 +3417,10 @@
         <li>Den Namen bestätigen (KaJa) und auf Hinzufügen tippen</li>
       </ol>
       <p>Die Kachel zeigt eine Justitia-Waage auf Pergament. Beim Antippen öffnet sich das Werkzeug im Vollbild. Der Lernfortschritt verbleibt im Speicher desselben Browsers.</p>
-      <div class="pillar"><strong>Hinweis:</strong> Die Arbeit auf dem Mobilgerät ergänzt die Hauptarbeit am Computer. Eine vierstündige Klausurbearbeitung bleibt sinnvoll am Computer; das Karteikarten-Lernen unterwegs in S-Bahn, Wartezimmer oder Mittagspause ist die typische Nutzung des Mobilgeräts.</p>
+      <div class="pillar"><strong>Hinweis:</strong> Die Arbeit auf dem Mobilgerät ergänzt die Hauptarbeit am Computer. Eine vierstündige Klausurbearbeitung bleibt sinnvoll am Computer; das Karteikarten-Lernen unterwegs in S-Bahn, Wartezimmer oder Mittagspause ist die typische Nutzung des Mobilgeräts.</div>
 
       <h4>Karten vorlesen lassen</h4>
-      <p>Auf jeder Karteikarte finden Sie oben rechts ein dezentes Lautsprecher-Symbol — sowohl auf Vorder- als auch auf Rückseite. Tippen Sie es an, wird der Karteninhalt mit deutscher Stimme vorgelesen. Erneutes Antippen beendet das Vorlesen. Auch beim Umdrehen, beim Wechsel zur nächsten Karte oder beim Verlassen des Karteikarten-Modus wird die Vorlesung automatisch unterbrochen.</p>
+      <p>Auf jeder Karteikarte finden Sie oben rechts ein dezentes Lautsprecher-Symbol — sowohl auf Vorder- als auch auf Rückseite. Tippen Sie es an, wird der Karteninhalt mit deutscher Stimme vorgelesen. Erneutes Antippen beendet das Vorlesen. Auch beim Umdrehen, beim Wechsel zur nächsten Karte oder beim Verlassen des Lernen-Modus wird die Vorlesung automatisch unterbrochen.</p>
       <p>In der Seitenleiste unter <strong>Vorlesen</strong> stellen Sie das Tempo (Voreinstellung 1.1-fach) und die deutsche Stimme ein. Welche Stimmen verfügbar sind, hängt vom Gerät und vom Betriebssystem ab — auf einem iPhone sind dies in der Regel Anna oder Petra; weitere Stimmen lassen sich in den iOS-Einstellungen hinzufügen.</p>
       <div class="pillar"><strong>Methodischer Hinweis:</strong> Das Vorlesen ist ein Werkzeug der Wiederholung, kein Ersatz für den aktiven Abruf. Denken Sie zuerst selbst durch, formulieren Sie die Antwort mündlich aus, und hören Sie dann zur Kontrolle. Das hörende Wiederholen festigt zudem die Aussprache schwieriger Begriffe (Verwaltungsgerichtsbeschwerde, Spezialverwaltungsgericht, Anschlussgebühren) — was sich in der mündlichen Prüfung auszahlt.</div>
 
@@ -12384,7 +12636,118 @@ const CARDS = [
    state.progress[kanton][rechtsbereich][cardId] = { ... }
    ════════════════════════════════════════════════════════════ */
 
-const TOOL_VERSION = '3.11';
+/* ════════════════════════════════════════════════════════════
+   Etappe 16.2 · Gesetzes-Verlinkung
+   Lookup-Tabelle der relevanten Erlasse mit Fedlex-ELI-URLs
+   und Parser für Norm-Verweise im Karten-Text
+   ════════════════════════════════════════════════════════════ */
+
+const ERLASSE = [
+  /* Bundesgesetze auf Fedlex */
+  { kuerzel: 'StGB',   name: 'Strafgesetzbuch',                   sr: '311.0',   url: 'https://www.fedlex.admin.ch/eli/cc/54/757_781_799/de',    artAnker: true },
+  { kuerzel: 'StPO',   name: 'Strafprozessordnung',               sr: '312.0',   url: 'https://www.fedlex.admin.ch/eli/cc/2010/267/de',          artAnker: true },
+  { kuerzel: 'JStG',   name: 'Jugendstrafgesetz',                 sr: '311.1',   url: 'https://www.fedlex.admin.ch/eli/cc/2006/467/de',          artAnker: true },
+  { kuerzel: 'JStPO',  name: 'Jugendstrafprozessordnung',         sr: '312.1',   url: 'https://www.fedlex.admin.ch/eli/cc/2010/268/de',          artAnker: true },
+  { kuerzel: 'BV',     name: 'Bundesverfassung',                  sr: '101',     url: 'https://www.fedlex.admin.ch/eli/cc/1999/404/de',          artAnker: true },
+  { kuerzel: 'EMRK',   name: 'Europäische Menschenrechtskonvention', sr: '0.101', url: 'https://www.fedlex.admin.ch/eli/cc/1974/2151_2151_2151/de', artAnker: true },
+  { kuerzel: 'OR',     name: 'Obligationenrecht',                 sr: '220',     url: 'https://www.fedlex.admin.ch/eli/cc/27/317_321_377/de',    artAnker: true },
+  { kuerzel: 'ZGB',    name: 'Zivilgesetzbuch',                   sr: '210',     url: 'https://www.fedlex.admin.ch/eli/cc/24/233_245_233/de',    artAnker: true },
+  { kuerzel: 'ZPO',    name: 'Zivilprozessordnung',               sr: '272',     url: 'https://www.fedlex.admin.ch/eli/cc/2010/262/de',          artAnker: true },
+  { kuerzel: 'SchKG',  name: 'Schuldbetreibung und Konkurs',      sr: '281.1',   url: 'https://www.fedlex.admin.ch/eli/cc/11/529_488_529/de',    artAnker: true },
+  { kuerzel: 'BGFA',   name: 'Bundesanwaltsgesetz',               sr: '935.61',  url: 'https://www.fedlex.admin.ch/eli/cc/2002/153/de',          artAnker: true },
+  { kuerzel: 'GwG',    name: 'Geldwäschereigesetz',               sr: '955.0',   url: 'https://www.fedlex.admin.ch/eli/cc/1998/892_892_892/de',  artAnker: true },
+  { kuerzel: 'OHG',    name: 'Opferhilfegesetz',                  sr: '312.5',   url: 'https://www.fedlex.admin.ch/eli/cc/2008/280/de',          artAnker: true },
+  { kuerzel: 'IRSG',   name: 'Rechtshilfegesetz',                 sr: '351.1',   url: 'https://www.fedlex.admin.ch/eli/cc/1982/846_846_846/de',  artAnker: true },
+  { kuerzel: 'SVG',    name: 'Strassenverkehrsgesetz',            sr: '741.01',  url: 'https://www.fedlex.admin.ch/eli/cc/1959/679_705_685/de',  artAnker: true },
+  { kuerzel: 'VUV',    name: 'Verkehrsregelnverordnung',          sr: '741.11',  url: 'https://www.fedlex.admin.ch/eli/cc/1962/1364_1409_1420/de', artAnker: true },
+  /* Aargauer Erlasse · gesetzessammlungen.ag.ch · keine Artikel-Anker */
+  { kuerzel: 'KV AG',   name: 'Kantonsverfassung Aargau',         sr: 'SAR 110.000', url: 'https://gesetzessammlungen.ag.ch/app/de/texts_of_law/110.000', artAnker: false },
+  { kuerzel: 'EG StPO', name: 'Einführungsgesetz zur StPO Aargau', sr: 'SAR 251.200', url: 'https://gesetzessammlungen.ag.ch/app/de/texts_of_law/251.200', artAnker: false },
+  { kuerzel: 'EG ZPO',  name: 'Einführungsgesetz zur ZPO Aargau',  sr: 'SAR 221.200', url: 'https://gesetzessammlungen.ag.ch/app/de/texts_of_law/221.200', artAnker: false },
+  { kuerzel: 'GOG',     name: 'Gerichtsorganisationsgesetz Aargau', sr: 'SAR 155.200', url: 'https://gesetzessammlungen.ag.ch/app/de/texts_of_law/155.200', artAnker: false },
+  { kuerzel: 'OBG',     name: 'Ordnungsbussengesetz',              sr: '314.1',   url: 'https://www.fedlex.admin.ch/eli/cc/2017/685/de',          artAnker: true },
+];
+
+/* Erlass-Kürzel → Lookup-Eintrag (für schnellen Zugriff) */
+const ERLASS_BY_KUERZEL = Object.fromEntries(ERLASSE.map(e => [e.kuerzel, e]));
+
+/* Konstruiert die URL für einen Norm-Verweis. Gibt null zurück,
+   wenn der Erlass nicht in der Tabelle ist. */
+function buildNormURL(artikelNr, erlassKuerzel) {
+  const erlass = ERLASS_BY_KUERZEL[erlassKuerzel];
+  if (!erlass) return null;
+  if (!erlass.artAnker || !artikelNr) return erlass.url;
+  /* Fedlex-Anker · #art_NNN · ohne Buchstaben-Suffixe (bis/ter)
+     Bei "102bis" wird trotzdem auf #art_102 verlinkt, weil Fedlex
+     keine Sub-Anker für lateinische Suffixe pflegt — der Artikel
+     ist auf derselben Seite und der Browser springt zur Position. */
+  const numerischerTeil = String(artikelNr).match(/^\d+/);
+  if (!numerischerTeil) return erlass.url;
+  return `${erlass.url}#art_${numerischerTeil[0]}`;
+}
+
+/* BGer-Sucheinstieg für BGE und Bundesgerichts-Entscheide.
+   Die Suchmaschine läuft auf search.bger.ch (Eurospider) und akzeptiert
+   einen vorbefüllten Suchbegriff über den Parameter query_words.
+   Bei einem konkreten BGE-Zitat wie "BGE 144 IV 345" findet sie
+   den Entscheid über das Index-Modul direkt; bei einem Stichwort
+   wie "Eventualvorsatz" liefert sie eine Volltext-Trefferliste. */
+function buildBGEURL(zitierString) {
+  const q = encodeURIComponent(zitierString);
+  return `https://search.bger.ch/ext/eurospider/live/de/php/clir/http/index.php`
+    + `?lang=de&type=simple_query&query_words=${q}&top_subcollection_clir=bge`;
+}
+
+/* Erkennungsmuster für Norm-Verweise im Text:
+   Art. NNN[bis/ter] [Abs. N] [Ziff. N] [lit. a] ERLASS
+   Mehrere Erlasskürzel sortiert nach Länge (lange zuerst), damit
+   "JStPO" nicht fälschlich als "JS" + "tPO" interpretiert wird. */
+const ERLASS_REGEX_TEIL = ERLASSE
+  .map(e => e.kuerzel)
+  .sort((a, b) => b.length - a.length)
+  .map(k => k.replace(/\s+/g, '\\s+'))
+  .join('|');
+
+const NORM_REGEX = new RegExp(
+  '\\bArt\\.\\s*'
+  + '(\\d+(?:[a-z]+)?(?:\\s*[-–]\\s*\\d+)?(?:\\s*ff\\.?)?)'   // Artikel-Nummer mit ggf. Bereich oder ff.
+  + '(?:\\s+(?:Abs\\.|Absatz)\\s*[\\dIVXLC]+(?:[a-z]+)?)?'    // Abs. (optional)
+  + '(?:\\s+(?:Ziff\\.|Ziffer)\\s*[\\dIVXLC]+)?'              // Ziff. (optional)
+  + '(?:\\s+lit\\.\\s*[a-z]+)?'                                // lit. (optional)
+  + '\\s+'
+  + '(' + ERLASS_REGEX_TEIL + ')'
+  + '\\b',
+  'g'
+);
+
+/* BGE-Erkennung · "BGE 144 IV 345", "BGE 147 IV 9" */
+const BGE_REGEX = /\bBGE\s+\d+\s+[IVX]+\s+\d+\b/g;
+
+/* Wandelt Norm- und BGE-Verweise in einem HTML-String in Links um.
+   Geht behutsam vor: nur in Text zwischen Tags ersetzen, nicht in
+   bestehenden href-Attributen oder innerhalb anderer Tags. */
+function verlinkeNormen(htmlString) {
+  if (!htmlString) return htmlString;
+  /* HTML in Text-/Tag-Segmente zerlegen */
+  const teile = htmlString.split(/(<[^>]+>)/);
+  return teile.map(teil => {
+    if (teil.startsWith('<')) return teil;   /* HTML-Tag unverändert */
+    /* Erst Norm-Verweise · Reihenfolge wichtig, weil BGE-Regex einfacher ist */
+    let s = teil.replace(NORM_REGEX, (match, art, kuerzel) => {
+      const url = buildNormURL(art, kuerzel.replace(/\s+/g, ' '));
+      if (!url) return match;
+      return `<a href="${url}" target="_blank" rel="noopener" class="norm-link">${match}</a>`;
+    });
+    /* Dann BGE-Verweise */
+    s = s.replace(BGE_REGEX, match => {
+      const url = buildBGEURL(match);
+      return `<a href="${url}" target="_blank" rel="noopener" class="norm-link norm-link-bge">${match}</a>`;
+    });
+    return s;
+  }).join('');
+}
+
+const TOOL_VERSION = '3.12';
 const DEFAULT_KANTON = 'AG';
 const DEFAULT_RECHTSBEREICH = 'strafrecht';
 
@@ -13205,7 +13568,7 @@ function renderCard() {
       <div class="card-answer">
         <div class="answer-title">
           ${card.answerTitle}
-          <span class="ref">${card.answerRef}</span>
+          <span class="ref">${verlinkeNormen(card.answerRef)}</span>
         </div>
         <div class="answer-block">${card.answerHTML}</div>
         <div class="fall-notes-label fall-notes-label-back">
@@ -13248,7 +13611,7 @@ function renderCard() {
       <div class="card-answer">
         <div class="answer-title">
           ${card.answerTitle}
-          <span class="ref">${card.answerRef}</span>
+          <span class="ref">${verlinkeNormen(card.answerRef)}</span>
         </div>
         <div class="answer-block">${card.answerHTML}</div>
         ${notesBlockHTML}
@@ -13847,6 +14210,15 @@ function showToast(msg) {
 
 document.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  /* Etappe 16.3 · contenteditable-Elemente schützen — der Notizblock
+     ist ein <div contenteditable>, dort dürfen Leertaste, Pfeiltasten
+     und Zifferntasten nicht abgefangen werden. */
+  if (e.target.isContentEditable) return;
+  /* Tastatur-Steuerung gilt nur im Karteikarten-Modus.
+     In Notizen-, Klausur- und Gesetze-Modus haben die Tasten andere
+     Bedeutung (Eingabefelder, Suche). */
+  const kartenModule = document.getElementById('kartenModule');
+  if (!kartenModule || kartenModule.classList.contains('hidden')) return;
   if (e.code === 'Space') {
     e.preventDefault();
     state.flipped = !state.flipped;
@@ -14790,8 +15162,36 @@ function renderNotizen() {
     }, 500);
   });
 
-  /* Tastatur-Kürzel · Strg+B/I/U */
+  /* Tastatur-Kürzel · Strg+B/I/U sowie Enter-Behandlung */
   editor.addEventListener('keydown', e => {
+    /* Etappe 16.1 · Enter explizit behandeln, weil contenteditable
+       sonst je nach Browser uneinheitlich reagiert (besonders auf iOS
+       Safari führt der Standard zu inkonsistentem Verhalten beim
+       ersten Enter in einem leeren oder nur-Text-Editor). */
+    if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      if (e.shiftKey) {
+        /* Shift+Enter: einfacher Zeilenumbruch innerhalb desselben Absatzes */
+        document.execCommand('insertHTML', false, '<br>');
+      } else {
+        /* Enter: neuer Absatz · zwei <br> erzeugen visuelle Leerzeile,
+           was dem entspricht, was Nutzer erwarten ("eine Zeile Abstand"). */
+        document.execCommand('insertHTML', false, '<br><br>');
+      }
+      /* Speicherung antriggern */
+      state.notizblock = editor.innerHTML;
+      updateNotizenStats();
+      clearTimeout(notizenSaveTimer);
+      notizenSaveTimer = setTimeout(() => {
+        saveState();
+        const ind = document.getElementById('notizenSavedIndicator');
+        if (ind) {
+          ind.classList.add('show');
+          setTimeout(() => ind.classList.remove('show'), 1400);
+        }
+      }, 500);
+      return;
+    }
     if (!(e.ctrlKey || e.metaKey)) return;
     const k = e.key.toLowerCase();
     if (k === 'b') { e.preventDefault(); applyNotizFormat('bold'); }
@@ -14844,22 +15244,122 @@ function updateNotizenStats() {
   stats.textContent = chars === 1 ? '1 Zeichen' : `${chars} Zeichen`;
 }
 
+/* ════════════════════════════════════════════════════════════
+   Etappe 16.2 · Gesetze-Modus · Render und Suche
+   ════════════════════════════════════════════════════════════ */
+
+let gesetzeBound = false;
+
+function renderGesetze() {
+  /* Erlass-Listen befüllen */
+  const bundEl = document.getElementById('gesetzeListeBund');
+  const kantonEl = document.getElementById('gesetzeListeKanton');
+  if (bundEl && kantonEl) {
+    bundEl.innerHTML = '';
+    kantonEl.innerHTML = '';
+    ERLASSE.forEach(erlass => {
+      const eintrag = document.createElement('a');
+      eintrag.className = 'gesetze-liste-eintrag';
+      eintrag.href = erlass.url;
+      eintrag.target = '_blank';
+      eintrag.rel = 'noopener';
+      eintrag.innerHTML = `
+        <div class="gesetze-liste-kuerzel">${erlass.kuerzel}</div>
+        <div class="gesetze-liste-name">${erlass.name}</div>
+        <div class="gesetze-liste-sr">SR ${erlass.sr}</div>
+      `;
+      const istAargau = erlass.kuerzel === 'KV AG'
+        || erlass.kuerzel === 'EG StPO'
+        || erlass.kuerzel === 'EG ZPO'
+        || erlass.kuerzel === 'GOG';
+      (istAargau ? kantonEl : bundEl).appendChild(eintrag);
+    });
+  }
+
+  /* Handler nur einmal binden */
+  if (gesetzeBound) return;
+  gesetzeBound = true;
+
+  const sucheInput = document.getElementById('gesetzeSucheInput');
+  const sucheBtn = document.getElementById('gesetzeSucheBtn');
+  const sucheFehler = document.getElementById('gesetzeSucheFehler');
+
+  function fuhreNormSucheAus() {
+    const eingabe = sucheInput.value.trim();
+    if (!eingabe) {
+      zeigeFehler('Bitte einen Norm-Verweis eingeben, z.B. „Art. 102 StGB".');
+      return;
+    }
+    /* Wir nutzen den schon definierten NORM_REGEX, müssen aber
+       eine frische Instanz holen (g-Flag macht ihn statefull). */
+    const localRegex = new RegExp(NORM_REGEX.source);
+    const treffer = eingabe.match(localRegex);
+    if (!treffer) {
+      zeigeFehler('Format nicht erkannt. Erwartet wird etwa „Art. 102 StGB" oder „Art. 263 StPO".');
+      return;
+    }
+    const artikel = treffer[1];
+    const kuerzel = treffer[2].replace(/\s+/g, ' ');
+    const url = buildNormURL(artikel, kuerzel);
+    if (!url) {
+      zeigeFehler(`Erlass „${kuerzel}" ist nicht in der Liste.`);
+      return;
+    }
+    sucheFehler.hidden = true;
+    window.open(url, '_blank', 'noopener');
+  }
+
+  function zeigeFehler(text) {
+    sucheFehler.textContent = text;
+    sucheFehler.hidden = false;
+  }
+
+  sucheBtn.addEventListener('click', fuhreNormSucheAus);
+  sucheInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      fuhreNormSucheAus();
+    }
+  });
+
+  /* BGE-Suche */
+  const bgeInput = document.getElementById('bgeSucheInput');
+  const bgeBtn = document.getElementById('bgeSucheBtn');
+  function fuhreBGESucheAus() {
+    const q = bgeInput.value.trim();
+    if (!q) return;
+    const url = buildBGEURL(q);
+    window.open(url, '_blank', 'noopener');
+  }
+  bgeBtn.addEventListener('click', fuhreBGESucheAus);
+  bgeInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      fuhreBGESucheAus();
+    }
+  });
+}
+
 function setMode(mode) {
   if (typeof ttsCancel === 'function') ttsCancel();   /* M3 · Vorlesen stoppen bei Modus-Wechsel */
   const kartenModule = document.getElementById('kartenModule');
   const klausurModule = document.getElementById('klausurModule');
   const notizenModule = document.getElementById('notizenModule');
+  const gesetzeModule = document.getElementById('gesetzeModule');
   const btnKarten = document.getElementById('modeKarten');
   const btnKlausur = document.getElementById('modeKlausur');
   const btnNotizen = document.getElementById('modeNotizen');
+  const btnGesetze = document.getElementById('modeGesetze');
 
   /* Alle Module ausblenden, alle Knöpfe deaktivieren */
   kartenModule.classList.add('hidden');
   if (klausurModule) klausurModule.classList.remove('active');
   if (notizenModule) notizenModule.classList.remove('active');
+  if (gesetzeModule) gesetzeModule.classList.remove('active');
   btnKarten.classList.remove('active');
   if (btnKlausur) btnKlausur.classList.remove('active');
   if (btnNotizen) btnNotizen.classList.remove('active');
+  if (btnGesetze) btnGesetze.classList.remove('active');
 
   if (mode === 'klausur') {
     if (klausurModule) klausurModule.classList.add('active');
@@ -14869,6 +15369,10 @@ function setMode(mode) {
     if (notizenModule) notizenModule.classList.add('active');
     if (btnNotizen) btnNotizen.classList.add('active');
     renderNotizen();
+  } else if (mode === 'gesetze') {
+    if (gesetzeModule) gesetzeModule.classList.add('active');
+    if (btnGesetze) btnGesetze.classList.add('active');
+    renderGesetze();
   } else {
     /* karten */
     kartenModule.classList.remove('hidden');
@@ -15692,6 +16196,8 @@ document.getElementById('modeKarten').addEventListener('click', () => setMode('k
 document.getElementById('modeKlausur').addEventListener('click', () => setMode('klausur'));
 const _btnNotizen = document.getElementById('modeNotizen');
 if (_btnNotizen) _btnNotizen.addEventListener('click', () => setMode('notizen'));
+const _btnGesetze = document.getElementById('modeGesetze');
+if (_btnGesetze) _btnGesetze.addEventListener('click', () => setMode('gesetze'));
 
 /* ── Hilfe-Modal ── */
 
