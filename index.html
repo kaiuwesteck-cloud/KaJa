@@ -778,7 +778,7 @@
   .card[data-type="definition"]    { --accent: var(--indigo); }
   .card[data-type="konstellation"] { --accent: var(--burgundy); }
   .card[data-type="vernetzung"]    { --accent: var(--emerald); }
-  .card[data-type="fall"]          { --accent: var(--petrol); }
+  .card[data-type="fall"]          { --accent: var(--petrol); min-height: 1000px; }   /* Etappe 17.10b · Karten-Mindesthöhe für Mini-Fälle erhöht, damit Sachverhalt-Box (280px) + Lösungs-Notizfeld (240px) + restliche Elemente gleichzeitig sichtbar bleiben — analog Zivilrechts-Tool v0.28 */
   .card[data-type="methode"]       { --accent: var(--slate); }
 
   .card::after {
@@ -854,6 +854,46 @@
     max-width: 520px;
   }
 
+  /* ─────────────────────────────────────────
+     Etappe 17.7 · Kontext und Quelle auf der
+     Vorderseite normaler Karten · optional:
+     • kontext → 1-2 Sätze Sachverhalt-Anriss
+     • quelle  → Provenienz (BGE, Klausur, ...)
+     Beide nur sichtbar wenn im Karten-Datenobjekt
+     vorhanden. Karten ohne diese Felder bleiben
+     unverändert (defensiv).
+     ───────────────────────────────────────── */
+  .card-kontext {
+    font-family: var(--serif-body);
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink);
+    margin-top: 18px;
+    padding: 10px 14px;
+    border-left: 3px solid var(--petrol, #2c5560);
+    background: rgba(44, 85, 96, 0.04);
+    border-radius: 0 3px 3px 0;
+    max-width: 580px;
+    font-style: italic;
+  }
+  .card-quelle {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 14px;
+    letter-spacing: 0.04em;
+    max-width: 580px;
+  }
+  .card-quelle::before {
+    content: 'Quelle · ';
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 9.5px;
+    color: var(--burgundy, #7a2e2a);
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
   /* ─── Mini-Fall · Vorderseite ─── */
   .fall-front {
     flex: 1;
@@ -872,6 +912,12 @@
     letter-spacing: -0.005em;
     margin-bottom: 14px;
   }
+  /* Etappe 17.10 · Sachverhalt-Box auf F-Z-Standard angeglichen
+     (analog Zivilrechts-Tool v0.28). Vorher max-height 230px mit
+     overflow-Scroll — User-Feedback: zu kleines Sachverhalts-Fenster.
+     Jetzt fixe Höhe 280px (Desktop) / 220px (Mobile), flex-shrink: 0,
+     stärkere Scrollbar, Gradient-Hinweis am unteren Rand wenn intern
+     gescrollt werden kann. */
   .fall-sachverhalt {
     font-family: var(--serif-body);
     font-size: 15px;
@@ -882,11 +928,21 @@
     padding: 14px 18px;
     border-radius: 0 3px 3px 0;
     margin-bottom: 14px;
-    max-height: 230px;
+    height: 280px;
     overflow-y: auto;
+    flex-shrink: 0;
   }
-  .fall-sachverhalt::-webkit-scrollbar { width: 5px; }
-  .fall-sachverhalt::-webkit-scrollbar-thumb { background: var(--paper-edge); border-radius: 3px; }
+  .fall-sachverhalt::-webkit-scrollbar { width: 8px; }
+  .fall-sachverhalt::-webkit-scrollbar-track { background: rgba(31,77,92,0.04); border-radius: 4px; }
+  .fall-sachverhalt::-webkit-scrollbar-thumb { background: var(--paper-edge); border-radius: 4px; }
+  .fall-sachverhalt::-webkit-scrollbar-thumb:hover { background: var(--petrol); }
+  /* Visueller Hinweis: Wenn intern gescrollt werden kann, Gradient am unteren Rand */
+  .fall-sachverhalt {
+    background-image:
+      linear-gradient(rgba(31,77,92,0.04), rgba(31,77,92,0.04)),
+      linear-gradient(to top, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 30%);
+    background-attachment: local, scroll;
+  }
   .fall-aufgabe {
     font-family: var(--serif-body);
     font-style: italic;
@@ -899,9 +955,14 @@
     color: var(--ink);
     font-weight: 600;
   }
+  /* Etappe 17.5 · min-height auf 240px erhöht (analog Zivilrechts-Tool
+     v0.28). Vorher 80px — bei mehrzeiligen Notizen war beim Wiederlesen
+     immer nur ein winziger Ausschnitt sichtbar, was das Mitführen längerer
+     Anmerkungen unbrauchbar machte. Betrifft Notiz-Textareas auf
+     Karten-Rückseiten und Lösungs-Textareas auf Mini-Fall-Vorderseiten. */
   .fall-notes {
     flex: 1;
-    min-height: 80px;
+    min-height: 240px;
     width: 100%;
     background: rgba(255,255,255,0.5);
     border: 1px solid var(--paper-edge);
@@ -2801,11 +2862,11 @@
       gap: 6px;
       margin-bottom: 18px;
     }
-    /* fall-sachverhalt: Padding mobil knapper */
+    /* fall-sachverhalt: Padding mobil knapper, fixe Höhe analog Zivilrechts-Tool · Etappe 17.10 */
     .fall-sachverhalt {
       padding: 12px 14px;
       font-size: 14.5px;
-      max-height: 180px;
+      height: 220px;
     }
     .fall-question {
       font-size: 19px;
@@ -3750,6 +3811,10 @@ const CARDS = [
     hint: "Frühling 2024 prominent — mündlicher Strafantrag.",
     answerTitle: "Strafantrag",
     answerRef: "Art. 30–33 StGB · Art. 304 StPO",
+    /* Etappe 17.4 · Rückzug-Block korrigiert: Frist ist die Eröffnung des
+       Urteils der zweiten kantonalen Instanz (Art. 33 Abs. 1 StGB), nicht
+       das erstinstanzliche Urteil. Zusätzlich Abs. 4 (Einspruch des
+       Beschuldigten) und Form-Verweis auf Art. 304 Abs. 2 StPO ergänzt. */
     answerHTML: `
       <h4>Voraussetzungen — Art. 30</h4>
       <ul>
@@ -3771,9 +3836,11 @@ const CARDS = [
       <p>Wer Antrag stellt, will Strafverfolgung gegen alle Beteiligten — kein Antrag nur gegen einen Mittäter.</p>
       <h4>Rückzug — Art. 33</h4>
       <ul>
-        <li>Bis zur Eröffnung des erstinstanzlichen Urteils möglich</li>
-        <li>Wirkt zugunsten <em>aller</em> Beteiligten</li>
-        <li>Endgültig — kein erneuter Antrag</li>
+        <li>Möglich, solange das <strong>Urteil der zweiten kantonalen Instanz</strong> noch nicht eröffnet ist (Abs. 1)</li>
+        <li>Endgültig — wer zurückgezogen hat, kann nicht nochmals Antrag stellen (Abs. 2)</li>
+        <li>Rückzug gegenüber einem Beschuldigten gilt für <em>alle</em> Beschuldigten (Abs. 3 · Unteilbarkeit auch beim Rückzug)</li>
+        <li><strong>Einspruch des Beschuldigten</strong> gegen den Rückzug → Rückzug gilt für ihn nicht (Abs. 4) · klausurrelevant: Beschuldigter will u. U. Freispruch statt Einstellung</li>
+        <li>Form: gleiche Form wie der Strafantrag — schriftlich oder mündlich zu Protokoll <span class="norm">Art. 304 Abs. 2 StPO</span></li>
       </ul>
       <div class="pillar"><strong>Klausuranker Frühling 2024:</strong> mündlicher Strafantrag — Form, Frist, Wirkung gegen alle Beteiligten.</div>
     `
@@ -4429,6 +4496,9 @@ const CARDS = [
     topic: "SVG-Konstellation",
     prompt: "Strassenverkehrsunfall mit Personenschaden · Prüfprogramm",
     hint: "Aargauer Standardkonstellation.",
+    /* Etappe 17.9 · Klausurkonstellation BT */
+    kontext: "Strassenverkehrsunfall mit Personenschaden — Tötung oder Körperverletzung. Frage: Welche Tatbestände aus StGB und SVG sind nebeneinander zu prüfen — und wie verhalten sich Fahrlässigkeitsdelikte (Art. 117/125 StGB) zu groben oder qualifiziert groben Verkehrsregelverletzungen und Raserdelikten (Art. 90 SVG)?",
+    quelle: "Aargauer Anwaltsprüfung Herbst 2024 (Strafrecht-Klausur, Verkehrsunfall) · Art. 117 + 125 StGB · Art. 90 ff. SVG · methodisch verbunden mit BT-10",
     answerTitle: "Konstellation · SVG-Unfall",
     answerRef: "StGB + SVG zusammen prüfen",
     answerHTML: `
@@ -4470,6 +4540,10 @@ const CARDS = [
     topic: "Arbeitsunfall",
     prompt: "Arbeitsunfall · Geschäftsherrenhaftung",
     hint: "Sommer 2025 — Estrichmaschine.",
+    /* Etappe 17.9 · Klausurkonstellation BT · Sachverhalt-Detail aus
+       Klausurunterlagen ergänzbar (siehe Notizfeld auf der Vorderseite). */
+    kontext: "Arbeitsunfall mit Personenschaden bei Bedienung einer Maschine durch einen Mitarbeiter. Frage: Wie ist die Geschäftsherrenhaftung des Vorgesetzten zu prüfen — Garantenstellung aus VUV/ArG, konkrete Sorgfaltspflichtverletzung, Pflichtwidrigkeitszusammenhang trotz allfälligem Mitverschulden des Arbeiters?",
+    quelle: "Aargauer Anwaltsprüfung Sommer 2025 (Strafrecht-Klausur, Estrichmaschinen-Fall) · Art. 117 + 125 StGB · VUV (SR 832.30) · ArG",
     answerTitle: "Konstellation · Arbeitsunfall",
     answerRef: "Art. 117 / 125 StGB · VUV",
     answerHTML: `
@@ -11389,6 +11463,9 @@ const CARDS = [
     topic: "Verfahren · Beweisverwertung · Fernwirkung",
     prompt: "Wann erstreckt sich ein Beweisverwertungsverbot auf weitere Beweismittel?",
     hint: "Fernwirkung als Klausurfrage bei mehrstufigen Ermittlungen.",
+    /* Etappe 17.7 · Pilot für die neuen Vorderseiten-Felder kontext + quelle */
+    kontext: "Aus einem rechtswidrig erlangten Primärbeweis (z.B. fehlerhafte Hausdurchsuchung, mangelhafte Telefonüberwachung) werden weitere Beweismittel gewonnen. Greift das Verwertungsverbot des Primärbeweises auch auf diese Folgebeweise durch?",
+    quelle: "BGE 138 IV 169 E. 3.3.3 · bestätigt durch Urteil 7B_257/2022 vom 4.12.2023 · Art. 141 Abs. 4 StPO (revidiert per 1.1.2024)",
     answerTitle: "BGE 138 IV 169 · Fernwirkung Beweisverwertungsverbot",
     answerRef: "BGE 138 IV 169 E. 3.3.3 · Art. 141 Abs. 4 StPO",
     answerHTML: `
@@ -11409,11 +11486,19 @@ const CARDS = [
      in Wahrheit pro-DURIORE (siehe BGE-03) · Karte umgestellt auf
      BGE 144 IV 345 E. 2.2.3.1-2.2.3.3 (Mord-Fall mit ausführlichen
      Beweiswürdigungs-Erwägungen) */
+  /* Etappe 17.8 · BGE-Tranche · alle 17 BGE-Karten haben jetzt kontext +
+     quelle auf der Vorderseite. Sachverhalte aus dem bestehenden
+     answerHTML-Block destilliert; Quellen aus answerRef plus Folge-BGE.
+     Bei den drei dogmatischen Karten (BGE-15/16/17) wurde der Kontext
+     als Problemaufriss formuliert, nicht als Sachverhalt — kein
+     erfundener Fall. */
   {
     id: "BGE-02", type: "bge", category: "bge",
     topic: "Verfahren · Beweiswürdigung",
     prompt: "Welche Doppelfunktion hat der Grundsatz in dubio pro reo?",
     hint: "Beweiswürdigungsregel und Beweislastregel zugleich.",
+    kontext: "Mordverurteilung nach Messer-Tötung in einem Restaurant in Uri (März 2013). Frage: Wie ist die Beweiswürdigung der Mordmerkmale unter dem Grundsatz in dubio pro reo zu führen — als Beweiswürdigungs- oder als Beweislastregel?",
+    quelle: "BGE 144 IV 345 E. 2.2.3.1-2.2.3.3 · Art. 10 Abs. 3 StPO · Art. 32 Abs. 1 BV · Art. 6 Ziff. 2 EMRK",
     answerTitle: "BGE 144 IV 345 · in dubio pro reo · Doppelfunktion",
     answerRef: "BGE 144 IV 345 E. 2.2.3.1-2.2.3.3 · Art. 10 Abs. 3 StPO · Art. 32 Abs. 1 BV · Art. 6 Ziff. 2 EMRK",
     answerHTML: `
@@ -11442,6 +11527,8 @@ const CARDS = [
     topic: "Verfahren · Anklage- und Einstellungspraxis",
     prompt: "Welche Schwelle gilt für Einstellung versus Anklage durch die Staatsanwaltschaft?",
     hint: "Spiegelbild zu in dubio pro reo, aber für die Anklageentscheidung.",
+    kontext: "Staatsanwaltschaft will ein Strafverfahren einstellen, obwohl eine Verurteilung möglich erscheint. Frage: Welche Schwelle gilt für Einstellungsverfügungen — und wie verhält sich der Grundsatz in dubio pro duriore zum spiegelbildlichen in dubio pro reo?",
+    quelle: "BGE 138 IV 186 E. 4.1 S. 190 · Art. 319 StPO · vgl. BGE 137 IV 219, BGE 138 IV 86",
     answerTitle: "BGE 138 IV 186 · in dubio pro duriore",
     answerRef: "BGE 138 IV 186 E. 4.1 S. 190 · Art. 319 StPO · vgl. BGE 137 IV 219, BGE 138 IV 86",
     answerHTML: `
@@ -11465,6 +11552,8 @@ const CARDS = [
     topic: "Verfahren · Anklageschrift",
     prompt: "Welche Anforderungen stellt der Anklagegrundsatz an die Anklageschrift?",
     hint: "Umgrenzungs- und Informationsfunktion.",
+    kontext: "Verurteilung wegen Tatbestandsmerkmalen, die in der Anklageschrift nicht hinreichend konkretisiert waren. Frage: Welche Anforderungen stellt der Anklagegrundsatz an Umgrenzungs- und Informationsfunktion der Anklageschrift?",
+    quelle: "BGE 143 IV 63 E. 2.2 · Art. 9 + 325 StPO · vgl. BGE 147 IV 439 E. 7.2, BGE 144 I 234 E. 5.6.1",
     answerTitle: "BGE 143 IV 63 · Anklagegrundsatz",
     answerRef: "BGE 143 IV 63 E. 2.2 · Art. 9 + 325 StPO · vgl. BGE 147 IV 439 E. 7.2, BGE 144 I 234 E. 5.6.1",
     answerHTML: `
@@ -11498,6 +11587,8 @@ const CARDS = [
     topic: "AT · Vorsatzdogmatik",
     prompt: "Wie zieht das Bundesgericht die Trennlinie zwischen Eventualvorsatz und bewusster Fahrlässigkeit?",
     hint: "Wahrscheinlichkeitsgrad und Inkaufnahme — Gelfingen-Linie.",
+    kontext: "Illegales Strassenrennen über mehrere Kilometer in Gelfingen LU mit massiv überhöhter Geschwindigkeit, in der Folge Tötung. Frage: Eventualvorsatz oder bewusste Fahrlässigkeit hinsichtlich der Tötung?",
+    quelle: "BGE 130 IV 58 · Art. 12 Abs. 2 StGB · Folge-Rechtsprechung BGE 133 IV 9 (Muri-Fall), BGE 147 IV 439 E. 7.3.1",
     answerTitle: "BGE 130 IV 58 · Eventualvorsatz Gelfingen",
     answerRef: "BGE 130 IV 58 · Art. 12 Abs. 2 StGB · ergänzend BGE 133 IV 9 (Muri), BGE 147 IV 439 E. 7.3.1",
     answerHTML: `
@@ -11527,6 +11618,8 @@ const CARDS = [
     topic: "AT · Versuch · unmittelbares Ansetzen",
     prompt: "Wann liegt unmittelbares Ansetzen zur Tatbestandsverwirklichung vor?",
     hint: "Schwellentheorie · Plan plus objektive Nähe.",
+    kontext: "Vorbereitungshandlungen vor einer geplanten Tat — Beschaffung von Tatwerkzeug, Rekognoszierung am Tatort, Annäherung. Frage: Wann ist die Schwelle vom straflosen Vorbereiten zum strafbaren Versuch (unmittelbares Ansetzen) überschritten?",
+    quelle: "BGE 140 IV 150 · Art. 22 StGB",
     answerTitle: "BGE 140 IV 150 · Versuchsbeginn",
     answerRef: "BGE 140 IV 150 · Art. 22 StGB",
     answerHTML: `
@@ -11547,6 +11640,8 @@ const CARDS = [
     topic: "AT · Teilnahme · Bandenmässigkeit",
     prompt: "Welche Voraussetzungen verlangt der Bandenbegriff?",
     hint: "Mindestens zwei plus Verabredung künftiger Straftaten.",
+    kontext: "Zwei Personen verüben gemeinsam Diebstähle und verabreden weitere künftige Taten. Frage: Liegt Bandenmässigkeit als Qualifikationsmerkmal vor — und reichen dafür zwei Personen aus?",
+    quelle: "BGE 132 IV 132 E. 5.2 · Art. 139 Ziff. 3 + 140 Ziff. 3 StGB",
     answerTitle: "BGE 132 IV 132 · Bandenbegriff",
     answerRef: "BGE 132 IV 132 E. 5.2 · Art. 139 Ziff. 3 + 140 Ziff. 3 StGB",
     answerHTML: `
@@ -11578,6 +11673,8 @@ const CARDS = [
     topic: "Verfahren · Untersuchungshaft · Ausführungsgefahr",
     prompt: "Welche Schwelle setzt der Haftgrund der Ausführungsgefahr, und wann genügen Ersatzmassnahmen?",
     hint: "Sehr hohe Wahrscheinlichkeit eines schweren Verbrechens · Verhältnismässigkeit.",
+    kontext: "Aargauer Fall der Staatsanwaltschaft Brugg-Zurzach: Beschuldigter wegen Körperverletzung, Drohung und Nötigung; auf seinen iPhones Texte mit Tötungsphantasien gegen die Lebenspartnerin. Frage: Liegt Ausführungsgefahr vor — und reichen Ersatzmassnahmen statt Untersuchungshaft?",
+    quelle: "BGE 140 IV 19 · Art. 221 Abs. 2 + Art. 237 StPO · klassische Aargauer Konstellation in häuslicher Gewalt und Stalking-Mandaten",
     answerTitle: "BGE 140 IV 19 · Ausführungsgefahr und Ersatzmassnahmen",
     answerRef: "BGE 140 IV 19 · Art. 221 Abs. 2 + Art. 237 StPO · Aargauer Sachverhalt",
     answerHTML: `
@@ -11609,6 +11706,8 @@ const CARDS = [
     topic: "BT · Betrug · Arglist",
     prompt: "Welche drei Stufen der Arglist hat das Bundesgericht entwickelt?",
     hint: "Lügengebäude oder Überprüfungserschwernis oder Vertrauensverhältnis.",
+    kontext: "Anlagebetrug mit raffiniertem Lügengebäude und Vortäuschung eines Vertrauensverhältnisses. Frage: Welche Arglistanforderungen verlangt Art. 146 StGB — und in welchen drei Fallgruppen wird Arglist bejaht?",
+    quelle: "BGE 142 IV 153 E. 2.2.2 · Art. 146 StGB",
     answerTitle: "BGE 142 IV 153 · Arglist drei Stufen",
     answerRef: "BGE 142 IV 153 E. 2.2.2 · Art. 146 StGB",
     answerHTML: `
@@ -11634,6 +11733,8 @@ const CARDS = [
     topic: "BT · Urkundenfälschung · erhöhte Glaubwürdigkeit",
     prompt: "Welche drei Fallgruppen begründen erhöhte Glaubwürdigkeit bei der Falschbeurkundung?",
     hint: "Gesetzliche Beweisregel · besondere Vertrauensstellung · objektive Garantieposition.",
+    kontext: "Falschbeurkundung in einem Privatdokument (z.B. Buchhaltung, Geschäftsbericht). Frage: Wann hat ein Privatdokument die für die Falschbeurkundung erforderliche erhöhte Glaubwürdigkeit?",
+    quelle: "BGE 138 IV 130 · Art. 251 StGB",
     answerTitle: "BGE 138 IV 130 · erhöhte Glaubwürdigkeit",
     answerRef: "BGE 138 IV 130 · Art. 251 StGB",
     answerHTML: `
@@ -11659,6 +11760,8 @@ const CARDS = [
     topic: "BT · Veruntreuung · Anvertrauen",
     prompt: "Wann ist eine Sache oder ein Vermögenswert anvertraut?",
     hint: "Übertragung mit Massgabe der bestimmten Verwendung.",
+    kontext: "Vermögensverwalter verwendet Kundengelder für eigene Zwecke. Frage: Wann liegt ein Anvertrauungsverhältnis im Sinne von Art. 138 StGB vor — und wie grenzt es sich von blosser Empfangnahme ab?",
+    quelle: "BGE 133 IV 21 E. 6.2 · Art. 138 StGB",
     answerTitle: "BGE 133 IV 21 · Anvertrauungsbegriff",
     answerRef: "BGE 133 IV 21 E. 6.2 · Art. 138 StGB",
     answerHTML: `
@@ -11680,6 +11783,8 @@ const CARDS = [
     topic: "BT · Raub und Erpressung · Tatherrschaft",
     prompt: "Wodurch grenzen sich Raub und räuberische Erpressung tatbestandlich ab?",
     hint: "Wegnahme durch Täter versus Verfügung durch Opfer.",
+    kontext: "Bedrohung des Opfers mit einer Waffe; Opfer hebt selbst Geld am Bankomaten ab und übergibt es dem Täter. Frage: Raub nach Art. 140 oder räuberische Erpressung nach Art. 156 Ziff. 3 StGB?",
+    quelle: "BGE 133 IV 207 · Art. 140 + 156 Ziff. 3 StGB",
     answerTitle: "BGE 133 IV 207 · Raub vs. räuberische Erpressung",
     answerRef: "BGE 133 IV 207 · Art. 140 + 156 Ziff. 3 StGB",
     answerHTML: `
@@ -11700,6 +11805,8 @@ const CARDS = [
     topic: "BT · Tötungsdelikte · Mord",
     prompt: "Wie ist die besondere Skrupellosigkeit bei Mord nach BGer zu prüfen?",
     hint: "Gesamtwürdigung mit drei Ebenen.",
+    kontext: "Vorsätzliche Tötung mit qualifizierter Verwerflichkeit (z.B. eiskalte Planung, niedrige Beweggründe, brutale Ausführung). Frage: Wie ist die besondere Skrupellosigkeit nach Art. 112 StGB methodisch in einer Gesamtwürdigung zu prüfen?",
+    quelle: "BGE 141 IV 61 · Art. 112 StGB",
     answerTitle: "BGE 141 IV 61 · Mord-Skrupellosigkeit",
     answerRef: "BGE 141 IV 61 · Art. 112 StGB",
     answerHTML: `
@@ -11730,6 +11837,8 @@ const CARDS = [
     topic: "Verfahren · Strafbefehl · zweiter Strafbefehl",
     prompt: "Wann darf nach Einsprache ein neuer Strafbefehl ergehen, und gilt das Verschlechterungsverbot?",
     hint: "Geänderte Sach-/Rechtslage als Voraussetzung.",
+    kontext: "Nach Einsprache gegen einen Strafbefehl erlässt die Staatsanwaltschaft Schaffhausen einen zweiten Strafbefehl, der in Schuld und Sanktion mit dem ersten identisch, aber besser begründet ist und höhere Kosten enthält. Frage: Ist das zulässig — und greift das Verschlechterungsverbot?",
+    quelle: "BGE 145 IV 438 · Art. 354 + 355 + 356 StPO · vgl. Urteil 6B_222/2022 vom 18.1.2023",
     answerTitle: "BGE 145 IV 438 · neuer Strafbefehl nach Einsprache",
     answerRef: "BGE 145 IV 438 · Art. 354 + 355 + 356 StPO · vgl. Urteil 6B_222/2022 vom 18.1.2023",
     answerHTML: `
@@ -11762,6 +11871,8 @@ const CARDS = [
     topic: "Sanktionsrecht · Strafarten",
     prompt: "Welche Kriterien bestimmen die Wahl zwischen Geldstrafe und Freiheitsstrafe nach der Revision 2018?",
     hint: "Zweckmässigkeit, Auswirkungen, präventive Effizienz — Verschulden NICHT massgeblich.",
+    kontext: "Strafzumessung im Bereich der unteren Strafskala, wo der Strafrahmen sowohl Geldstrafe als auch kurze Freiheitsstrafe zulässt. Frage: Welche Kriterien entscheiden über die Wahl der Strafart — und ist seit der Sanktionenrechts-Revision 2018 noch der alte Geldstrafen-Vorrang massgeblich?",
+    quelle: "BGE 134 IV 82 · Art. 41 StGB (revidiert 1.1.2018) · aktuelle Linie BGE 144 IV 313 E. 1.1.1, BGE 147 IV 241 E. 3.2",
     answerTitle: "BGE 134 IV 82 · Strafhierarchie · aktualisiert durch Revision 2018",
     answerRef: "BGE 134 IV 82 · Art. 41 StGB (revidiert 1.1.2018) · aktuelle Linie BGE 144 IV 313 E. 1.1.1, BGE 147 IV 241 E. 3.2",
     answerHTML: `
@@ -11799,6 +11910,8 @@ const CARDS = [
     topic: "Sanktionsrecht · Ersatzforderung · Wiedereingliederung",
     prompt: "Wann darf auf eine Ersatzforderung verzichtet werden?",
     hint: "Uneinbringlichkeit oder ernstliche Behinderung der Wiedereingliederung.",
+    kontext: "Vermögensdelikt mit hohem Schaden, der Täter ist mittellos oder die deliktischen Werte sind nicht mehr greifbar. Frage: Wann darf das Gericht auf eine Ersatzforderung ganz oder teilweise verzichten?",
+    quelle: "BGE 144 IV 1 · Art. 71 Abs. 2 StGB",
     answerTitle: "BGE 144 IV 1 · Ersatzforderung mit Wiedereingliederungsvorbehalt",
     answerRef: "BGE 144 IV 1 · Art. 71 Abs. 2 StGB",
     answerHTML: `
@@ -11832,6 +11945,8 @@ const CARDS = [
     topic: "BT · Sexualstrafrecht · Übergang Revision 2024",
     prompt: "Wie unterscheidet sich das alte vom revidierten Sexualstrafrecht in der BGer-Praxis?",
     hint: "Vom Nötigungsprinzip zur Zustimmungslösung — Übergang seit 1.7.2024.",
+    kontext: "Sexualstrafrechts-Sachverhalt mit Tatzeit vor oder nach dem 1. Juli 2024. Frage: Welches Recht ist anwendbar — das alte Nötigungsprinzip oder die neue Zustimmungslösung — und wie unterscheiden sich die Tatbestände dogmatisch?",
+    quelle: "Altes Recht: BGE 148 IV 234 (Genfer Fall, 6B_894/2021), BGE 148 IV 329 · Neues Recht: Art. 189 + 190 StGB rev. (i.K. 1.7.2024) · BGer-Praxis zur Revision noch im Aufbau",
     answerTitle: "Sexualstrafrecht · Übergang Revision 2024",
     answerRef: "Altes Recht: BGE 148 IV 234, BGE 148 IV 329 · Neues Recht: Art. 189, 190 StGB rev. (i.K. 1.7.2024) — BGer-Praxis im Aufbau",
     answerHTML: `
@@ -12643,11 +12758,15 @@ const CARDS = [
    ════════════════════════════════════════════════════════════ */
 
 const ERLASSE = [
-  /* Bundesgesetze auf Fedlex */
+  /* Bundesgesetze auf Fedlex
+     Etappe 17.1 · ELI-URLs für JStG, JStPO, OHG, OBG korrigiert (Etappe 16
+     hatte falsche Jahres- und AS-Nummern aus älterer Erinnerung übernommen).
+     Etappe 17.2 · VUV-Eintrag richtiggestellt (Kürzel zeigte auf VUV
+     SR 832.30 Unfallverhütungs-V, Name/SR/URL gehörten aber zur VRV). */
   { kuerzel: 'StGB',   name: 'Strafgesetzbuch',                   sr: '311.0',   url: 'https://www.fedlex.admin.ch/eli/cc/54/757_781_799/de',    artAnker: true },
   { kuerzel: 'StPO',   name: 'Strafprozessordnung',               sr: '312.0',   url: 'https://www.fedlex.admin.ch/eli/cc/2010/267/de',          artAnker: true },
-  { kuerzel: 'JStG',   name: 'Jugendstrafgesetz',                 sr: '311.1',   url: 'https://www.fedlex.admin.ch/eli/cc/2006/467/de',          artAnker: true },
-  { kuerzel: 'JStPO',  name: 'Jugendstrafprozessordnung',         sr: '312.1',   url: 'https://www.fedlex.admin.ch/eli/cc/2010/268/de',          artAnker: true },
+  { kuerzel: 'JStG',   name: 'Jugendstrafgesetz',                 sr: '311.1',   url: 'https://www.fedlex.admin.ch/eli/cc/2006/551/de',          artAnker: true },
+  { kuerzel: 'JStPO',  name: 'Jugendstrafprozessordnung',         sr: '312.1',   url: 'https://www.fedlex.admin.ch/eli/cc/2010/226/de',          artAnker: true },
   { kuerzel: 'BV',     name: 'Bundesverfassung',                  sr: '101',     url: 'https://www.fedlex.admin.ch/eli/cc/1999/404/de',          artAnker: true },
   { kuerzel: 'EMRK',   name: 'Europäische Menschenrechtskonvention', sr: '0.101', url: 'https://www.fedlex.admin.ch/eli/cc/1974/2151_2151_2151/de', artAnker: true },
   { kuerzel: 'OR',     name: 'Obligationenrecht',                 sr: '220',     url: 'https://www.fedlex.admin.ch/eli/cc/27/317_321_377/de',    artAnker: true },
@@ -12656,16 +12775,18 @@ const ERLASSE = [
   { kuerzel: 'SchKG',  name: 'Schuldbetreibung und Konkurs',      sr: '281.1',   url: 'https://www.fedlex.admin.ch/eli/cc/11/529_488_529/de',    artAnker: true },
   { kuerzel: 'BGFA',   name: 'Bundesanwaltsgesetz',               sr: '935.61',  url: 'https://www.fedlex.admin.ch/eli/cc/2002/153/de',          artAnker: true },
   { kuerzel: 'GwG',    name: 'Geldwäschereigesetz',               sr: '955.0',   url: 'https://www.fedlex.admin.ch/eli/cc/1998/892_892_892/de',  artAnker: true },
-  { kuerzel: 'OHG',    name: 'Opferhilfegesetz',                  sr: '312.5',   url: 'https://www.fedlex.admin.ch/eli/cc/2008/280/de',          artAnker: true },
+  { kuerzel: 'OHG',    name: 'Opferhilfegesetz',                  sr: '312.5',   url: 'https://www.fedlex.admin.ch/eli/cc/2008/232/de',          artAnker: true },
   { kuerzel: 'IRSG',   name: 'Rechtshilfegesetz',                 sr: '351.1',   url: 'https://www.fedlex.admin.ch/eli/cc/1982/846_846_846/de',  artAnker: true },
+  /* Etappe 17.3 · BetmG ergänzt (in Karte F-XX referenziert) */
+  { kuerzel: 'BetmG',  name: 'Betäubungsmittelgesetz',            sr: '812.121', url: 'https://www.fedlex.admin.ch/eli/cc/1952/241_241_245/de', artAnker: true },
   { kuerzel: 'SVG',    name: 'Strassenverkehrsgesetz',            sr: '741.01',  url: 'https://www.fedlex.admin.ch/eli/cc/1959/679_705_685/de',  artAnker: true },
-  { kuerzel: 'VUV',    name: 'Verkehrsregelnverordnung',          sr: '741.11',  url: 'https://www.fedlex.admin.ch/eli/cc/1962/1364_1409_1420/de', artAnker: true },
+  { kuerzel: 'VUV',    name: 'Verordnung über die Verhütung von Unfällen und Berufskrankheiten', sr: '832.30', url: 'https://www.fedlex.admin.ch/eli/cc/1983/1968_1968_1968/de', artAnker: true },
+  { kuerzel: 'OBG',    name: 'Ordnungsbussengesetz',              sr: '314.1',   url: 'https://www.fedlex.admin.ch/eli/cc/2017/725/de',          artAnker: true },
   /* Aargauer Erlasse · gesetzessammlungen.ag.ch · keine Artikel-Anker */
   { kuerzel: 'KV AG',   name: 'Kantonsverfassung Aargau',         sr: 'SAR 110.000', url: 'https://gesetzessammlungen.ag.ch/app/de/texts_of_law/110.000', artAnker: false },
   { kuerzel: 'EG StPO', name: 'Einführungsgesetz zur StPO Aargau', sr: 'SAR 251.200', url: 'https://gesetzessammlungen.ag.ch/app/de/texts_of_law/251.200', artAnker: false },
   { kuerzel: 'EG ZPO',  name: 'Einführungsgesetz zur ZPO Aargau',  sr: 'SAR 221.200', url: 'https://gesetzessammlungen.ag.ch/app/de/texts_of_law/221.200', artAnker: false },
   { kuerzel: 'GOG',     name: 'Gerichtsorganisationsgesetz Aargau', sr: 'SAR 155.200', url: 'https://gesetzessammlungen.ag.ch/app/de/texts_of_law/155.200', artAnker: false },
-  { kuerzel: 'OBG',     name: 'Ordnungsbussengesetz',              sr: '314.1',   url: 'https://www.fedlex.admin.ch/eli/cc/2017/685/de',          artAnker: true },
 ];
 
 /* Erlass-Kürzel → Lookup-Eintrag (für schnellen Zugriff) */
@@ -12698,8 +12819,8 @@ function buildBGEURL(zitierString) {
     + `?lang=de&type=simple_query&query_words=${q}&top_subcollection_clir=bge`;
 }
 
-/* Erkennungsmuster für Norm-Verweise im Text:
-   Art. NNN[bis/ter] [Abs. N] [Ziff. N] [lit. a] ERLASS
+/* Erkennungsmuster für Norm-Verweise im Text · Etappe 17.4 erweitert
+   Bausteine getrennt definiert, damit nachvollziehbar bleibt, was warum matcht.
    Mehrere Erlasskürzel sortiert nach Länge (lange zuerst), damit
    "JStPO" nicht fälschlich als "JS" + "tPO" interpretiert wird. */
 const ERLASS_REGEX_TEIL = ERLASSE
@@ -12708,12 +12829,33 @@ const ERLASS_REGEX_TEIL = ERLASSE
   .map(k => k.replace(/\s+/g, '\\s+'))
   .join('|');
 
+/* Bausteine für die Artikel-Spezifikation. Eine "Spec" ist eine vollständige
+   Artikel-Angabe inklusive optionaler Suffixe (Range, ff., Abs., Ziff., lit.,
+   römische Absatzziffer ohne Abs.-Token). */
+const _ART_NUM   = '\\d+(?:[a-z]+)?';                                   /* 22, 22bis, 144ter */
+const _RANGE     = '(?:\\s*[-–]\\s*' + _ART_NUM + ')?';                  /* -25, -171bis */
+const _FF        = '(?:\\s*ff\\.?)?';                                    /* ff. */
+const _ABS_TEIL  =
+    '(?:'
+  +   '\\s+(?:Abs\\.|Absatz)\\s*[\\dIVXLC]+(?:[a-z]+)?'
+  +   '(?:\\s*[-–+/]\\s*[\\dIVXLC]+(?:[a-z]+)?)?'                        /* eine zusätzliche Zahl: Abs. 2-3, Abs. 2 + 3, Abs. 2/3 */
+  + ')?';
+const _ROEM_ABS  = '(?:\\s+(?:I{1,3}|IV|V|VI{0,3}|IX|X)\\b(?![a-z]))?';  /* römische Absatzziffer ohne "Abs." */
+const _ZIFF_TEIL =
+    '(?:'
+  +   '\\s+(?:Ziff\\.|Ziffer)\\s*[\\dIVXLC]+(?:[a-z]+)?'
+  +   '(?:\\s*[-–+/]\\s*[\\dIVXLC]+(?:[a-z]+)?)?'                        /* eine zusätzliche Zahl: Ziff. 3 + 4 */
+  + ')?';
+const _LIT_TEIL  = '(?:\\s+lit\\.\\s*[a-z]+)?';
+const _ART_SPEC  = _ART_NUM + _RANGE + _FF + _ABS_TEIL + _ROEM_ABS + _ZIFF_TEIL + _LIT_TEIL;
+/* Trenner zwischen mehreren Artikeln in einer Liste. Erlaubt , + / · sowie
+   ein optional wiederholtes "Art." nach dem Trenner (etwa „Art. 10 + Art. 2"). */
+const _ART_SEP   = '\\s*[,+/·]\\s*(?:Art\\.\\s*)?';
+const _ART_LIST  = _ART_SPEC + '(?:' + _ART_SEP + _ART_SPEC + ')*';
+
 const NORM_REGEX = new RegExp(
   '\\bArt\\.\\s*'
-  + '(\\d+(?:[a-z]+)?(?:\\s*[-–]\\s*\\d+)?(?:\\s*ff\\.?)?)'   // Artikel-Nummer mit ggf. Bereich oder ff.
-  + '(?:\\s+(?:Abs\\.|Absatz)\\s*[\\dIVXLC]+(?:[a-z]+)?)?'    // Abs. (optional)
-  + '(?:\\s+(?:Ziff\\.|Ziffer)\\s*[\\dIVXLC]+)?'              // Ziff. (optional)
-  + '(?:\\s+lit\\.\\s*[a-z]+)?'                                // lit. (optional)
+  + '(' + _ART_LIST + ')'
   + '\\s+'
   + '(' + ERLASS_REGEX_TEIL + ')'
   + '\\b',
@@ -12722,6 +12864,48 @@ const NORM_REGEX = new RegExp(
 
 /* BGE-Erkennung · "BGE 144 IV 345", "BGE 147 IV 9" */
 const BGE_REGEX = /\bBGE\s+\d+\s+[IVX]+\s+\d+\b/g;
+
+/* Splittet eine Artikel-Liste in einzelne Specs und rendert jede als eigenen
+   Link · Etappe 17.4. Wichtig: kein blindes Splitten am Trenner-Zeichen, sondern
+   Inner-Match mit ART_SPEC, sonst würde „Abs. 2 + 3" am Plus zerschnitten. */
+function verlinkeArtikelListe(artListe, erlassKuerzel) {
+  const innerRe = new RegExp(_ART_SPEC, 'g');
+  const specs = [];
+  let m;
+  while ((m = innerRe.exec(artListe)) !== null) {
+    specs.push({ text: m[0], start: m.index, end: m.index + m[0].length });
+    if (m[0].length === 0) innerRe.lastIndex++;   /* Schutz gegen leere Matches */
+  }
+  if (specs.length === 0) {
+    /* Fallback: ein einziger Link über die gesamte Phrase */
+    const erstZahl = (artListe.match(/^\d+/) || [])[0];
+    const url = erstZahl ? buildNormURL(erstZahl, erlassKuerzel) : null;
+    if (!url) return 'Art. ' + artListe + ' ' + erlassKuerzel;
+    return `<a href="${url}" target="_blank" rel="noopener" class="norm-link">Art. ${artListe} ${erlassKuerzel}</a>`;
+  }
+  const out = [];
+  for (let i = 0; i < specs.length; i++) {
+    const spec = specs[i];
+    const isLast = i === specs.length - 1;
+    /* Trenner-Text vor diesem Spec (Lücke zwischen vorigem Spec-Ende und Spec-Start) */
+    const prevEnd = i === 0 ? 0 : specs[i - 1].end;
+    let trenner = artListe.slice(prevEnd, spec.start);
+    if (i > 0) {
+      /* "Art." am Trenner-Ende strippen, weil der nächste Link-Text es selbst mitführt */
+      trenner = trenner.replace(/\s*Art\.\s*$/, ' ');
+    }
+    out.push(trenner);
+    const erstZahl = (spec.text.match(/^\d+/) || [])[0];
+    const linkText = 'Art. ' + spec.text + (isLast ? ' ' + erlassKuerzel : '');
+    const url = erstZahl ? buildNormURL(erstZahl, erlassKuerzel) : null;
+    if (url) {
+      out.push(`<a href="${url}" target="_blank" rel="noopener" class="norm-link">${linkText}</a>`);
+    } else {
+      out.push((i === 0 ? 'Art. ' : '') + spec.text + (isLast ? ' ' + erlassKuerzel : ''));
+    }
+  }
+  return out.join('');
+}
 
 /* Wandelt Norm- und BGE-Verweise in einem HTML-String in Links um.
    Geht behutsam vor: nur in Text zwischen Tags ersetzen, nicht in
@@ -12733,10 +12917,8 @@ function verlinkeNormen(htmlString) {
   return teile.map(teil => {
     if (teil.startsWith('<')) return teil;   /* HTML-Tag unverändert */
     /* Erst Norm-Verweise · Reihenfolge wichtig, weil BGE-Regex einfacher ist */
-    let s = teil.replace(NORM_REGEX, (match, art, kuerzel) => {
-      const url = buildNormURL(art, kuerzel.replace(/\s+/g, ' '));
-      if (!url) return match;
-      return `<a href="${url}" target="_blank" rel="noopener" class="norm-link">${match}</a>`;
+    let s = teil.replace(NORM_REGEX, (match, artListe, kuerzel) => {
+      return verlinkeArtikelListe(artListe, kuerzel.replace(/\s+/g, ' '));
     });
     /* Dann BGE-Verweise */
     s = s.replace(BGE_REGEX, match => {
@@ -12747,7 +12929,7 @@ function verlinkeNormen(htmlString) {
   }).join('');
 }
 
-const TOOL_VERSION = '3.12';
+const TOOL_VERSION = '3.20';
 const DEFAULT_KANTON = 'AG';
 const DEFAULT_RECHTSBEREICH = 'strafrecht';
 
@@ -13533,6 +13715,27 @@ function renderCard() {
         <div class="flip-hint"><span>Leertaste · Musterlösung anzeigen</span></div>
       </div>`;
   } else {
+    /* Etappe 17.6 · Notizfeld auch auf der Vorderseite normaler Karten.
+       Use Case: eigene Frage/Eselsbrücke formulieren, wenn die Stichworte
+       auf der Vorderseite allein nicht ausreichen, um sich an den Inhalt
+       der Karte zu erinnern. Selbes UI-Pattern wie auf der Rückseite:
+       leere Notiz → kompakter Knopf · vorhandene Notiz → Feld permanent. */
+    const savedNoteFront = getNote(card.id, 'front');
+    const hasNoteFront = savedNoteFront.trim().length > 0;
+    const notesFrontBlockHTML = hasNoteFront
+      ? `
+        <div class="card-notes-section">
+          <div class="fall-notes-label">
+            <span>Eigene Frage / Eselsbrücke</span>
+            <span class="saved" id="notesSavedFront">— gespeichert</span>
+          </div>
+          <textarea class="fall-notes" id="cardNotesFront" placeholder="Formulieren Sie eine eigene Frage oder Eselsbrücke, die Ihnen hilft zu erinnern, um was es bei dieser Karte geht.">${savedNoteFront.replace(/</g,'&lt;')}</textarea>
+        </div>`
+      : `
+        <div class="card-notes-section card-notes-collapsed">
+          <button type="button" class="card-notes-add" id="cardNotesAddFrontBtn">+ Eigene Frage / Eselsbrücke</button>
+        </div>`;
+
     frontHTML = `
       <div class="face front">
         <div class="card-meta">
@@ -13547,6 +13750,9 @@ function renderCard() {
           <div class="card-topic">${card.topic}</div>
           <div class="card-prompt">${card.prompt}</div>
           ${card.hint ? `<div class="card-hint">${card.hint}</div>` : ''}
+          ${card.kontext ? `<div class="card-kontext">${card.kontext}</div>` : ''}
+          ${card.quelle ? `<div class="card-quelle">${verlinkeNormen(card.quelle)}</div>` : ''}
+          ${notesFrontBlockHTML}
         </div>
         <div class="flip-hint"><span>Leertaste · Karte umdrehen</span></div>
       </div>`;
@@ -13625,10 +13831,12 @@ function renderCard() {
     ${backHTML}
   `;
 
-  /* Klick auf Vorderseite → Flip; bei Mini-Fall nicht, wenn auf Textarea geklickt wird */
+  /* Klick auf Vorderseite → Flip; bei Mini-Fall nicht, wenn auf Textarea geklickt wird;
+     bei normalen Karten · Etappe 17.6 · nicht, wenn Klick im Notizbereich ist */
   cardEl.querySelector('.face.front').addEventListener('click', e => {
     if (e.target.closest('.tts-btn')) return;   /* M3 · TTS-Klick blockiert Flip */
     if (isFall && (e.target.tagName === 'TEXTAREA' || e.target.closest('.fall-notes-label'))) return;
+    if (e.target.closest('.card-notes-section')) return;   /* Etappe 17.6 · Notiz-Klick blockiert Flip */
     state.flipped = !state.flipped;
     cardEl.classList.toggle('flipped');
     /* M3 · beim Flip Vorlesen stoppen */
@@ -13700,6 +13908,70 @@ function renderCard() {
         if (e.code === 'Space' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
           e.stopPropagation();
         }
+      });
+    }
+  }
+
+  /* Etappe 17.6 · Notiz-Speicherung Vorderseite normaler Karten (analog Rückseite) */
+  if (!isFall) {
+    const taCardFront = cardEl.querySelector('#cardNotesFront');
+    const savedCardFront = cardEl.querySelector('#notesSavedFront');
+    let saveTimerCardFront = null;
+    if (taCardFront) {
+      taCardFront.addEventListener('input', () => {
+        setNote(card.id, 'front', taCardFront.value);
+        clearTimeout(saveTimerCardFront);
+        saveTimerCardFront = setTimeout(() => {
+          saveState();
+          if (savedCardFront) {
+            savedCardFront.classList.add('show');
+            setTimeout(() => savedCardFront.classList.remove('show'), 1200);
+          }
+        }, 400);
+      });
+      taCardFront.addEventListener('click', e => e.stopPropagation());
+      taCardFront.addEventListener('keydown', e => {
+        if (e.code === 'Space' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          e.stopPropagation();
+        }
+      });
+    }
+    /* Knopf "+ Eigene Frage / Eselsbrücke" entfaltet das Front-Notizfeld */
+    const addFrontBtn = cardEl.querySelector('#cardNotesAddFrontBtn');
+    if (addFrontBtn) {
+      addFrontBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        const section = addFrontBtn.closest('.card-notes-section');
+        if (!section) return;
+        section.classList.remove('card-notes-collapsed');
+        section.innerHTML = `
+          <div class="fall-notes-label">
+            <span>Eigene Frage / Eselsbrücke</span>
+            <span class="saved" id="notesSavedFront">— gespeichert</span>
+          </div>
+          <textarea class="fall-notes" id="cardNotesFront" placeholder="Formulieren Sie eine eigene Frage oder Eselsbrücke, die Ihnen hilft zu erinnern, um was es bei dieser Karte geht."></textarea>
+        `;
+        const ta = section.querySelector('#cardNotesFront');
+        const savedNew = section.querySelector('#notesSavedFront');
+        let saveTimerNew = null;
+        ta.addEventListener('input', () => {
+          setNote(card.id, 'front', ta.value);
+          clearTimeout(saveTimerNew);
+          saveTimerNew = setTimeout(() => {
+            saveState();
+            if (savedNew) {
+              savedNew.classList.add('show');
+              setTimeout(() => savedNew.classList.remove('show'), 1200);
+            }
+          }, 400);
+        });
+        ta.addEventListener('click', ev => ev.stopPropagation());
+        ta.addEventListener('keydown', ev => {
+          if (ev.code === 'Space' || ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') {
+            ev.stopPropagation();
+          }
+        });
+        ta.focus();
       });
     }
   }
